@@ -1,0 +1,7 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "ion-one",
+  "bundledWebRuntime": false,
+  "webDir": "www",
+  "windowsAndroidStudioPath":"D:\\Android\\Android Studio\\bin"
+}

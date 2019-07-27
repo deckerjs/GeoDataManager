@@ -1,0 +1,46 @@
+<ion-content text-center padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header class="banner">
+            <ion-title>
+              <ion-label color="light">
+                <h1>Geo Data Search</h1>
+                <h2></h2>
+                <h4>This does nothing at the moment</h4>
+              </ion-label>
+            </ion-title>           
+
+            <ion-searchbar
+              showCancelButton
+              cancelButtonText="Cancel"
+              placeholder="Search"
+              debounce="500"
+              animated
+            ></ion-searchbar>
+          </ion-card-header>
+
+          <ion-card-content >
+            <ion-virtual-scroll [items]="searchResults">
+              <ion-item *virtualItem="let row">
+                <ion-thumbnail slot="start">                  
+                  <ion-img src="/assets/_ionicons_svg_md-bug.svg"></ion-img>
+                </ion-thumbnail>
+                <ion-label>
+                  <h2>{{ row.col1 }}</h2>
+                  <p>{{ row.col2 }}</p>
+                  <p>{{ row.col3 }}</p>
+                </ion-label>
+              </ion-item>
+            </ion-virtual-scroll>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col> </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

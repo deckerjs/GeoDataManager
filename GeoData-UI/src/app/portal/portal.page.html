@@ -1,0 +1,45 @@
+<ion-menu side="start" menuId="main1">
+
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Portal Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+      <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
+        <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
+          <ion-icon slot="start" [name]="p.icon"></ion-icon>
+          <ion-label>
+            {{ p.title }}
+          </ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+    </ion-list>
+  </ion-content>
+
+</ion-menu>
+
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Portal</ion-title>
+
+    <ion-buttons slot="start">
+      <ion-button (click)="openPortalMenu()">
+        <ion-icon slot="icon-only" name="menu"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button color="contactColor" (click)="openAuth()">
+        <ion-icon slot="icon-only" name="contact" [color]="loginStatusColor"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-router-outlet main></ion-router-outlet>
+</ion-content>

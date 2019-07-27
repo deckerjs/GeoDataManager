@@ -1,0 +1,40 @@
+<ion-header>
+	<ion-toolbar>
+		<ion-title>GeoDataDetails</ion-title>
+		<ion-back-button defaultHref="/geo-data-manager"></ion-back-button>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+	<ion-card>
+		<ion-card-header>
+			<ion-label>
+				<h2>
+					<span><b>Description: </b>{{ geoDataSet?.Description }}</span>
+				</h2>
+			</ion-label>
+		</ion-card-header>
+		<ion-card-content>
+			<p>
+				<span><b>DateCreated: </b>{{ geoDataSet?.DateCreated }}</span>
+			</p>
+			<p>
+				<span><b>UserID: </b>{{ geoDataSet?.UserID }}</span>
+			</p>
+			<p>
+				<span
+					><b>Feature Count: </b>{{ geoDataSet?.Data.features.length }}</span
+				>
+			</p>
+			<p>
+        <span><b>Tags: </b>
+          <ion-chip *ngFor="let tag of geoDataSet?.Tags">
+            <ion-label>
+              {{tag}}
+            </ion-label>
+          </ion-chip>
+				</span>
+			</p>
+		</ion-card-content>
+	</ion-card>
+</ion-content>

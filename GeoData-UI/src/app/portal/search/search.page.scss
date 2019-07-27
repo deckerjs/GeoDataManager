@@ -1,0 +1,10 @@
+.banner {
+    background-color: black;
+    background: linear-gradient(black 10%, white 90%),url(/assets/someimage.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top;
+    background-blend-mode:darken;
+    height: 246px;
+    position: relative;
+}

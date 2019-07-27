@@ -1,0 +1,58 @@
+<ion-header>
+	<ion-toolbar>
+		<ion-title>GeoDataManager</ion-title>
+
+		<ion-buttons slot="end">
+			<ion-button (click)="openFile()" color="primary" >
+				Upload File
+				<ion-icon slot="end" name="add-circle"></ion-icon>
+			</ion-button>
+			<input type="file" #filePicker (change)="fileSelected($event)">
+		</ion-buttons>
+
+	</ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<ion-grid>
+		<ion-row>
+			<ion-col>
+				<ion-card>
+					<ion-card-content>
+						<ion-list>
+							<ion-item *ngFor="let row of geoDataSets">
+								<ion-thumbnail slot="start">									
+									<ion-img src="/assets/_ionicons_svg_md-bug.svg"></ion-img>
+								</ion-thumbnail>
+								<ion-label>
+									<h2>{{ row.ID }}</h2>
+									<p>{{ row.Description }}</p>
+									<p>{{ row.DateCreated }}</p>
+								</ion-label>
+
+								<ion-button (click)="openMapView(row.ID)">
+									<ion-icon slot="icon-only" name="map"></ion-icon>
+								</ion-button>
+
+								<ion-button (click)="openGeoDataDetails(row.ID)">
+									<ion-icon slot="icon-only" name="list"></ion-icon>
+								</ion-button>
+
+								<ion-button (click)="deleteGeoData(row.ID)">
+									<ion-icon slot="icon-only" name="trash"></ion-icon>
+								</ion-button>
+
+
+							</ion-item>
+						</ion-list>
+					</ion-card-content>
+				</ion-card>
+			</ion-col>
+		</ion-row>
+
+		<ion-row>
+			<ion-col>
+			</ion-col>
+		</ion-row>
+	</ion-grid>
+</ion-content>

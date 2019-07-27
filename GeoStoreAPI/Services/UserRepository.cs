@@ -13,7 +13,8 @@ namespace GeoStoreAPI.Services
         {
             _dataAccess = dataAccess;
         
-        //uncomment this to init test users
+        //uncomment to create some test users
+        //todo: replace this wtih seed users as startup option
         // _dataAccess.Create(_users[0],"100001");
         // _dataAccess.Create(_users[1],"100000");
         }
