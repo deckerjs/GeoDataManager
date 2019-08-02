@@ -48,7 +48,7 @@ namespace geostoreapi
 
             builder.AddInMemoryIdentityResources(IDSConfig.GetIdentityResources());
             builder.AddInMemoryApiResources(IDSConfig.GetApis());
-            builder.AddInMemoryClients(IDSConfig.GetClients());
+            builder.AddInMemoryClients(IDSConfig.GetClients(Configuration));
             builder.AddCustomUserStore();
 
             if (Environment.IsDevelopment())
