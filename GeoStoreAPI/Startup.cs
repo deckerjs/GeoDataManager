@@ -103,6 +103,8 @@ namespace geostoreapi
             services.AddScoped<IUserIdentificationService, UserIdentificationService>();
 
             services.AddHttpContextAccessor();
+            
+            services.Configure<AppOptions>(Configuration);
         }
                 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, ILoggerFactory loggerFactory)
