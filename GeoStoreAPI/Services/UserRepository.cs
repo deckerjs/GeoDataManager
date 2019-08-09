@@ -16,7 +16,8 @@ namespace GeoStoreAPI.Services
             _dataAccess = dataAccess;
             _options = options;
 
-            if(_options.Value.GenerateDefaultUsers == true){
+            if (_options.Value.GenerateDefaultUsers == true)
+            {
                 CreateDefaultUsersIfAbsent();
             }
         }
@@ -46,6 +47,9 @@ namespace GeoStoreAPI.Services
 
         public void CreateDefaultUsersIfAbsent()
         {
+            //todo: check config settings for default user collection
+            //if absent then use the ones here, also add one with an admin role
+
             List<AppUser> _users = new List<AppUser>
             {
                 new AppUser{

@@ -94,21 +94,22 @@ namespace geostoreapi
                 });
             });
 
-            services.AddSingleton<IFileDataAccess<GeoData>>(x => new FileDataAccess<GeoData>(Path.Combine(Directory.GetCurrentDirectory(), "Data")));
-            services.AddSingleton<IFileDataAccess<AppUser>>(x => new FileDataAccess<AppUser>(Path.Combine(Directory.GetCurrentDirectory(), "UserData")));            
-            services.AddSingleton<IGeoDataAccess, GeoDataAccess>();
-            services.AddSingleton<IUserDataAccess, UserDataAccess>();                        
-            services.AddSingleton<IGeoDataRepository, GeoDataRepository>();
+            services.AddScoped<IFileDataAccess<GeoData>>(x => new FileDataAccess<GeoData>(Path.Combine(Directory.GetCurrentDirectory(), "Data")));
+            services.AddScoped<IFileDataAccess<AppUser>>(x => new FileDataAccess<AppUser>(Path.Combine(Directory.GetCurrentDirectory(), "UserData")));            
+            services.AddScoped<IGeoDataAccess, GeoDataAccess>();
+            services.AddScoped<IUserDataAccess, UserDataAccess>();                        
+            services.AddScoped<IGeoDataRepository, GeoDataRepository>();
             
             services.AddScoped<IUserIdentificationService, UserIdentificationService>();
 
             services.AddHttpContextAccessor();
             
             services.Configure<AppOptions>(Configuration);
+            services.AddScoped<AppOptions>(x =>x.GetService<IOptionsSnapshot<AppOptions>>().Value);
         }
                 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, ILoggerFactory loggerFactory)
-        {
+        {            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

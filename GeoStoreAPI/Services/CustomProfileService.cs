@@ -10,31 +10,28 @@ namespace GeoStoreAPI.Services
 {
     public class CustomProfileService : IProfileService
     {
-        //protected readonly ILogger Logger;
+        private readonly ILogger<CustomProfileService> _logger;
 
-        protected readonly IUserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
 
-        public CustomProfileService(IUserRepository userRepository)
+        public CustomProfileService(IUserRepository userRepository, ILogger<CustomProfileService> logger)
         {
-            //, ILogger<CustomProfileService> logger
+            _logger = logger;
             _userRepository = userRepository;
-            //Logger = logger;
         }
-
-
+        
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
+
             var sub = context.Subject.GetSubjectId();
 
-            // Logger.LogDebug("Get profile called for subject {subject} from client {client} with claim types {claimTypes} via {caller}",
-            //     context.Subject.GetSubjectId(),
-            //     context.Client.ClientName ?? context.Client.ClientId,
-            //     context.RequestedClaimTypes,
-            //     context.Caller);
+            _logger.LogDebug("Get profile called for subject {subject} from client {client} with claim types {claimTypes} via {caller}",
+                context.Subject.GetSubjectId(),
+                context.Client.ClientName ?? context.Client.ClientId,
+                context.RequestedClaimTypes,
+                context.Caller);
 
-            var user = _userRepository.FindBySubjectId(context.Subject.GetSubjectId());
-
-            // new Claim("role", "dataEventRecords.admin"),
+            var user = await GetUserAsync(context.Subject.GetSubjectId());
             var claims = new List<Claim>
             {
                 new Claim("role", "user"),
@@ -46,10 +43,15 @@ namespace GeoStoreAPI.Services
         }
 
         public async Task IsActiveAsync(IsActiveContext context)
-        {
-            var sub = context.Subject.GetSubjectId();
-            var user = _userRepository.FindBySubjectId(context.Subject.GetSubjectId());
+        {            
+            var user = await GetUserAsync(context.Subject.GetSubjectId());
             context.IsActive = user != null;
         }
+
+        private async Task<AppUser> GetUserAsync(string subjectID)
+        {
+            return await Task.FromResult(_userRepository.FindBySubjectId(subjectID));
+        }
+
     }
 }
