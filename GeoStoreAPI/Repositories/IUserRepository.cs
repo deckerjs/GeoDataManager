@@ -1,4 +1,6 @@
-﻿namespace GeoStoreAPI.Services
+﻿using GeoStoreAPI.Models;
+
+namespace GeoStoreAPI.Repositories
 {
     public interface IUserRepository
     {

@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using GeoStoreAPI.DataAccess;
 using GeoStoreAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GeoStoreAPI.DataAccess
+namespace GeoStoreAPI.Repositories
 {
     public class GeoDataRepository : IGeoDataRepository
     {

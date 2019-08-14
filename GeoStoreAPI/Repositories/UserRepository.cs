@@ -2,8 +2,10 @@
 using System.Linq;
 using System;
 using Microsoft.Extensions.Options;
+using GeoStoreAPI.Models;
+using GeoStoreAPI.DataAccess;
 
-namespace GeoStoreAPI.Services
+namespace GeoStoreAPI.Repositories
 {
     public class UserRepository : IUserRepository
     {

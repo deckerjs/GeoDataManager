@@ -1,6 +1,9 @@
-
-public class AppOptions
+namespace GeoStoreAPI.Models
 {
-    public bool GenerateDefaultUsers { get; set; }
+    public class AppOptions
+    {
+        public bool GenerateDefaultUsers { get; set; }
+
+    }
 
 }

@@ -1,6 +1,7 @@
 ﻿using IdentityServer4.Validation;
 using IdentityModel;
 using System.Threading.Tasks;
+using GeoStoreAPI.Repositories;
 
 namespace GeoStoreAPI.Services
 {

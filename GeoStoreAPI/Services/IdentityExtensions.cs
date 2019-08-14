@@ -1,4 +1,5 @@
-﻿using GeoStoreAPI.Services;
+﻿using GeoStoreAPI.Repositories;
+using GeoStoreAPI.Services;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

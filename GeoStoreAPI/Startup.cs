@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using GeoStoreAPI.Services;
+using GeoStoreAPI.Repositories;
 
 namespace geostoreapi
 {

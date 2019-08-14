@@ -5,6 +5,8 @@ using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using GeoStoreAPI.Repositories;
+using GeoStoreAPI.Models;
 
 namespace GeoStoreAPI.Services
 {
@@ -34,6 +36,7 @@ namespace GeoStoreAPI.Services
             var user = await GetUserAsync(context.Subject.GetSubjectId());
             var claims = new List<Claim>
             {
+                //todo: load roles for userid from new roles repo
                 new Claim("role", "user"),
                 new Claim("username", user.UserName),
                 new Claim("email", user.Email)

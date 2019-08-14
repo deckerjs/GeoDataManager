@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using GeoStoreAPI.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace GeoStoreAPI.DataAccess
 {
