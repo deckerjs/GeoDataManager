@@ -38,7 +38,7 @@ namespace geostoreapi
             services.AddMvc()
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
             .AddJsonOptions(x => x.UseMemberCasing());
-            
+
             var builder = services.AddIdentityServer(options =>
             {
                 options.Events.RaiseErrorEvents = true;
@@ -96,28 +96,32 @@ namespace geostoreapi
             });
 
             services.AddScoped<IFileDataAccess<GeoData>>(x => new FileDataAccess<GeoData>(Path.Combine(Directory.GetCurrentDirectory(), "Data")));
-            services.AddScoped<IFileDataAccess<AppUser>>(x => new FileDataAccess<AppUser>(Path.Combine(Directory.GetCurrentDirectory(), "UserData")));            
+            services.AddScoped<IFileDataAccess<AppUser>>(x => new FileDataAccess<AppUser>(Path.Combine(Directory.GetCurrentDirectory(), "UserData")));
+            services.AddScoped<IFileDataAccess<AppRole>>(x => new FileDataAccess<AppRole>(Path.Combine(Directory.GetCurrentDirectory(), "RoleData")));
+
             services.AddScoped<IGeoDataAccess, GeoDataAccess>();
-            services.AddScoped<IUserDataAccess, UserDataAccess>();                        
-            services.AddScoped<IGeoDataRepository, GeoDataRepository>();
+            services.AddScoped<IUserDataAccess, UserDataAccess>();
+            services.AddScoped<IRoleDataAccess, RoleDataAccess>();
             
+            services.AddScoped<IGeoDataRepository, GeoDataRepository>();
+
             services.AddScoped<IUserIdentificationService, UserIdentificationService>();
 
             services.AddHttpContextAccessor();
-            
+
             services.Configure<AppOptions>(Configuration);
-            services.AddScoped<AppOptions>(x =>x.GetService<IOptionsSnapshot<AppOptions>>().Value);
+            services.AddScoped<AppOptions>(x => x.GetService<IOptionsSnapshot<AppOptions>>().Value);
         }
-                
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, ILoggerFactory loggerFactory)
-        {            
+        {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
             app.UseAuthentication();
-            app.UseCors("AllowAll");            
+            app.UseCors("AllowAll");
             app.UseIdentityServer();
             app.UseMvc();
         }

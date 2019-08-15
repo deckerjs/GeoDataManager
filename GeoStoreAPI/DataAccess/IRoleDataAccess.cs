@@ -6,10 +6,10 @@ namespace GeoStoreAPI.DataAccess
 {
     public interface IRoleDataAccess
     {
-        void Create(AppRole role, string roleID);
+        void Create(AppRole role);
         IEnumerable<AppRole> GetAll(Func<AppRole, bool> filter);                
         AppRole Get(string roleID);
-        void Update(AppRole roleData, string roleID);
+        void Update(AppRole roleData);
         void Delete(string id);        
     }
 

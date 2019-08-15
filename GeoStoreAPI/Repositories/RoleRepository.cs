@@ -20,17 +20,17 @@ namespace GeoStoreAPI.Repositories
 
             if (_options.Value.GenerateDefaultUsers == true)
             {
-                CreateDefaultRolessIfAbsent();
+                CreateDefaultRolesIfAbsent();
             }
         }
 
-        public AppRole FindByRoleId(string roleId)
+        public AppRole GetRole(string roleId)
         {
             var role = _dataAccess.GetAll(r => r.RoleID == roleId);
             return role.FirstOrDefault();
         }
 
-        public void CreateDefaultRolesIfAbsent()
+        private void CreateDefaultRolesIfAbsent()
         {
 
             List<AppRole> _roles = new List<AppRole>
@@ -47,19 +47,26 @@ namespace GeoStoreAPI.Repositories
 
             _roles.ForEach(role =>
             {
-                if (FindByRoleId(role.RoleID) == null)
+                if (GetRole(role.RoleID) == null)
                 {
-                    CreateRole(role.RoleID, role);
+                    CreateRole(role);
                 }
             });
         }
 
-    public void CreateRole(string RoleID, AppRole role)
-    {
-        _dataAccess.Create(role, RoleID);
+        public void CreateRole(AppRole role)
+        {
+            _dataAccess.Create(role);
+        }
+
+        public void UpdateRole(AppRole role){
+            _dataAccess.Update(role);
+        }
+
+        public void RemoveRole(string roleID)
+        {
+            _dataAccess.Delete(roleID);
+        }
+
     }
-
-
-
-}
 }
