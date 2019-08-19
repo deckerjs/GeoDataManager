@@ -9,7 +9,7 @@ namespace GeoStoreAPI.Models
             RoleIDs = new List<string>();
         }
 
-        string AppUserID { get; set; }
-        List<string> RoleIDs { get; set; }
+        public string UserID { get; set; }
+        public List<string> RoleIDs { get; set; }
     }
 }

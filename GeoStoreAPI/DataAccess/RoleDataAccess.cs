@@ -7,7 +7,7 @@ namespace GeoStoreAPI.DataAccess
     public class RoleDataAccess : IRoleDataAccess
     {
         private readonly IFileDataAccess<AppRole> _fileDataAccess;
-        private const string ROLE_DATA = "RoleData";
+        public const string ROLE_DATA = "RoleData";
 
         public RoleDataAccess(IFileDataAccess<AppRole> fileDataAccess)
         {

@@ -8,7 +8,7 @@ namespace GeoStoreAPI.DataAccess
     {
         private readonly IFileDataAccess<AppUser> _fileDataAccess;
 
-        private const string USER_DATA = "UserData";
+        public const string USER_DATA = "UserData";
 
         public UserDataAccess(IFileDataAccess<AppUser> fileDataAccess)
         {

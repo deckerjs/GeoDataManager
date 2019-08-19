@@ -95,13 +95,15 @@ namespace geostoreapi
                 });
             });
 
-            services.AddScoped<IFileDataAccess<GeoData>>(x => new FileDataAccess<GeoData>(Path.Combine(Directory.GetCurrentDirectory(), "Data")));
-            services.AddScoped<IFileDataAccess<AppUser>>(x => new FileDataAccess<AppUser>(Path.Combine(Directory.GetCurrentDirectory(), "UserData")));
-            services.AddScoped<IFileDataAccess<AppRole>>(x => new FileDataAccess<AppRole>(Path.Combine(Directory.GetCurrentDirectory(), "RoleData")));
+            services.AddScoped<IFileDataAccess<GeoData>>(x => new FileDataAccess<GeoData>(Path.Combine(Directory.GetCurrentDirectory(), GeoDataAccess.GEODATA)));
+            services.AddScoped<IFileDataAccess<AppUser>>(x => new FileDataAccess<AppUser>(Path.Combine(Directory.GetCurrentDirectory(), UserDataAccess.USER_DATA)));
+            services.AddScoped<IFileDataAccess<AppRole>>(x => new FileDataAccess<AppRole>(Path.Combine(Directory.GetCurrentDirectory(), RoleDataAccess.ROLE_DATA)));
+            services.AddScoped<IFileDataAccess<AppUserRoles>>(x => new FileDataAccess<AppUserRoles>(Path.Combine(Directory.GetCurrentDirectory(), UserRolesDataAccess.USER_ROLE_DATA)));
 
             services.AddScoped<IGeoDataAccess, GeoDataAccess>();
             services.AddScoped<IUserDataAccess, UserDataAccess>();
             services.AddScoped<IRoleDataAccess, RoleDataAccess>();
+            services.AddScoped<IUserRolesDataAccess, UserRolesDataAccess>();            
             
             services.AddScoped<IGeoDataRepository, GeoDataRepository>();
 

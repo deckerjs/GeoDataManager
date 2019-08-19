@@ -65,7 +65,14 @@ namespace GeoStoreAPI.Repositories
                     UserName = "user2",
                     Password = "password2",
                     Email = "user2@email.com"
+                },
+                new AppUser{
+                    ID = "100003",
+                    UserName = "admin1",
+                    Password = "password1",
+                    Email = "admin1@email.com"
                 }
+
             };
 
             if (FindBySubjectId(_users[0].ID) == null)
