@@ -6,7 +6,8 @@ using Microsoft.Extensions.Options;
 
 namespace GeoStoreAPI.Repositories
 {
-    public class UserRolesRepository:IUserRolesRepository
+
+    public class UserRolesRepository : IUserRolesRepository
     {
         private readonly IUserRolesDataAccess _dataAccess;
         private readonly IOptionsSnapshot<AppOptions> _options;

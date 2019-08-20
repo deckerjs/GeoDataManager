@@ -9,7 +9,6 @@ namespace GeoStoreAPI.Repositories
 {
     public class UserRepository : IUserRepository
     {
-
         private readonly IUserDataAccess _dataAccess;
         private readonly IOptionsSnapshot<AppOptions> _options;
 
@@ -48,10 +47,7 @@ namespace GeoStoreAPI.Repositories
         }
 
         public void CreateDefaultUsersIfAbsent()
-        {
-            //todo: check config settings for default user collection
-            //if absent then use the ones here, also add one with an admin role
-
+        {            
             List<AppUser> _users = new List<AppUser>
             {
                 new AppUser{
@@ -72,18 +68,15 @@ namespace GeoStoreAPI.Repositories
                     Password = "password1",
                     Email = "admin1@email.com"
                 }
-
             };
 
-            if (FindBySubjectId(_users[0].ID) == null)
+            _users.ForEach(user =>
             {
-                CreateUser(_users[0].ID, _users[0]);
-            }
-
-            if (FindBySubjectId(_users[1].ID) == null)
-            {
-                CreateUser(_users[1].ID, _users[1]);
-            }
+                if (FindBySubjectId(user.ID) == null)
+                {
+                    CreateUser(user.ID, user);
+                }
+            });
         }
 
         public void CreateUser(string userID, AppUser user)

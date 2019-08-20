@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using GeoStoreAPI.Repositories;
 using GeoStoreAPI.Models;
+using System;
 
 namespace GeoStoreAPI.Services
 {
@@ -15,16 +16,20 @@ namespace GeoStoreAPI.Services
         private readonly ILogger<CustomProfileService> _logger;
 
         private readonly IUserRepository _userRepository;
+        private readonly IUserRolesRepository _userRolesRepository;
 
-        public CustomProfileService(IUserRepository userRepository, ILogger<CustomProfileService> logger)
+        public CustomProfileService(
+            IUserRepository userRepository,
+            IUserRolesRepository userRolesRepository,
+            ILogger<CustomProfileService> logger)
         {
             _logger = logger;
             _userRepository = userRepository;
+            _userRolesRepository = userRolesRepository;
         }
-        
+
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
-
             var sub = context.Subject.GetSubjectId();
 
             _logger.LogDebug("Get profile called for subject {subject} from client {client} with claim types {claimTypes} via {caller}",
@@ -36,17 +41,29 @@ namespace GeoStoreAPI.Services
             var user = await GetUserAsync(context.Subject.GetSubjectId());
             var claims = new List<Claim>
             {
-                //todo: load roles for userid from new roles repo
-                new Claim("role", "user"),
                 new Claim("username", user.UserName),
                 new Claim("email", user.Email)
             };
+            claims.AddRange(GetUserRoleClaims(user.ID));
 
             context.IssuedClaims = claims;
         }
 
+        private IEnumerable<Claim> GetUserRoleClaims(string userID)
+        {
+            var claims = new List<Claim>();
+            var userRoles = _userRolesRepository.GetUserRoles(userID);
+
+            foreach (var roleID in userRoles.RoleIDs)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, roleID));
+            }
+
+            return claims;
+        }
+
         public async Task IsActiveAsync(IsActiveContext context)
-        {            
+        {
             var user = await GetUserAsync(context.Subject.GetSubjectId());
             context.IsActive = user != null;
         }

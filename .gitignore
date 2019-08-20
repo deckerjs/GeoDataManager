@@ -263,5 +263,7 @@ __pycache__/
 #file data
 Data/
 UserData/
+RoleData/
+UserRoleData/
 GeoStoreAPI/Properties/PublishProfiles/GeoStoreAPI20190602081120 - Web Deploy.pubxml
 GeoStoreAPI/tempkey.rsa
