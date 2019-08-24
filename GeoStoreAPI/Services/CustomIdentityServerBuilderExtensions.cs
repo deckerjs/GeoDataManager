@@ -8,7 +8,8 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class CustomIdentityServerBuilderExtensions
     {
-        public static IIdentityServerBuilder AddIdentityServices(this IIdentityServerBuilder builder)
+        public static IIdentityServerBuilder 
+        AddIdentityServices(this IIdentityServerBuilder builder)
         {
             builder.Services.AddScoped<IFileDataAccess<AppUser>>(x => new FileDataAccess<AppUser>(Path.Combine(Directory.GetCurrentDirectory(), UserDataAccess.USER_DATA)));
             builder.Services.AddScoped<IFileDataAccess<AppRole>>(x => new FileDataAccess<AppRole>(Path.Combine(Directory.GetCurrentDirectory(), RoleDataAccess.ROLE_DATA)));

@@ -58,3 +58,198 @@
 2019-08-20 07:27:30.0151 Info Found 21 configuration items
 2019-08-20 07:27:30.0248 Info Configuration initialized.
 2019-08-20 07:27:30.0418 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.6.6.10303. Product version: 4.6.6.
+2019-08-21 06:13:40.6427 Info Message Template Auto Format enabled
+2019-08-21 06:13:40.6559 Info Loading assembly: NLog.Web.AspNetCore
+2019-08-21 06:13:40.7043 Info Adding target FileTarget(Name=allfile)
+2019-08-21 06:13:40.7419 Error Parsing configuration from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config failed. Exception: NLog.NLogConfigurationException: Exception when parsing /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config.  ---> NLog.NLogConfigurationException: Target 'ownFile-web' not found for logging rule: *.
+   at NLog.Config.LoggingConfigurationParser.ParseLoggingRuleTargets(String writeTargets, LoggingRule rule)
+   at NLog.Config.LoggingConfigurationParser.ParseRuleElement(ILoggingConfigurationElement loggerElement)
+   at NLog.Config.LoggingConfigurationParser.ParseRulesElement(ILoggingConfigurationElement rulesElement, IList`1 rulesCollection)
+   at NLog.Config.LoggingConfigurationParser.LoadConfig(ILoggingConfigurationElement nlogConfig, String basePath)
+   at NLog.Config.XmlLoggingConfiguration.ParseNLogElement(ILoggingConfigurationElement nlogElement, String filePath, Boolean autoReloadDefault)
+   at NLog.Config.XmlLoggingConfiguration.Initialize(XmlReader reader, String fileName, Boolean ignoreErrors)
+   --- End of inner exception stack trace ---
+2019-08-21 06:13:40.7419 Warn Failed loading config from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config. Invalid XML?
+2019-08-21 06:13:40.7580 Info Found 21 configuration items
+2019-08-21 06:13:40.7678 Info Configuration initialized.
+2019-08-21 06:13:40.7848 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.6.6.10303. Product version: 4.6.6.
+2019-08-21 06:30:30.9819 Info Message Template Auto Format enabled
+2019-08-21 06:30:30.9934 Info Loading assembly: NLog.Web.AspNetCore
+2019-08-21 06:30:31.0403 Info Adding target FileTarget(Name=allfile)
+2019-08-21 06:30:31.0776 Error Parsing configuration from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config failed. Exception: NLog.NLogConfigurationException: Exception when parsing /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config.  ---> NLog.NLogConfigurationException: Target 'ownFile-web' not found for logging rule: *.
+   at NLog.Config.LoggingConfigurationParser.ParseLoggingRuleTargets(String writeTargets, LoggingRule rule)
+   at NLog.Config.LoggingConfigurationParser.ParseRuleElement(ILoggingConfigurationElement loggerElement)
+   at NLog.Config.LoggingConfigurationParser.ParseRulesElement(ILoggingConfigurationElement rulesElement, IList`1 rulesCollection)
+   at NLog.Config.LoggingConfigurationParser.LoadConfig(ILoggingConfigurationElement nlogConfig, String basePath)
+   at NLog.Config.XmlLoggingConfiguration.ParseNLogElement(ILoggingConfigurationElement nlogElement, String filePath, Boolean autoReloadDefault)
+   at NLog.Config.XmlLoggingConfiguration.Initialize(XmlReader reader, String fileName, Boolean ignoreErrors)
+   --- End of inner exception stack trace ---
+2019-08-21 06:30:31.0776 Warn Failed loading config from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config. Invalid XML?
+2019-08-21 06:30:31.0936 Info Found 21 configuration items
+2019-08-21 06:30:31.1035 Info Configuration initialized.
+2019-08-21 06:30:31.1203 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.6.6.10303. Product version: 4.6.6.
+2019-08-21 06:52:40.5296 Info Message Template Auto Format enabled
+2019-08-21 06:52:40.5411 Info Loading assembly: NLog.Web.AspNetCore
+2019-08-21 06:52:40.5830 Info Adding target FileTarget(Name=allfile)
+2019-08-21 06:52:40.6244 Error Parsing configuration from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config failed. Exception: NLog.NLogConfigurationException: Exception when parsing /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config.  ---> NLog.NLogConfigurationException: Target 'ownFile-web' not found for logging rule: *.
+   at NLog.Config.LoggingConfigurationParser.ParseLoggingRuleTargets(String writeTargets, LoggingRule rule)
+   at NLog.Config.LoggingConfigurationParser.ParseRuleElement(ILoggingConfigurationElement loggerElement)
+   at NLog.Config.LoggingConfigurationParser.ParseRulesElement(ILoggingConfigurationElement rulesElement, IList`1 rulesCollection)
+   at NLog.Config.LoggingConfigurationParser.LoadConfig(ILoggingConfigurationElement nlogConfig, String basePath)
+   at NLog.Config.XmlLoggingConfiguration.ParseNLogElement(ILoggingConfigurationElement nlogElement, String filePath, Boolean autoReloadDefault)
+   at NLog.Config.XmlLoggingConfiguration.Initialize(XmlReader reader, String fileName, Boolean ignoreErrors)
+   --- End of inner exception stack trace ---
+2019-08-21 06:52:40.6244 Warn Failed loading config from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config. Invalid XML?
+2019-08-21 06:52:40.6471 Info Found 21 configuration items
+2019-08-21 06:52:40.6576 Info Configuration initialized.
+2019-08-21 06:52:40.6756 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.6.6.10303. Product version: 4.6.6.
+2019-08-21 06:53:36.6060 Info Message Template Auto Format enabled
+2019-08-21 06:53:36.6375 Info Loading assembly: NLog.Web.AspNetCore
+2019-08-21 06:53:36.6803 Info Adding target FileTarget(Name=allfile)
+2019-08-21 06:53:36.7346 Error Parsing configuration from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config failed. Exception: NLog.NLogConfigurationException: Exception when parsing /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config.  ---> NLog.NLogConfigurationException: Target 'ownFile-web' not found for logging rule: *.
+   at NLog.Config.LoggingConfigurationParser.ParseLoggingRuleTargets(String writeTargets, LoggingRule rule)
+   at NLog.Config.LoggingConfigurationParser.ParseRuleElement(ILoggingConfigurationElement loggerElement)
+   at NLog.Config.LoggingConfigurationParser.ParseRulesElement(ILoggingConfigurationElement rulesElement, IList`1 rulesCollection)
+   at NLog.Config.LoggingConfigurationParser.LoadConfig(ILoggingConfigurationElement nlogConfig, String basePath)
+   at NLog.Config.XmlLoggingConfiguration.ParseNLogElement(ILoggingConfigurationElement nlogElement, String filePath, Boolean autoReloadDefault)
+   at NLog.Config.XmlLoggingConfiguration.Initialize(XmlReader reader, String fileName, Boolean ignoreErrors)
+   --- End of inner exception stack trace ---
+2019-08-21 06:53:36.7357 Warn Failed loading config from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config. Invalid XML?
+2019-08-21 06:53:36.7502 Info Found 21 configuration items
+2019-08-21 06:53:36.7598 Info Configuration initialized.
+2019-08-21 06:53:36.7769 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.6.6.10303. Product version: 4.6.6.
+2019-08-22 05:50:08.1043 Info Message Template Auto Format enabled
+2019-08-22 05:50:08.1167 Info Loading assembly: NLog.Web.AspNetCore
+2019-08-22 05:50:08.1594 Info Adding target FileTarget(Name=allfile)
+2019-08-22 05:50:08.2027 Error Parsing configuration from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config failed. Exception: NLog.NLogConfigurationException: Exception when parsing /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config.  ---> NLog.NLogConfigurationException: Target 'ownFile-web' not found for logging rule: *.
+   at NLog.Config.LoggingConfigurationParser.ParseLoggingRuleTargets(String writeTargets, LoggingRule rule)
+   at NLog.Config.LoggingConfigurationParser.ParseRuleElement(ILoggingConfigurationElement loggerElement)
+   at NLog.Config.LoggingConfigurationParser.ParseRulesElement(ILoggingConfigurationElement rulesElement, IList`1 rulesCollection)
+   at NLog.Config.LoggingConfigurationParser.LoadConfig(ILoggingConfigurationElement nlogConfig, String basePath)
+   at NLog.Config.XmlLoggingConfiguration.ParseNLogElement(ILoggingConfigurationElement nlogElement, String filePath, Boolean autoReloadDefault)
+   at NLog.Config.XmlLoggingConfiguration.Initialize(XmlReader reader, String fileName, Boolean ignoreErrors)
+   --- End of inner exception stack trace ---
+2019-08-22 05:50:08.2027 Warn Failed loading config from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config. Invalid XML?
+2019-08-22 05:50:08.2193 Info Found 21 configuration items
+2019-08-22 05:50:08.2294 Info Configuration initialized.
+2019-08-22 05:50:08.2465 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.6.6.10303. Product version: 4.6.6.
+2019-08-22 06:01:08.7165 Info Message Template Auto Format enabled
+2019-08-22 06:01:08.7478 Info Loading assembly: NLog.Web.AspNetCore
+2019-08-22 06:01:08.7905 Info Adding target FileTarget(Name=allfile)
+2019-08-22 06:01:08.8273 Error Parsing configuration from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config failed. Exception: NLog.NLogConfigurationException: Exception when parsing /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config.  ---> NLog.NLogConfigurationException: Target 'ownFile-web' not found for logging rule: *.
+   at NLog.Config.LoggingConfigurationParser.ParseLoggingRuleTargets(String writeTargets, LoggingRule rule)
+   at NLog.Config.LoggingConfigurationParser.ParseRuleElement(ILoggingConfigurationElement loggerElement)
+   at NLog.Config.LoggingConfigurationParser.ParseRulesElement(ILoggingConfigurationElement rulesElement, IList`1 rulesCollection)
+   at NLog.Config.LoggingConfigurationParser.LoadConfig(ILoggingConfigurationElement nlogConfig, String basePath)
+   at NLog.Config.XmlLoggingConfiguration.ParseNLogElement(ILoggingConfigurationElement nlogElement, String filePath, Boolean autoReloadDefault)
+   at NLog.Config.XmlLoggingConfiguration.Initialize(XmlReader reader, String fileName, Boolean ignoreErrors)
+   --- End of inner exception stack trace ---
+2019-08-22 06:01:08.8273 Warn Failed loading config from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config. Invalid XML?
+2019-08-22 06:01:08.8445 Info Found 21 configuration items
+2019-08-22 06:01:08.8566 Info Configuration initialized.
+2019-08-22 06:01:08.8760 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.6.6.10303. Product version: 4.6.6.
+2019-08-22 06:13:13.7846 Info Message Template Auto Format enabled
+2019-08-22 06:13:13.7962 Info Loading assembly: NLog.Web.AspNetCore
+2019-08-22 06:13:13.8396 Info Adding target FileTarget(Name=allfile)
+2019-08-22 06:13:13.8824 Error Parsing configuration from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config failed. Exception: NLog.NLogConfigurationException: Exception when parsing /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config.  ---> NLog.NLogConfigurationException: Target 'ownFile-web' not found for logging rule: *.
+   at NLog.Config.LoggingConfigurationParser.ParseLoggingRuleTargets(String writeTargets, LoggingRule rule)
+   at NLog.Config.LoggingConfigurationParser.ParseRuleElement(ILoggingConfigurationElement loggerElement)
+   at NLog.Config.LoggingConfigurationParser.ParseRulesElement(ILoggingConfigurationElement rulesElement, IList`1 rulesCollection)
+   at NLog.Config.LoggingConfigurationParser.LoadConfig(ILoggingConfigurationElement nlogConfig, String basePath)
+   at NLog.Config.XmlLoggingConfiguration.ParseNLogElement(ILoggingConfigurationElement nlogElement, String filePath, Boolean autoReloadDefault)
+   at NLog.Config.XmlLoggingConfiguration.Initialize(XmlReader reader, String fileName, Boolean ignoreErrors)
+   --- End of inner exception stack trace ---
+2019-08-22 06:13:13.8824 Warn Failed loading config from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config. Invalid XML?
+2019-08-22 06:13:13.9007 Info Found 21 configuration items
+2019-08-22 06:13:13.9106 Info Configuration initialized.
+2019-08-22 06:13:13.9294 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.6.6.10303. Product version: 4.6.6.
+2019-08-22 06:17:50.6123 Info Message Template Auto Format enabled
+2019-08-22 06:17:50.6252 Info Loading assembly: NLog.Web.AspNetCore
+2019-08-22 06:17:50.6678 Info Adding target FileTarget(Name=allfile)
+2019-08-22 06:17:50.7092 Error Parsing configuration from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config failed. Exception: NLog.NLogConfigurationException: Exception when parsing /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config.  ---> NLog.NLogConfigurationException: Target 'ownFile-web' not found for logging rule: *.
+   at NLog.Config.LoggingConfigurationParser.ParseLoggingRuleTargets(String writeTargets, LoggingRule rule)
+   at NLog.Config.LoggingConfigurationParser.ParseRuleElement(ILoggingConfigurationElement loggerElement)
+   at NLog.Config.LoggingConfigurationParser.ParseRulesElement(ILoggingConfigurationElement rulesElement, IList`1 rulesCollection)
+   at NLog.Config.LoggingConfigurationParser.LoadConfig(ILoggingConfigurationElement nlogConfig, String basePath)
+   at NLog.Config.XmlLoggingConfiguration.ParseNLogElement(ILoggingConfigurationElement nlogElement, String filePath, Boolean autoReloadDefault)
+   at NLog.Config.XmlLoggingConfiguration.Initialize(XmlReader reader, String fileName, Boolean ignoreErrors)
+   --- End of inner exception stack trace ---
+2019-08-22 06:17:50.7092 Warn Failed loading config from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config. Invalid XML?
+2019-08-22 06:17:50.7273 Info Found 21 configuration items
+2019-08-22 06:17:50.7377 Info Configuration initialized.
+2019-08-22 06:17:50.7564 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.6.6.10303. Product version: 4.6.6.
+2019-08-22 06:36:08.3758 Info Message Template Auto Format enabled
+2019-08-22 06:36:08.3875 Info Loading assembly: NLog.Web.AspNetCore
+2019-08-22 06:36:08.4334 Info Adding target FileTarget(Name=allfile)
+2019-08-22 06:36:08.4767 Error Parsing configuration from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config failed. Exception: NLog.NLogConfigurationException: Exception when parsing /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config.  ---> NLog.NLogConfigurationException: Target 'ownFile-web' not found for logging rule: *.
+   at NLog.Config.LoggingConfigurationParser.ParseLoggingRuleTargets(String writeTargets, LoggingRule rule)
+   at NLog.Config.LoggingConfigurationParser.ParseRuleElement(ILoggingConfigurationElement loggerElement)
+   at NLog.Config.LoggingConfigurationParser.ParseRulesElement(ILoggingConfigurationElement rulesElement, IList`1 rulesCollection)
+   at NLog.Config.LoggingConfigurationParser.LoadConfig(ILoggingConfigurationElement nlogConfig, String basePath)
+   at NLog.Config.XmlLoggingConfiguration.ParseNLogElement(ILoggingConfigurationElement nlogElement, String filePath, Boolean autoReloadDefault)
+   at NLog.Config.XmlLoggingConfiguration.Initialize(XmlReader reader, String fileName, Boolean ignoreErrors)
+   --- End of inner exception stack trace ---
+2019-08-22 06:36:08.4778 Warn Failed loading config from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config. Invalid XML?
+2019-08-22 06:36:08.4926 Info Found 21 configuration items
+2019-08-22 06:36:08.5021 Info Configuration initialized.
+2019-08-22 06:36:08.5199 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.6.6.10303. Product version: 4.6.6.
+2019-08-22 06:38:21.8515 Info Message Template Auto Format enabled
+2019-08-22 06:38:21.8652 Info Loading assembly: NLog.Web.AspNetCore
+2019-08-22 06:38:21.9077 Info Adding target FileTarget(Name=allfile)
+2019-08-22 06:38:21.9443 Error Parsing configuration from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config failed. Exception: NLog.NLogConfigurationException: Exception when parsing /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config.  ---> NLog.NLogConfigurationException: Target 'ownFile-web' not found for logging rule: *.
+   at NLog.Config.LoggingConfigurationParser.ParseLoggingRuleTargets(String writeTargets, LoggingRule rule)
+   at NLog.Config.LoggingConfigurationParser.ParseRuleElement(ILoggingConfigurationElement loggerElement)
+   at NLog.Config.LoggingConfigurationParser.ParseRulesElement(ILoggingConfigurationElement rulesElement, IList`1 rulesCollection)
+   at NLog.Config.LoggingConfigurationParser.LoadConfig(ILoggingConfigurationElement nlogConfig, String basePath)
+   at NLog.Config.XmlLoggingConfiguration.ParseNLogElement(ILoggingConfigurationElement nlogElement, String filePath, Boolean autoReloadDefault)
+   at NLog.Config.XmlLoggingConfiguration.Initialize(XmlReader reader, String fileName, Boolean ignoreErrors)
+   --- End of inner exception stack trace ---
+2019-08-22 06:38:21.9453 Warn Failed loading config from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config. Invalid XML?
+2019-08-22 06:38:21.9609 Info Found 21 configuration items
+2019-08-22 06:38:21.9738 Info Configuration initialized.
+2019-08-22 06:38:21.9944 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.6.6.10303. Product version: 4.6.6.
+2019-08-22 06:49:43.7856 Info Message Template Auto Format enabled
+2019-08-22 06:49:43.7982 Info Loading assembly: NLog.Web.AspNetCore
+2019-08-22 06:49:43.8419 Info Adding target FileTarget(Name=allfile)
+2019-08-22 06:49:43.8842 Error Parsing configuration from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config failed. Exception: NLog.NLogConfigurationException: Exception when parsing /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config.  ---> NLog.NLogConfigurationException: Target 'ownFile-web' not found for logging rule: *.
+   at NLog.Config.LoggingConfigurationParser.ParseLoggingRuleTargets(String writeTargets, LoggingRule rule)
+   at NLog.Config.LoggingConfigurationParser.ParseRuleElement(ILoggingConfigurationElement loggerElement)
+   at NLog.Config.LoggingConfigurationParser.ParseRulesElement(ILoggingConfigurationElement rulesElement, IList`1 rulesCollection)
+   at NLog.Config.LoggingConfigurationParser.LoadConfig(ILoggingConfigurationElement nlogConfig, String basePath)
+   at NLog.Config.XmlLoggingConfiguration.ParseNLogElement(ILoggingConfigurationElement nlogElement, String filePath, Boolean autoReloadDefault)
+   at NLog.Config.XmlLoggingConfiguration.Initialize(XmlReader reader, String fileName, Boolean ignoreErrors)
+   --- End of inner exception stack trace ---
+2019-08-22 06:49:43.8856 Warn Failed loading config from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config. Invalid XML?
+2019-08-22 06:49:43.9016 Info Found 21 configuration items
+2019-08-22 06:49:43.9123 Info Configuration initialized.
+2019-08-22 06:49:43.9328 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.6.6.10303. Product version: 4.6.6.
+2019-08-24 06:37:50.6256 Info Message Template Auto Format enabled
+2019-08-24 06:37:50.6397 Info Loading assembly: NLog.Web.AspNetCore
+2019-08-24 06:37:50.6893 Info Adding target FileTarget(Name=allfile)
+2019-08-24 06:37:50.7281 Error Parsing configuration from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config failed. Exception: NLog.NLogConfigurationException: Exception when parsing /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config.  ---> NLog.NLogConfigurationException: Target 'ownFile-web' not found for logging rule: *.
+   at NLog.Config.LoggingConfigurationParser.ParseLoggingRuleTargets(String writeTargets, LoggingRule rule)
+   at NLog.Config.LoggingConfigurationParser.ParseRuleElement(ILoggingConfigurationElement loggerElement)
+   at NLog.Config.LoggingConfigurationParser.ParseRulesElement(ILoggingConfigurationElement rulesElement, IList`1 rulesCollection)
+   at NLog.Config.LoggingConfigurationParser.LoadConfig(ILoggingConfigurationElement nlogConfig, String basePath)
+   at NLog.Config.XmlLoggingConfiguration.ParseNLogElement(ILoggingConfigurationElement nlogElement, String filePath, Boolean autoReloadDefault)
+   at NLog.Config.XmlLoggingConfiguration.Initialize(XmlReader reader, String fileName, Boolean ignoreErrors)
+   --- End of inner exception stack trace ---
+2019-08-24 06:37:50.7281 Warn Failed loading config from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config. Invalid XML?
+2019-08-24 06:37:50.7444 Info Found 21 configuration items
+2019-08-24 06:37:50.7546 Info Configuration initialized.
+2019-08-24 06:37:50.7722 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.6.6.10303. Product version: 4.6.6.
+2019-08-24 06:41:22.1221 Info Message Template Auto Format enabled
+2019-08-24 06:41:22.1346 Info Loading assembly: NLog.Web.AspNetCore
+2019-08-24 06:41:22.1800 Info Adding target FileTarget(Name=allfile)
+2019-08-24 06:41:22.2176 Error Parsing configuration from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config failed. Exception: NLog.NLogConfigurationException: Exception when parsing /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config.  ---> NLog.NLogConfigurationException: Target 'ownFile-web' not found for logging rule: *.
+   at NLog.Config.LoggingConfigurationParser.ParseLoggingRuleTargets(String writeTargets, LoggingRule rule)
+   at NLog.Config.LoggingConfigurationParser.ParseRuleElement(ILoggingConfigurationElement loggerElement)
+   at NLog.Config.LoggingConfigurationParser.ParseRulesElement(ILoggingConfigurationElement rulesElement, IList`1 rulesCollection)
+   at NLog.Config.LoggingConfigurationParser.LoadConfig(ILoggingConfigurationElement nlogConfig, String basePath)
+   at NLog.Config.XmlLoggingConfiguration.ParseNLogElement(ILoggingConfigurationElement nlogElement, String filePath, Boolean autoReloadDefault)
+   at NLog.Config.XmlLoggingConfiguration.Initialize(XmlReader reader, String fileName, Boolean ignoreErrors)
+   --- End of inner exception stack trace ---
+2019-08-24 06:41:22.2188 Warn Failed loading config from /home/naughtius/dev/git/GeoDataManager/GeoStoreAPI/bin/Debug/netcoreapp2.2/nlog.config. Invalid XML?
+2019-08-24 06:41:22.2347 Info Found 21 configuration items
+2019-08-24 06:41:22.2446 Info Configuration initialized.
+2019-08-24 06:41:22.2612 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.6.6.10303. Product version: 4.6.6.

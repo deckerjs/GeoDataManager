@@ -50,7 +50,7 @@ namespace geostoreapi
             builder.AddInMemoryIdentityResources(IDSConfig.GetIdentityResources());
             builder.AddInMemoryApiResources(IDSConfig.GetApis());
             builder.AddInMemoryClients(IDSConfig.GetClients(Configuration));
-            
+
             builder.AddIdentityServices();
 
             if (Environment.IsDevelopment())
@@ -96,14 +96,14 @@ namespace geostoreapi
                 });
             });
 
-            services.AddScoped<IFileDataAccess<GeoData>>(x => new FileDataAccess<GeoData>(Path.Combine(Directory.GetCurrentDirectory(), GeoDataAccess.GEODATA)));            
-            services.AddScoped<IGeoDataAccess, GeoDataAccess>();            
-            services.AddScoped<IGeoDataRepository, GeoDataRepository>();            
+            services.AddScoped<IFileDataAccess<GeoData>>(x => new FileDataAccess<GeoData>(Path.Combine(Directory.GetCurrentDirectory(), GeoDataAccess.GEODATA)));
+            services.AddScoped<IGeoDataAccess, GeoDataAccess>();
+            services.AddScoped<IGeoDataRepository, GeoDataRepository>();
 
-            services.AddScoped<AppOptions>(x => x.GetService<IOptionsSnapshot<AppOptions>>().Value);
+            services.Configure<AppOptions>(Configuration.GetSection("AppOptions"));
+            services.AddScoped<AppOptions>(x => x.GetService<IOptions<AppOptions>>().Value);
 
-            services.Configure<AppOptions>(Configuration);
-            services.AddHttpContextAccessor();
+            services.AddHttpContextAccessor();            
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, ILoggerFactory loggerFactory)
@@ -117,6 +117,7 @@ namespace geostoreapi
             app.UseCors("AllowAll");
             app.UseIdentityServer();
             app.UseMvc();
+            app.SeedUserData(serviceProvider);
         }
 
         //todo: configure encryption

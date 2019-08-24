@@ -10,17 +10,12 @@ namespace GeoStoreAPI.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly IUserDataAccess _dataAccess;
-        private readonly IOptionsSnapshot<AppOptions> _options;
+        private readonly AppOptions _options;
 
-        public UserRepository(IUserDataAccess dataAccess, IOptionsSnapshot<AppOptions> options)
+        public UserRepository(IUserDataAccess dataAccess, AppOptions options)
         {
             _dataAccess = dataAccess;
             _options = options;
-
-            if (_options.Value.GenerateDefaultUsers == true)
-            {
-                CreateDefaultUsersIfAbsent();
-            }
         }
 
         public bool ValidateCredentials(string username, string password)
@@ -46,45 +41,10 @@ namespace GeoStoreAPI.Repositories
             return users.FirstOrDefault();
         }
 
-        public void CreateDefaultUsersIfAbsent()
-        {            
-            List<AppUser> _users = new List<AppUser>
-            {
-                new AppUser{
-                    ID = "100000",
-                    UserName = "user1",
-                    Password = "password1",
-                    Email = "user1@email.com"
-                },
-                new AppUser{
-                    ID = "100001",
-                    UserName = "user2",
-                    Password = "password2",
-                    Email = "user2@email.com"
-                },
-                new AppUser{
-                    ID = "100003",
-                    UserName = "admin1",
-                    Password = "password1",
-                    Email = "admin1@email.com"
-                }
-            };
-
-            _users.ForEach(user =>
-            {
-                if (FindBySubjectId(user.ID) == null)
-                {
-                    CreateUser(user.ID, user);
-                }
-            });
-        }
-
         public void CreateUser(string userID, AppUser user)
         {
             _dataAccess.Create(user, userID);
         }
-
-
 
     }
 }

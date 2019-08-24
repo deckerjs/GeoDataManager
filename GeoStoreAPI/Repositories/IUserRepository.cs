@@ -9,5 +9,6 @@ namespace GeoStoreAPI.Repositories
         AppUser FindBySubjectId(string subjectId);
 
         AppUser FindByUsername(string username);
+        void CreateUser(string userID, AppUser user);
     }
 }
