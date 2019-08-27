@@ -267,3 +267,5 @@ RoleData/
 UserRoleData/
 GeoStoreAPI/Properties/PublishProfiles/GeoStoreAPI20190602081120 - Web Deploy.pubxml
 GeoStoreAPI/tempkey.rsa
+GeoStoreAPI/internal-nlog.txt
+

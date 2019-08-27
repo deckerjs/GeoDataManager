@@ -6,23 +6,25 @@ using Microsoft.AspNetCore.Builder;
 
 namespace GeoStoreAPI.Services
 {
-    public static class SeedUserDataService 
+    public static class SeedUserDataService
     {
         private static AppOptions _options;
         private static IUserRolesRepository _userRolesRepository;
         private static IUserRepository _userRepository;
         private static IRoleRepository _roleRepository;
 
-        public static IApplicationBuilder SeedUserData(this IApplicationBuilder app, IServiceProvider serviceProvider){
+        public static IApplicationBuilder SeedUserData(this IApplicationBuilder app, IServiceProvider serviceProvider)
+        {
 
-            _options = serviceProvider.GetService(typeof(AppOptions)) as AppOptions;            
+            _options = serviceProvider.GetService(typeof(AppOptions)) as AppOptions;
             _userRolesRepository = serviceProvider.GetService(typeof(IUserRolesRepository)) as IUserRolesRepository;
             _userRepository = serviceProvider.GetService(typeof(IUserRepository)) as IUserRepository;
             _roleRepository = serviceProvider.GetService(typeof(IRoleRepository)) as IRoleRepository;
-
+            Start();
+            
             return app;
         }
-        
+
         public static void Start()
         {
             if (_options.GenerateDefaultUsers == true)
