@@ -39,12 +39,22 @@ namespace geostoreapi
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
             .AddJsonOptions(x => x.UseMemberCasing());
 
+            IDSOptions idsOptions = Configuration.GetSection("IDSOptions").Get<IDSOptions>();
+
             var builder = services.AddIdentityServer(options =>
             {
                 options.Events.RaiseErrorEvents = true;
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
+                if (!string.IsNullOrEmpty(idsOptions.PublicOrigin))
+                {
+                    options.PublicOrigin = idsOptions.PublicOrigin;
+                }
+                if (!string.IsNullOrEmpty(idsOptions.IssuerUri))
+                {
+                    options.IssuerUri = idsOptions.IssuerUri;
+                }
             });
 
             builder.AddInMemoryIdentityResources(IDSConfig.GetIdentityResources());
