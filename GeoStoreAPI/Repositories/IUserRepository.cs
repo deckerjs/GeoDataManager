@@ -1,4 +1,6 @@
-﻿using GeoStoreAPI.Models;
+﻿using System;
+using System.Collections.Generic;
+using GeoStoreAPI.Models;
 
 namespace GeoStoreAPI.Repositories
 {
@@ -6,6 +8,8 @@ namespace GeoStoreAPI.Repositories
     {
         bool ValidateCredentials(string username, string password);
 
+        IEnumerable<AppUser> GetAllUsers(Func<AppUser,bool> filter);
+        
         AppUser FindBySubjectId(string subjectId);
 
         AppUser FindByUsername(string username);

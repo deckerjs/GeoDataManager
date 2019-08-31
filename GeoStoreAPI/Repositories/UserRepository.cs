@@ -4,6 +4,9 @@ using System;
 using Microsoft.Extensions.Options;
 using GeoStoreAPI.Models;
 using GeoStoreAPI.DataAccess;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Security.Cryptography;
+using GeoStoreAPI.Services;
 
 namespace GeoStoreAPI.Repositories
 {
@@ -11,11 +14,13 @@ namespace GeoStoreAPI.Repositories
     {
         private readonly IUserDataAccess _dataAccess;
         private readonly AppOptions _options;
+        private readonly IDataProtectionService _dataProtection;
 
-        public UserRepository(IUserDataAccess dataAccess, AppOptions options)
+        public UserRepository(IUserDataAccess dataAccess, AppOptions options, IDataProtectionService dataProtection)
         {
             _dataAccess = dataAccess;
             _options = options;
+            _dataProtection = dataProtection;
         }
 
         public bool ValidateCredentials(string username, string password)
@@ -23,10 +28,16 @@ namespace GeoStoreAPI.Repositories
             var user = FindByUsername(username);
             if (user != null)
             {
-                return user.Password.Equals(password);
+                return _dataProtection.PasswordMatchesHash(password, user.Password);
+                //return user.Password.Equals(password);
             }
 
             return false;
+        }
+
+        public IEnumerable<AppUser> GetAllUsers(Func<AppUser, bool> filter)
+        {
+            return _dataAccess.GetAll(filter);
         }
 
         public AppUser FindBySubjectId(string subjectId)
@@ -43,8 +54,12 @@ namespace GeoStoreAPI.Repositories
 
         public void CreateUser(string userID, AppUser user)
         {
+            user.Password = _dataProtection.GetPasswordHash(user.Password);
             _dataAccess.Create(user, userID);
         }
+
+
+
 
     }
 }

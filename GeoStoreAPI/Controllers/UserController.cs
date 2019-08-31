@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GeoStoreAPI.Models;
+using GeoStoreAPI.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,18 +12,20 @@ namespace GeoStoreAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
-    {        
+    {
+        private readonly IUserRepository _userRepository;
 
-        public UserController()
+        public UserController(IUserRepository userRepository)
         {
-            
+            _userRepository = userRepository;
         }
 
         [HttpGet]
         [Authorize(Roles="admin")]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<AppUser>> Get()
         {
-            return new string[] { "value1", "value2" };
+            Func<AppUser, bool> filter = x=> true;
+            return _userRepository.GetAllUsers(filter).ToList();
         }
 
         

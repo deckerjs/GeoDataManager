@@ -23,6 +23,8 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
             builder.Services.AddScoped<IUserRolesRepository, UserRolesRepository>();
 
+            builder.Services.AddScoped<IDataProtectionService, DataProtectionService>();
+
             builder.AddProfileService<CustomProfileService>();
             builder.AddResourceOwnerValidator<CustomResourceOwnerPasswordValidator>();
             builder.Services.AddScoped<IUserIdentificationService, UserIdentificationService>();
