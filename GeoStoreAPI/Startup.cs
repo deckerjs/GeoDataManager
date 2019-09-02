@@ -19,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using GeoStoreAPI.Services;
 using GeoStoreAPI.Repositories;
+using Microsoft.OpenApi.Models;
 
 namespace geostoreapi
 {
@@ -113,7 +114,12 @@ namespace geostoreapi
             services.Configure<AppOptions>(Configuration.GetSection("AppOptions"));
             services.AddScoped<AppOptions>(x => x.GetService<IOptions<AppOptions>>().Value);
 
-            services.AddHttpContextAccessor();            
+            services.AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "GeoStoreAPI", Version = "v1" });
+                });
+
+            services.AddHttpContextAccessor();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, ILoggerFactory loggerFactory)
@@ -122,12 +128,19 @@ namespace geostoreapi
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "GeoStoreAPI V1");
+            });
 
             app.UseAuthentication();
             app.UseCors("AllowAll");
             app.UseIdentityServer();
             app.UseMvc();
             app.SeedUserData(serviceProvider);
+
+
         }
 
         //todo: configure encryption
