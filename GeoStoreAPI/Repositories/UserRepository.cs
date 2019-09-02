@@ -40,7 +40,7 @@ namespace GeoStoreAPI.Repositories
             return _dataAccess.GetAll(filter);
         }
 
-        public AppUser FindBySubjectId(string subjectId)
+        public AppUser GetUser(string subjectId)
         {
             var users = _dataAccess.GetAll(x => x.ID == subjectId);
             return users.FirstOrDefault();
@@ -58,8 +58,27 @@ namespace GeoStoreAPI.Repositories
             _dataAccess.Create(user, userID);
         }
 
+        public void CreateUser(AppUser user)
+        {
+            string userID = Guid.NewGuid().ToString();
+            user.Password = _dataProtection.GetPasswordHash(user.Password);
+            _dataAccess.Create(user, userID);
+        }
 
+        public void UpdateUser(AppUser user)
+        {
+            var existingUser = _dataAccess.Get(user.ID);
+            if(existingUser != null && user != null){
+                existingUser.UpdateWith(user);
+                _dataAccess.Update(existingUser, existingUser.ID);
+            }
+        }
 
-
+        public void DeleteUser(string userID){
+            var existingUser = _dataAccess.Get(userID);
+            if(existingUser != null){                
+                _dataAccess.Delete(userID);
+            }            
+        }
     }
 }

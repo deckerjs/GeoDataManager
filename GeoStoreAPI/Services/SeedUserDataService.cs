@@ -84,7 +84,7 @@ namespace GeoStoreAPI.Services
 
             _users.ForEach(user =>
             {
-                if (_userRepository.FindBySubjectId(user.ID) == null)
+                if (_userRepository.GetUser(user.ID) == null)
                 {
                     _userRepository.CreateUser(user.ID, user);
                 }

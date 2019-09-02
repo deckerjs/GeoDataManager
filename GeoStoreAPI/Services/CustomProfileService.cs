@@ -70,7 +70,7 @@ namespace GeoStoreAPI.Services
 
         private async Task<AppUser> GetUserAsync(string subjectID)
         {
-            return await Task.FromResult(_userRepository.FindBySubjectId(subjectID));
+            return await Task.FromResult(_userRepository.GetUser(subjectID));
         }
 
     }

@@ -20,12 +20,12 @@ namespace GeoStoreAPI.DataAccess
             _fileDataAccess.CreateItem(USER_DATA, userData.ID.ToString(), userData);
         }
 
-        public void Delete(Guid id, string userID)
+        public void Delete(string userID)
         {
-            var data = _fileDataAccess.GetItem(USER_DATA, id.ToString());
-            if (data!=null && data.ID == userID)
+            var data = _fileDataAccess.GetItem(USER_DATA, userID);
+            if (data!=null)
             {
-                _fileDataAccess.DeleteItem(USER_DATA, id.ToString());
+                _fileDataAccess.DeleteItem(USER_DATA, userID);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,42 +20,32 @@ namespace GeoStoreAPI.Controllers
             _userRepository = userRepository;
         }
 
-        [HttpGet]
-        [Authorize(Roles="admin")]
-        public ActionResult<IEnumerable<AppUser>> Get()
-        {
-            Func<AppUser, bool> filter = x=> true;
-            return _userRepository.GetAllUsers(filter).ToList();
-        }
-
-        
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
-        {
-            return "value";
-        }
-
-        
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] AppUser user)
         {
+            //todo: need more limited user object, no providing an id, or roles
+            //limited update, this is unauthorized new user creation
+            _userRepository.CreateUser(user);
         }
 
-        
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+
+        [Authorize(Roles = "user")]
+        [HttpGet("{userID}")]
+        public ActionResult<AppUser> Get(string userID)
         {
+            //todo: need more limited user object, don't return pw
+            //limited return, and limited to logged in user
+            return _userRepository.GetUser(userID);
         }
 
-        
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [Authorize(Roles = "user")]
+        [HttpPut]
+        public void Put([FromBody] AppUser user)
         {
+            //todo: need more limited user object, no changing an id, or roles
+            //limited update, and limited to logged in user
+            _userRepository.UpdateUser(user);
         }
+
     }
 }
-
-
-
-
-
