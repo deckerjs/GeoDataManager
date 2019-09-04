@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GeoStoreAPI.Models;
 using GeoStoreAPI.Repositories;
+using GeoStoreAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,36 +15,41 @@ namespace GeoStoreAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
+        private readonly IUserIdentificationService _userIdService;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUserRepository userRepository, IUserIdentificationService userIdService)
         {
             _userRepository = userRepository;
+            _userIdService = userIdService;
         }
 
         [HttpPost]
-        public void Post([FromBody] AppUser user)
+        public void Post([FromBody] AppUserBase newUser)
         {
-            //todo: need more limited user object, no providing an id, or roles
-            //limited update, this is unauthorized new user creation
+            string userID = _userIdService.GetUserID();
+            var user = new AppUser(newUser);
+            
             _userRepository.CreateUser(user);
         }
 
 
         [Authorize(Roles = "user")]
         [HttpGet("{userID}")]
-        public ActionResult<AppUser> Get(string userID)
+        public ActionResult<AppUser> Get()
         {
-            //todo: need more limited user object, don't return pw
-            //limited return, and limited to logged in user
-            return _userRepository.GetUser(userID);
+            string userID =  _userIdService.GetUserID();
+            var user = _userRepository.GetUser(userID);
+            user.Password = "********";
+            return user;
         }
 
         [Authorize(Roles = "user")]
         [HttpPut]
-        public void Put([FromBody] AppUser user)
+        public void Put([FromBody] AppUserBase userUpdate)
         {
-            //todo: need more limited user object, no changing an id, or roles
-            //limited update, and limited to logged in user
+            string userID =  _userIdService.GetUserID();
+            var user = _userRepository.GetUser(userID);
+            user.UpdateWith(userUpdate);
             _userRepository.UpdateUser(user);
         }
 

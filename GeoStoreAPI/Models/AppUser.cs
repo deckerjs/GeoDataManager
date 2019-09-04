@@ -5,37 +5,33 @@ using System.Security.Claims;
 namespace GeoStoreAPI.Models
 {
 
-    public class AppUser
+    public class AppUser : AppUserBase
     {
-        public AppUser()
+        public AppUser(AppUserBase appUserBase) : base(appUserBase){}
+
+        public AppUser(): base(new AppUserBase())
         {
             Claims = new List<Claim>();
         }
 
         public string ID { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public string Email { get; set; }
+        public bool EmailVerified { get; set; }
         public bool Disabled { get; set; }
+        public string Password { get; set; }
         public ICollection<Claim> Claims { get; set; }
     }
 
-    public static class AppUserExtensions
+    public class AppUserBase
     {
-        public static void UpdateWith(this AppUser userUpdate, AppUser existingUser)
+        public AppUserBase(){}
+        public AppUserBase(AppUserBase appUserBase)
         {
-            if (existingUser.ID == userUpdate.ID)
-            {
-                existingUser.UserName = userUpdate.UserName;
-                existingUser.Password = userUpdate.Password;
-                existingUser.Email = userUpdate.Email;
-                existingUser.Disabled = userUpdate.Disabled;
-                existingUser.Claims = userUpdate.Claims;
-            }
-            else
-            {
-                throw new Exception("User ID doesn't match, Not updating");
-            }
+            UserName = appUserBase.UserName;            
+            Email = appUserBase.Email;
         }
+
+        public string UserName { get; set; }        
+        public string Email { get; set; }
     }
+
 }
