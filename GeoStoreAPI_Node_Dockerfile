@@ -1,0 +1,25 @@
+## docker build -t apinodetest -f GeoStoreAPI_Node_Dockerfile .
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS base
+WORKDIR /app
+EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
+WORKDIR /src
+COPY ["GeoStoreAPI/GeoStoreAPI.csproj", "GeoStoreAPI/"]
+RUN dotnet restore "GeoStoreAPI/GeoStoreAPI.csproj"
+COPY . .
+WORKDIR "/src/GeoStoreAPI"
+RUN dotnet build "GeoStoreAPI.csproj" -c Release -o /app
+
+FROM build AS publish
+RUN dotnet publish "GeoStoreAPI.csproj" -c Release -o /app
+
+FROM base AS final
+RUN apt-get update -yq && apt-get upgrade -yq
+RUN curl -sL https://deb.nodesource.com/setup_10.x |  bash -
+RUN apt-get install --yes nodejs
+
+WORKDIR /app
+COPY --from=publish /app .
+ENTRYPOINT ["dotnet", "GeoStoreAPI.dll"]
+
