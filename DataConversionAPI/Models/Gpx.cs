@@ -38,6 +38,7 @@ namespace DataConversionAPI.Models
     [XmlRoot(ElementName = "trk", Namespace = "http://www.topografix.com/GPX/1/1")]
     public class Trk
     {
+        public string name {get;set;}
         public Trkseg trkseg { get; set; }
     }
 

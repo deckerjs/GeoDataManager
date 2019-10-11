@@ -14,31 +14,38 @@ namespace DataConversionAPI.Services
     public class GPXTransformer
     {
         public GeoData GetGeoDataFromGpx(Gpx gpx)
-        {            
+        {
             var geoData = new GeoData()
             {
-                UserID = "testuser1234",
+                UserID = "",
                 ID = Guid.NewGuid().ToString(),
                 DateCreated = DateTime.Now,
-                Description = "test description",
-                Tags = { "some tag", "some other tag", "tag 3" },
+                Description = gpx.trk.name,
+                Tags = { "Transformed From GPX" },
                 DateModified = DateTime.Now,
                 Data = GetFeatureCollection(gpx)
             };
-            
+
             return geoData;
         }
         private GeoStoreAPI.Models.FeatureCollection GetFeatureCollection(Gpx gpx)
         {
-           
-            var coords = gpx.trk.trkseg.trkpt.Select(x=>{
-                return new Position(x.lon, x.lat, x.ele);
-            }).ToList();
-    
+            List<Position> coords = new List<Position>();
+            List<DateTime> coordTimes = new List<DateTime>();
+
+            foreach (var coord in gpx.trk.trkseg.trkpt)
+            {
+                coords.Add(new Position(coord.lon, coord.lat, coord.ele));
+                coordTimes.Add(coord.time);
+            } 
+
             var geom1 = new MultiPoint(coords);
 
             var props = new Dictionary<string, object>();
-            props["Name"] = "prop 1 name";
+            props["Name"] = gpx.trk.name;
+            props["StartTime"] = coordTimes.First();
+            props["EndtTime"] = coordTimes.Last();
+            props["CoordinateTimes"] = coordTimes;
 
             var feature1 = new Feature(geom1, props);
 
