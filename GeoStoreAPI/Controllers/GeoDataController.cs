@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BAMCIS.GeoJSON;
-using GeoStoreAPI.Models;
+using GeoDataModels.Models;
 using GeoStoreAPI.Repositories;
 using GeoStoreAPI.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -55,43 +54,44 @@ namespace GeoStoreAPI.Controllers
         {
             _dataRepository.Delete(id, _userIdService.GetUserID());
         }
-        private IEnumerable<GeoData> GetMockData()
-        {
-            var testData = new List<GeoData>();
-            var data1 = new GeoData()
-            {
-                UserID = "testuser1234",
-                ID = Guid.NewGuid().ToString(),
-                DateCreated = DateTime.Now,
-                Description = "test description",
-                Tags = { "some tag", "some other tag", "tag 3" },
-                DateModified = DateTime.Now,
-                Data = GetSampleFeatureCollection()
-            };
-            testData.Add(data1);
-            return testData;
-        }
-        private Models.FeatureCollection GetSampleFeatureCollection()
-        {
-            var coords = new List<Position>(){
-                new Position(-88.095398000000003, 42.918624000000001, 252.93600000000001),
-                new Position(-88.095395999999994, 42.918604000000002, 245.953),
-                new Position(-88.095110000000005, 42.918570000000003, 241.78899999999999)
-            };            
+        
+        // private IEnumerable<GeoData> GetMockData()
+        // {
+        //     var testData = new List<GeoData>();
+        //     var data1 = new GeoData()
+        //     {
+        //         UserID = "testuser1234",
+        //         ID = Guid.NewGuid().ToString(),
+        //         DateCreated = DateTime.Now,
+        //         Description = "test description",
+        //         Tags = { "some tag", "some other tag", "tag 3" },
+        //         DateModified = DateTime.Now,
+        //         Data = GetSampleFeatureCollection()
+        //     };
+        //     testData.Add(data1);
+        //     return testData;
+        // }
+        // private Models.FeatureCollection GetSampleFeatureCollection()
+        // {
+        //     var coords = new List<Position>(){
+        //         new Position(-88.095398000000003, 42.918624000000001, 252.93600000000001),
+        //         new Position(-88.095395999999994, 42.918604000000002, 245.953),
+        //         new Position(-88.095110000000005, 42.918570000000003, 241.78899999999999)
+        //     };            
 
-            var geom1 = new MultiPoint(coords);
+        //     var geom1 = new MultiPoint(coords);
 
-            var props = new Dictionary<string, object>();
-            props["Name"] = "prop 1 name";
+        //     var props = new Dictionary<string, object>();
+        //     props["Name"] = "prop 1 name";
 
-            var feature1 = new Feature(geom1, props);
+        //     var feature1 = new Feature(geom1, props);
 
-            var features = new List<Feature>();
-            features.Add(feature1);
+        //     var features = new List<Feature>();
+        //     features.Add(feature1);
 
-            var data = new Models.FeatureCollection(features);
+        //     var data = new Models.FeatureCollection(features);
 
-            return data;
-        }
+        //     return data;
+        // }
     }
 }

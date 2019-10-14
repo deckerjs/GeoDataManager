@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using DataConversionAPI.Models;
-using DataConversionAPI.Services;
-using GeoStoreAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using DataTransformUtilities.Models;
+using GeoDataModels.Models;
+using DataTransformUtilities.Transformers;
 
 namespace DataConversionAPI.Controllers
 {
@@ -17,17 +17,17 @@ namespace DataConversionAPI.Controllers
     [ApiController]
     public class GpxToGeoJsonController : ControllerBase
     {
-        private readonly GPXTransformer _gpxTransformer;
+        private readonly IGPXTransform _gpxTransform;
 
-        public GpxToGeoJsonController(GPXTransformer gpxTransformer)
+        public GpxToGeoJsonController(IGPXTransform gpxTransform)
         {
-            _gpxTransformer = gpxTransformer;
+            _gpxTransform = gpxTransform;
         }
 
         [HttpPost("FromXML")]
         public GeoData PostAsXML([FromBody] Gpx gpx)
         {            
-            var geoData = _gpxTransformer.GetGeoDataFromGpx(gpx);
+            var geoData = _gpxTransform.GetGeoDataFromGpx(gpx);
             return geoData;
         }
 
@@ -44,7 +44,7 @@ namespace DataConversionAPI.Controllers
             using (MemoryStream stream = new MemoryStream(StringToUTF8ByteArray(plainText)))
             {
                 var gpx = (Gpx)new XmlSerializer(typeof(Gpx), "http://www.topografix.com/GPX/1/1").Deserialize(stream);
-                var geoData = _gpxTransformer.GetGeoDataFromGpx(gpx);
+                var geoData = _gpxTransform.GetGeoDataFromGpx(gpx);
                 return geoData;
             }
         }

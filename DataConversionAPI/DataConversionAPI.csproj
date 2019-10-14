@@ -7,8 +7,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />      
-    <PackageReference Include="GeoJSON" Version="2.0.0" />  
-    <ProjectReference Include="../GeoStoreAPI/GeoStoreAPI.csproj" />
+    <ProjectReference Include="../GeoDataModels/GeoDataModels.csproj" />    
+    <ProjectReference Include="../DataTransformUtilities/DataTransformUtilities.csproj" />
   </ItemGroup>
 
 </Project>

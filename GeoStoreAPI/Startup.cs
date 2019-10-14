@@ -20,6 +20,8 @@ using Microsoft.AspNetCore.Authorization;
 using GeoStoreAPI.Services;
 using GeoStoreAPI.Repositories;
 using Microsoft.OpenApi.Models;
+using GeoDataModels.Models;
+using DataTransformUtilities.Transformers;
 
 namespace geostoreapi
 {
@@ -110,6 +112,8 @@ namespace geostoreapi
             services.AddScoped<IFileDataAccess<GeoData>>(x => new FileDataAccess<GeoData>(Path.Combine(Directory.GetCurrentDirectory(), GeoDataAccess.GEODATA)));
             services.AddScoped<IGeoDataAccess, GeoDataAccess>();
             services.AddScoped<IGeoDataRepository, GeoDataRepository>();
+            services.AddScoped<IGPXTransform, GPXTransform>();
+
 
             services.Configure<AppOptions>(Configuration.GetSection("AppOptions"));
             services.AddScoped<AppOptions>(x => x.GetService<IOptions<AppOptions>>().Value);

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace DataConversionAPI.Models
+namespace DataTransformUtilities.Models
 {
     [XmlRoot(ElementName = "start", Namespace = "http://www.topografix.com/GPX/1/1")]
     public class Start

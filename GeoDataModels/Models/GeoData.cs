@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace GeoStoreAPI.Models
+namespace GeoDataModels.Models
 {
     public class GeoData
     {

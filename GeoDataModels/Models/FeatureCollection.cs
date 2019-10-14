@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using BAMCIS.GeoJSON;
 
-namespace GeoStoreAPI.Models
+namespace GeoDataModels.Models
 {
     public class FeatureCollection: BAMCIS.GeoJSON.FeatureCollection
     {

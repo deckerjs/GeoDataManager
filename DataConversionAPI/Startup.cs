@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DataConversionAPI.Services;
+using DataTransformUtilities.Transformers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,7 +29,7 @@ namespace DataConversionAPI
             builder.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             builder.AddXmlSerializerFormatters();
 
-            services.AddScoped<GPXTransformer>();
+            services.AddScoped<IGPXTransform, GPXTransform>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

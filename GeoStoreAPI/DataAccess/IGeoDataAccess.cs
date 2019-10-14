@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using GeoStoreAPI.Models;
+using GeoDataModels.Models;
 
 namespace GeoStoreAPI.DataAccess
 {
