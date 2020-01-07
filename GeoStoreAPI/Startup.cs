@@ -40,7 +40,8 @@ namespace geostoreapi
         {
             services.AddMvc()
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-            .AddJsonOptions(x => x.UseMemberCasing());
+            .AddJsonOptions(x => x.UseMemberCasing())
+            .AddXmlSerializerFormatters();            
 
             IDSOptions idsOptions = Configuration.GetSection("IDSOptions").Get<IDSOptions>();
 
@@ -59,7 +60,7 @@ namespace geostoreapi
                     options.IssuerUri = idsOptions.IssuerUri;
                 }
             });
-
+            
             builder.AddInMemoryIdentityResources(IDSConfig.GetIdentityResources());
             builder.AddInMemoryApiResources(IDSConfig.GetApis());
             builder.AddInMemoryClients(IDSConfig.GetClients(Configuration));
