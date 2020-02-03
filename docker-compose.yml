@@ -1,0 +1,19 @@
+version: "3.4"
+
+services:
+  geodataapi:    
+    image: hallertau/geomarklar:${API_IMAGE_VERSION}
+    container_name: geodataapi
+    environment:
+    - AppOptions__GenerateDefaultUsers=${GENERATE_DEFAULT_USERS}
+    - GeoMgrClientSecret=${GEOMGR_CLIENT_SECRET}
+    - AuthURL=http://geodataapi
+    - IDSOptions__IssuerUri=http://geodataapi
+    ports:
+    - ${PORT}:80
+    expose:
+    - 80
+    networks:
+    - geodatanet
+networks:
+  geodatanet:
