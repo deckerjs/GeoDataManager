@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/GeoStoreAPI/bin/Debug/netcoreapp2.2/GeoStoreAPI.dll",
+            "program": "${workspaceFolder}/GeoStoreAPI/bin/Debug/netcoreapp3.1/GeoStoreAPI.dll",
             "args": [],
             "cwd": "${workspaceFolder}/GeoStoreAPI",
             "stopAtEntry": false,
@@ -30,7 +30,7 @@
             "request": "launch",
             "preLaunchTask": "buildDataConversion",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/DataConversionAPI/bin/Debug/netcoreapp2.2/DataConversionAPI.dll",
+            "program": "${workspaceFolder}/DataConversionAPI/bin/Debug/netcoreapp3.1/DataConversionAPI.dll",
             "args": [],
             "cwd": "${workspaceFolder}/DataConversionAPI",
             "stopAtEntry": false,
