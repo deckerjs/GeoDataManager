@@ -31,6 +31,7 @@ namespace geostoreapi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc()
+            .AddNewtonsoftJson(o=> o.UseMemberCasing())
             .AddJsonOptions(x => x.JsonSerializerOptions.PropertyNamingPolicy = null)
             .AddXmlSerializerFormatters();
 
@@ -59,7 +60,7 @@ namespace geostoreapi
                     c.SwaggerDoc("v1", new OpenApiInfo { Title = "GeoStoreAPI", Version = "v1" });
                 });
 
-            services.AddControllers();            
+            services.AddControllers().AddNewtonsoftJson();            
             services.AddHealthChecks().AddCheck<APIHealthCheck>("apiCheck");
             services.AddHttpContextAccessor();
         }

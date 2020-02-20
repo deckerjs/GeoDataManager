@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -26,13 +27,12 @@ namespace DataConversionAPI
         public void ConfigureServices(IServiceCollection services)
         {
             IMvcBuilder builder = services.AddMvc();
-            builder.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             builder.AddXmlSerializerFormatters();
 
             services.AddScoped<IGPXTransform, GPXTransform>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -43,8 +43,14 @@ namespace DataConversionAPI
 
             }
 
-            app.UseMvc();
-            
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapHealthChecks("/health");
+                    endpoints.MapControllers();
+                });
+
         }
     }
 }
