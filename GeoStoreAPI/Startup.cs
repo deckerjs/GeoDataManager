@@ -14,6 +14,7 @@ using GeoStoreAPI.Repositories;
 using Microsoft.OpenApi.Models;
 using GeoDataModels.Models;
 using DataTransformUtilities.Transformers;
+using Newtonsoft.Json.Serialization;
 
 namespace geostoreapi
 {
@@ -30,11 +31,6 @@ namespace geostoreapi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc()
-            .AddNewtonsoftJson(o=> o.UseMemberCasing())
-            .AddJsonOptions(x => x.JsonSerializerOptions.PropertyNamingPolicy = null)
-            .AddXmlSerializerFormatters();
-
             services.AddIdentityServerServices(Configuration,Environment);
 
             services.AddCors(options =>
@@ -60,7 +56,12 @@ namespace geostoreapi
                     c.SwaggerDoc("v1", new OpenApiInfo { Title = "GeoStoreAPI", Version = "v1" });
                 });
 
-            services.AddControllers().AddNewtonsoftJson();            
+            services.AddControllers()
+                .AddNewtonsoftJson(o=> o.UseMemberCasing())
+                .AddXmlSerializerFormatters()
+                .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);            
+
+
             services.AddHealthChecks().AddCheck<APIHealthCheck>("apiCheck");
             services.AddHttpContextAccessor();
         }

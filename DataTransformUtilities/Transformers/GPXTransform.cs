@@ -34,8 +34,8 @@ namespace DataTransformUtilities.Transformers
                 coords.Add(new Position(coord.lon, coord.lat, coord.ele));
                 coordTimes.Add(coord.time);
             }
-
-            var geom1 = new MultiPoint(coords);
+            
+            var geom1 = new LineString(coords);
 
             var props = new Dictionary<string, object>();
             props["Name"] = gpx.trk.name;
