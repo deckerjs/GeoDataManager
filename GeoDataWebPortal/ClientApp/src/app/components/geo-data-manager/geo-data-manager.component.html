@@ -1,0 +1,21 @@
+<ngb-tabset>
+
+  <ngb-tab *ngIf="showViewer" title="Data Viewer">
+    <ng-template ngbTabContent>
+      <app-geo-data-viewer></app-geo-data-viewer>
+    </ng-template>
+  </ngb-tab>
+
+  <ngb-tab *ngIf="showEditor" title="Data Editor">
+    <ng-template ngbTabContent>
+      <app-geo-data-editor></app-geo-data-editor>
+    </ng-template>
+  </ngb-tab>
+
+  <ngb-tab *ngIf="showImport" title="Import Data">
+    <ng-template ngbTabContent>
+      <app-geo-data-import></app-geo-data-import>
+    </ng-template>
+  </ngb-tab>
+
+</ngb-tabset>

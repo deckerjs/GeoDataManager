@@ -1,0 +1,16 @@
+<div class="top-header" [style.height.px]='topRowHeight'>
+  <ng-content select="div.top-section"></ng-content>
+</div>ex
+
+<div class="middle-Row" (window:resize)="onResize($event)" [style.height.px]="'100%'">
+
+  <div class="side-nav " [style.width.px]='sideNavWidth'>
+    <ng-content select="div.side-section"></ng-content>
+  </div>
+
+  <div class="main-content" [style.overflow-y]="mainContentScroll" >
+    <ng-content select="div.main-section"></ng-content>
+  </div>
+
+</div>
+

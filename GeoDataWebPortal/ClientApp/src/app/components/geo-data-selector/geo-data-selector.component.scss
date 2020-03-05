@@ -1,0 +1,10 @@
+.txtlimit{
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.txtsmaller{
+    font-size: 0.85rem;
+}

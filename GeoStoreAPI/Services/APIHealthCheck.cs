@@ -15,11 +15,11 @@ namespace GeoStoreAPI.Services
             if (healthCheckResult)
             {
                 return Task.FromResult(
-                    HealthCheckResult.Healthy("Healthy"));
+                    HealthCheckResult.Healthy("{'health':'Healthy'}"));
             }
 
             return Task.FromResult(
-                HealthCheckResult.Unhealthy("Health Problems"));
+                HealthCheckResult.Unhealthy("{'health':'Problems'}"));
         }
 
         private bool GetCurrentHealth(){

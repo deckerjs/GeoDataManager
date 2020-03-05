@@ -1,15 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoStoreAPI", "GeoStoreAPI\GeoStoreAPI.csproj", "{943A791B-763E-477A-A3A4-A4D2976D8440}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoStoreAPI", "GeoStoreAPI\GeoStoreAPI.csproj", "{943A791B-763E-477A-A3A4-A4D2976D8440}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataConversionAPI", "DataConversionAPI\DataConversionAPI.csproj", "{9A6E3126-EDB7-4D12-82AC-0C296068EF08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataConversionAPI", "DataConversionAPI\DataConversionAPI.csproj", "{9A6E3126-EDB7-4D12-82AC-0C296068EF08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTransformUtilities", "DataTransformUtilities\DataTransformUtilities.csproj", "{204A719B-0174-4932-9B1B-9F07C5B78767}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataTransformUtilities", "DataTransformUtilities\DataTransformUtilities.csproj", "{204A719B-0174-4932-9B1B-9F07C5B78767}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoDataModels", "GeoDataModels\GeoDataModels.csproj", "{66DC8ACF-25C1-4D1F-89CF-834B1A8B40E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoDataModels", "GeoDataModels\GeoDataModels.csproj", "{66DC8ACF-25C1-4D1F-89CF-834B1A8B40E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoDataWebPortal", "GeoDataWebPortal\GeoDataWebPortal.csproj", "{DC9C8DBD-1B6F-44DF-A04F-8CD45688130A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,9 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{943A791B-763E-477A-A3A4-A4D2976D8440}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -36,18 +35,6 @@ Global
 		{943A791B-763E-477A-A3A4-A4D2976D8440}.Release|x64.Build.0 = Release|Any CPU
 		{943A791B-763E-477A-A3A4-A4D2976D8440}.Release|x86.ActiveCfg = Release|Any CPU
 		{943A791B-763E-477A-A3A4-A4D2976D8440}.Release|x86.Build.0 = Release|Any CPU
-		{84A5AFEF-E334-485F-BFC8-4A602FAD1C68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{84A5AFEF-E334-485F-BFC8-4A602FAD1C68}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{84A5AFEF-E334-485F-BFC8-4A602FAD1C68}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{84A5AFEF-E334-485F-BFC8-4A602FAD1C68}.Debug|x64.Build.0 = Debug|Any CPU
-		{84A5AFEF-E334-485F-BFC8-4A602FAD1C68}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{84A5AFEF-E334-485F-BFC8-4A602FAD1C68}.Debug|x86.Build.0 = Debug|Any CPU
-		{84A5AFEF-E334-485F-BFC8-4A602FAD1C68}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{84A5AFEF-E334-485F-BFC8-4A602FAD1C68}.Release|Any CPU.Build.0 = Release|Any CPU
-		{84A5AFEF-E334-485F-BFC8-4A602FAD1C68}.Release|x64.ActiveCfg = Release|Any CPU
-		{84A5AFEF-E334-485F-BFC8-4A602FAD1C68}.Release|x64.Build.0 = Release|Any CPU
-		{84A5AFEF-E334-485F-BFC8-4A602FAD1C68}.Release|x86.ActiveCfg = Release|Any CPU
-		{84A5AFEF-E334-485F-BFC8-4A602FAD1C68}.Release|x86.Build.0 = Release|Any CPU
 		{9A6E3126-EDB7-4D12-82AC-0C296068EF08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9A6E3126-EDB7-4D12-82AC-0C296068EF08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A6E3126-EDB7-4D12-82AC-0C296068EF08}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -84,5 +71,23 @@ Global
 		{66DC8ACF-25C1-4D1F-89CF-834B1A8B40E9}.Release|x64.Build.0 = Release|Any CPU
 		{66DC8ACF-25C1-4D1F-89CF-834B1A8B40E9}.Release|x86.ActiveCfg = Release|Any CPU
 		{66DC8ACF-25C1-4D1F-89CF-834B1A8B40E9}.Release|x86.Build.0 = Release|Any CPU
+		{DC9C8DBD-1B6F-44DF-A04F-8CD45688130A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC9C8DBD-1B6F-44DF-A04F-8CD45688130A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC9C8DBD-1B6F-44DF-A04F-8CD45688130A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DC9C8DBD-1B6F-44DF-A04F-8CD45688130A}.Debug|x64.Build.0 = Debug|Any CPU
+		{DC9C8DBD-1B6F-44DF-A04F-8CD45688130A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DC9C8DBD-1B6F-44DF-A04F-8CD45688130A}.Debug|x86.Build.0 = Debug|Any CPU
+		{DC9C8DBD-1B6F-44DF-A04F-8CD45688130A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC9C8DBD-1B6F-44DF-A04F-8CD45688130A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC9C8DBD-1B6F-44DF-A04F-8CD45688130A}.Release|x64.ActiveCfg = Release|Any CPU
+		{DC9C8DBD-1B6F-44DF-A04F-8CD45688130A}.Release|x64.Build.0 = Release|Any CPU
+		{DC9C8DBD-1B6F-44DF-A04F-8CD45688130A}.Release|x86.ActiveCfg = Release|Any CPU
+		{DC9C8DBD-1B6F-44DF-A04F-8CD45688130A}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {49F7DB5F-4710-49CD-8AB2-82D75A741FC5}
 	EndGlobalSection
 EndGlobal

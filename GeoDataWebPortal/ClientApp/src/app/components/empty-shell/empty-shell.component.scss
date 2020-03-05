@@ -1,0 +1,17 @@
+// .top-header{}
+
+.middle-Row{
+    display: flex;
+    flex-shrink: 0;
+    flex-grow: 1;
+}
+
+.side-nav{
+    overflow-y: auto;
+}
+
+.main-content{
+    width: 100%;
+}
+
+// .bottom-footer{}

@@ -1,0 +1,33 @@
+<div class="card text-white bg-secondary ">
+  <div class="card-header">Available Data</div>
+
+  <div class="card-body px-2">
+    <p class="card-text">Geo Datasets</p>
+    <div class="list-group mx-0 px-0 py-1">
+      <div *ngFor="let item of datasetCollection" class="list-group-item list-group-item-action mx-0 px-1 my-1">
+
+        <div class="container mx-0 px-1" (click)="selectDataset(item)">
+
+          <div class="row">
+            <div class="col-12 txtlimit txtsmaller ">
+              {{item.Description}}
+            </div>          
+          </div>
+          
+          <div class="row">
+            <div class="col-8 txtsmaller ">Coordinates:</div>
+            <div class="col-4 txtsmaller ">
+              <div class="badge badge-info">
+                {{item.Data.features[0].geometry.coordinates.length}}
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+</div>

@@ -1,0 +1,36 @@
+<h4>
+  <div>
+    <title>Settings</title>
+  </div>
+</h4>
+
+<div class="container" text-center padding>
+  <form (ngSubmit)="onSaveSettings()" #f="ngForm">
+    <div class="container">
+      <div class="row">
+        <div class="col" size-sm="6" offset-sm="3">
+          <div>
+            <label position="floating">Geo Manager API URL</label>
+            <input type="text" [(ngModel)]="GeoManagerAPISetting" name="GeoManagerAPISetting" required></input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col" size-sm="6" offset-sm="3">
+          <div>
+            <label position="floating">Auth URL</label>
+            <input type="text" [(ngModel)]="AuthAPISetting" name="AuthAPISetting" required></input>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col" size-sm="6" offset-sm="3">
+          <button type="submit" color="primary" expand="block" [disabled]="!f.valid">
+            Save Settings
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

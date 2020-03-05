@@ -1,0 +1,59 @@
+<div class="card-deck w-85 mx-3 my-3 h-100">
+
+  <div class="card text-white bg-secondary h-100">
+    <h4 class="card-header">GeoJSON</h4>
+    <div class="card-body">
+      <ngx-monaco-editor style="height: 600px;" [options]="editorOptions" [(ngModel)]="rawText"
+        (onInit)="onEditorInit($event)"></ngx-monaco-editor>
+    </div>
+    <div class="card-footer">
+      <button type="button" class="btn btn-secondary my-1" (click)="parseGeoJson()">JSON Parse</button>
+    </div>
+  </div>
+
+  <div class="card text-white bg-secondary h-100">
+
+    <div class="card-header">
+      <h4>Selected Dataset</h4>
+    </div>
+    <div class="card-body">
+
+      <form>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="dsetName">Description</label>
+            <input [(ngModel)]="data.Description" type="text" class="form-control" placeholder="Name" name="dsetName"
+              id="dsetName">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="dsetID">ID</label>
+            <input [(ngModel)]="data.ID" type="text" class="form-control" placeholder="ID" name="dsetID" id="dsetID">
+          </div>
+        </div>
+      </form>
+
+      <button type="button" class="btn btn-primary my-1" (click)="update()">Update</button>
+      <button type="button" class="btn btn-primary my-1" (click)="addNew()">Create</button>
+      <button type="button" class="btn btn-warning mx-1 my-1" (click)="reset()">Reset</button>
+    </div>
+
+    <h4 class="card-header">Data summary</h4>
+    <div class="card-body">
+
+      <h5 class="card-title">Type:</h5>
+      <p class="card-text bg-dark">{{data?.Data?.type}}</p>
+
+      <div class="card-title">Features Count:</div>
+      <div class="card-text bg-dark">{{data?.Data?.features?.length}}</div>
+
+      <div class="card-title">Properties:</div>
+      <div class="card-text"></div>
+
+      <div class="card-title">Problems:</div>
+      <div class="card-text bg-dark">{{problems}}</div>
+
+    </div>
+
+    <div class="card-footer">
+    </div>
+  </div>

@@ -1,0 +1,21 @@
+@import "~bootstrap/scss/bootstrap-reboot";
+@import "~bootstrap/scss/bootstrap-grid";
+
+@import "../src/themes/sandstone/_variables.scss";
+@import "../src/themes/sandstone/_bootswatch.scss";
+@import "../src/themes/sandstone/bootstrap.css";
+
+html {
+  height: 100%;
+  margin: 0px;
+}
+
+body {
+  height: 100%;
+  margin: 0px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0px;
+}
