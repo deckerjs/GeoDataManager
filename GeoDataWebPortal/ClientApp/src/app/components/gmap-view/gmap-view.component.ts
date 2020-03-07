@@ -3,10 +3,11 @@ import { GeoDataset } from "../../models/geo-dataset";
 import { geojsonHelperFunctions } from "../../utilities/geojson-helper-functions";
 import { GeoDataMessageBusService } from "../../services/geo-data-message-bus.service";
 import * as mapboxgl from 'mapbox-gl';
-import { environment } from 'src/environments/environment';
 import { FeatureCollection, LineString } from 'geojson';
 import { AreaBounds } from 'src/app/models/area-bounds';
 import { LatLngPoint } from 'src/app/models/lat-lng-point';
+import { SettingsService } from 'src/app/portal-settings/settings.service';
+import { take } from 'rxjs/operators';
 
 const outdoorsv9: string = 'outdoors-v9';
 const outdoorsv11: string = 'outdoors-v11';
@@ -24,13 +25,18 @@ export class GmapViewComponent implements OnInit {
 
   public map: mapboxgl.Map;
   public source: any;
-  
+
   private style = 'mapbox://styles/mapbox/' + lightv10;
   private lat: number;
   private lng: number;
 
-  constructor(private msgService: GeoDataMessageBusService) {
-    mapboxgl.accessToken = environment.mapboxToken;
+  constructor(private msgService: GeoDataMessageBusService,
+    private settingsService: SettingsService) {
+    settingsService.getSettings().pipe(take(1)).subscribe({
+      next: config => {
+        mapboxgl.accessToken = config.MapboxToken;
+      }
+    });
   }
 
   ngOnInit() {
@@ -77,7 +83,7 @@ export class GmapViewComponent implements OnInit {
       style: this.style,
       zoom: 13
       , center: [this.lng, this.lat]
-    });    
+    });
 
     this.map.addControl(new mapboxgl.NavigationControl());
 

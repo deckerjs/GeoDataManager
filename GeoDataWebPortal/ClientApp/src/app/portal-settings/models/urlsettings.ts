@@ -1,4 +1,6 @@
-export class URLSettings {
-    public AuthAPI:string;
-    public GeoManagerAPI:string;
+export class ConfigurationSettings {
+    public AuthUrl:string;
+    public GeoDataApiUrl:string;
+    public AuthClientSecret: string;
+    public MapboxToken: string;    
 }

@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SettingsService } from './settings.service';
-import { NgForm, FormGroup } from '@angular/forms';
-// import { ModalController } from '@ionic/angular';
-import { URLSettings } from './models/urlsettings';
+import { ConfigurationSettings } from './models/urlsettings';
 
 @Component({
   selector: 'app-portal-settings',
@@ -13,26 +11,21 @@ export class PortalSettingsPage implements OnInit {
 
   public GeoManagerAPISetting: string;
   public AuthAPISetting: string;
-  constructor(
-    private settingsService: SettingsService,
-    // private modalCtrl: ModalController
-    ){
-  }
+  constructor(private settingsService: SettingsService){}
 
   ngOnInit() {
-    this.settingsService.getURLSettings().subscribe({
+    this.settingsService.getSettings().subscribe({
       next: settings => {
-        console.log("got settings:", settings)
-        this.GeoManagerAPISetting = settings.GeoManagerAPI;
-        this.AuthAPISetting = settings.AuthAPI;
+        this.GeoManagerAPISetting = settings.GeoDataApiUrl;
+        this.AuthAPISetting = settings.AuthUrl;
       }
     });
   }
 
   public onSaveSettings() {
-    const settings = new URLSettings();
-    settings.AuthAPI = this.AuthAPISetting;
-    settings.GeoManagerAPI = this.GeoManagerAPISetting;
+    const settings = new ConfigurationSettings();
+    settings.AuthUrl = this.AuthAPISetting;
+    settings.GeoDataApiUrl = this.GeoManagerAPISetting;
     this.settingsService.saveURLSettings(settings);
   }
 

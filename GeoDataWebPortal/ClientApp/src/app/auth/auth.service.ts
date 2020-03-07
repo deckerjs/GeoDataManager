@@ -4,7 +4,6 @@ import { BehaviorSubject, Observable, from } from 'rxjs';
 import { map, tap, switchMap } from 'rxjs/operators';
 import { User } from './user.model';
 import { SettingsService } from '../portal-settings/settings.service';
-import { environment } from 'src/environments/environment';
 
 export interface AuthResponseData {  
   access_token: string;  
@@ -65,26 +64,23 @@ export class AuthService {
   }
 
   signup(email: string, password: string): Observable<AuthResponseData> {
-    //todo: add user creation endpoint on api
-    // use api url from environment
-    // from response create new AuthResponseData 
+    //todo: need to add a user creation endpoint on api
     return new Observable<AuthResponseData>();
   }
 
   login(loginID: string, password: string): Observable<AuthResponseData> {
-    const formData = new FormData();
-    formData.append('client_id', 'geomgrui');
-    formData.append('client_secret', environment.authClientSecret);
-    formData.append('grant_type', 'password');
-    formData.append('username', loginID);
-    formData.append('password', password);
-
-    console.log("in login", formData)
-
-    return this.settingsService.getURLSettings().pipe(
+    return this.settingsService.getSettings().pipe(
       switchMap(
-        stuff => {
-          const authurl = stuff.AuthAPI + '/connect/token';
+        config => {
+          const authurl = config.AuthUrl + '/connect/token';
+
+          const formData = new FormData();
+          formData.append('client_id', 'geomgrui');
+          formData.append('client_secret', config.AuthClientSecret);
+          formData.append('grant_type', 'password');
+          formData.append('username', loginID);
+          formData.append('password', password);
+
           return this.http.post<AuthResponseData>(authurl, formData)
             .pipe(tap(authResponse => {
               this.setUserData(authResponse, loginID);
@@ -92,7 +88,6 @@ export class AuthService {
         }
       )
     );
-
   }
 
   logout() {
@@ -132,10 +127,12 @@ export class AuthService {
       token: token,
       tokenExpirationDate: tokenExpirationDate
     });
-    //Plugins.Storage.set({ key: 'authData', value: data });
+
+    //todo: local storage for ({ key: 'authData', value: data });
   }
 
   public autoLogin() {
+    //todo: get token from local storage, check if its expired
     // return from(Plugins.Storage.get({ key: 'authData' })).pipe(
     //   map(storedData => {
     //     if (!storedData || !storedData.value) {
@@ -168,6 +165,5 @@ export class AuthService {
     //   })
     // );
   }
-
 
 }

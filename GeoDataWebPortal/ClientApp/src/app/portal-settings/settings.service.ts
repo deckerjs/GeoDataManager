@@ -1,46 +1,36 @@
 import { Injectable } from '@angular/core';
-import { URLSettings } from './models/urlsettings';
+import { ConfigurationSettings } from './models/urlsettings';
 import { environment } from 'src/environments/environment';
 import { from, Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SettingsService {
+  private readonly API_ENDPOINT: string = '/api/ConfigurationSettings';
+  private _settings: ConfigurationSettings;
 
-  constructor(private ConfigurationSettingsService ) {
-    // this._urlSettings = this.getDefaultSettings();
+  constructor(private http: HttpClient) {}
+
+  public getSettings(): Observable<ConfigurationSettings> {
+    console.log('get settings')
+    return this.http.get<ConfigurationSettings>(this.API_ENDPOINT);
   }
 
-  private _urlSettings: URLSettings;
-
-  // private getDefaultSettings(): URLSettings {
-  //   const urlSettings = new URLSettings();
-  //   urlSettings.GeoManagerAPI = environment.geoManagerAPI;
-  //   urlSettings.AuthAPI = environment.authapiurl;
-  //   console.log("set default url settings", urlSettings)
-  //   return urlSettings;
-  // }
-
-  public getURLSettings(): Observable<URLSettings> {
-
-    return of(this._urlSettings);
-
-  }
-
-  public saveURLSettings(settings: URLSettings): void {
+  public saveURLSettings(settings: ConfigurationSettings): void {
     this.localStoreURLSettings(settings);
   }
 
-  private localStoreURLSettings(settings: URLSettings): void {
+  private localStoreURLSettings(settings: ConfigurationSettings): void {
     const data = JSON.stringify({
-      AuthAPI: settings.AuthAPI,
-      GeoManagerAPI: settings.GeoManagerAPI
+      AuthAPI: settings.AuthUrl,
+      GeoManagerAPI: settings.GeoDataApiUrl
     });    
   }
 
-  private localLoadURLSettings(): Observable<URLSettings> {
+  private localLoadURLSettings(): Observable<ConfigurationSettings> {
     //todo: hookup to local storage
     return null;
     // console.log("attempting load of local url settings")

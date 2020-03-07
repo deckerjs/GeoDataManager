@@ -5,7 +5,7 @@ import { Observable, of, Subject } from 'rxjs';
 import { SettingsService } from '../portal-settings/settings.service';
 import { AuthService } from '../auth/auth.service';
 import { switchMap, delay, repeat, tap, catchError } from 'rxjs/operators';
-import { URLSettings } from '../portal-settings/models/urlsettings';
+import { ConfigurationSettings } from '../portal-settings/models/urlsettings';
 
 @Injectable({
   providedIn: 'root'
@@ -84,8 +84,8 @@ export class GeoDataAPIService {
     );
   }
 
-  private getSettingsObservable(): Observable<URLSettings> {
-    return this.settingsService.getURLSettings();
+  private getSettingsObservable(): Observable<ConfigurationSettings> {
+    return this.settingsService.getSettings();
   }
 
   private getHttpHeaders(): Observable<HttpHeaders> {
@@ -94,12 +94,12 @@ export class GeoDataAPIService {
     }));
   }
 
-  private getGeoDataSingleURL(urlSettings: URLSettings, endPoint: string, id: string): string {
-    return urlSettings.GeoManagerAPI + '/' + endPoint + '/' + id;
+  private getGeoDataSingleURL(urlSettings: ConfigurationSettings, endPoint: string, id: string): string {
+    return urlSettings.GeoDataApiUrl + '/' + endPoint + '/' + id;
   }
 
-  private getGeoDataURL(urlSettings: URLSettings, endPoint: string): string {
-    return urlSettings.GeoManagerAPI + '/' + endPoint;
+  private getGeoDataURL(urlSettings: ConfigurationSettings, endPoint: string): string {
+    return urlSettings.GeoDataApiUrl + '/' + endPoint;
   }
 
   private getHeaderOptions(token: string): HttpHeaders {
@@ -113,7 +113,9 @@ export class GeoDataAPIService {
   private getApiHealth(): Observable<any> {
     return this.getSettingsObservable().pipe(
       switchMap(settings => {
+        console.log('get health settings,this.API_HEALTH_ENDPOINT:',settings, this.API_HEALTH_ENDPOINT)
         const url = this.getGeoDataURL(settings, this.API_HEALTH_ENDPOINT);
+        console.log('get health url:', url)
         return this.http.get(url, {responseType: 'text'});
       })
     );

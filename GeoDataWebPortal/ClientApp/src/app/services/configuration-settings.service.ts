@@ -7,19 +7,11 @@ import { Observable, of, Subject } from 'rxjs';
 })
 
 export class ConfigurationSettingsService {
-
     private readonly API_ENDPOINT: string = '/api/ConfigurationSettings';
-
-    constructor(
-        private http: HttpClient
-    ) {
-    }
-
-
+    constructor(private http: HttpClient) {}
     public GetSettings(id: string): Observable<ConfigurationSettings> {
         return this.http.get<ConfigurationSettings>(this.API_ENDPOINT);
     }
-
 }
 
 export class ConfigurationSettings {
