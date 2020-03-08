@@ -1,10 +1,11 @@
 {
-  "name": "geo-track-mgr",
+  "name": "geo-data-web-portal",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "buildprod": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

@@ -11,3 +11,7 @@ docker-compose*
 README.md
 LICENSE
 .vscode
+*/GeoData
+*/RoleData
+*/UserData
+*/UserRoleData

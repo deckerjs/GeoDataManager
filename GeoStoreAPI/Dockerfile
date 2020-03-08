@@ -7,7 +7,7 @@ WORKDIR /src
 COPY ["GeoStoreAPI/GeoStoreAPI.csproj", "GeoStoreAPI/"]
 RUN dotnet restore "GeoStoreAPI/GeoStoreAPI.csproj"
 COPY . .
-WORKDIR "/src/GeoStoreAPI"
+WORKDIR /src/GeoStoreAPI
 RUN dotnet build "GeoStoreAPI.csproj" -c Release -o /app
 
 FROM build AS publish

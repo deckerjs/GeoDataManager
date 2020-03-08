@@ -2,18 +2,38 @@ version: "3.4"
 
 services:
   geodataapi:    
-    image: hallertau/geomarklar:${API_IMAGE_VERSION}
+    image: hallertau/geodataapi:${API_IMAGE_VERSION}
     container_name: geodataapi
+    build:
+      context: .
+      dockerfile: GeoStoreAPI/Dockerfile
     environment:
     - AppOptions__GenerateDefaultUsers=${GENERATE_DEFAULT_USERS}
-    - GeoMgrClientSecret=${GEOMGR_CLIENT_SECRET}
-    - AuthURL=http://geodataapi
-    - IDSOptions__IssuerUri=http://geodataapi
+    - GeoMgrClientSecret=${PORTAL_AUTH_CLIENT_SECRET}
+    - AuthURL=${API_AUTH_URL}
+    - IDSOptions__IssuerUri=${ISSUER_URI}
     ports:
-    - ${PORT}:80
+    - ${API_PORT}:80
     expose:
     - 80
     networks:
     - geodatanet
+  geodataportal:    
+    image: hallertau/geodataportal:${API_IMAGE_VERSION}
+    container_name: geodataportal
+    build:
+      context: .
+      dockerfile: GeoDataWebPortal/Dockerfile
+    environment:
+    - ClientConfigurationSettings__AuthUrl=${PORTAL_AUTH_URL}
+    - ClientConfigurationSettings__AuthClientSecret=${PORTAL_AUTH_CLIENT_SECRET}
+    - ClientConfigurationSettings__GeoDataApiUrl=${API_URL}
+    - ClientConfigurationSettings__MapboxToken=${MAPBOX_TOKEN}
+    ports:
+    - ${PORTAL_PORT}:80
+    expose:
+    - 80
+    networks:
+    - geodatanet    
 networks:
   geodatanet:

@@ -24,7 +24,7 @@ namespace GeoDataWebPortal
                 .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "ClientApp/dist";
+                configuration.RootPath = "ClientApp/dist/GeoDataWebPortal";
             });
 
             services.Configure<ClientConfigurationSettings>(Configuration.GetSection("ClientConfigurationSettings"));
