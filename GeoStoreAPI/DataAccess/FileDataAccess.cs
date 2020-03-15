@@ -9,6 +9,7 @@ namespace GeoStoreAPI.DataAccess
 {
     public class FileDataAccess<T> : IFileDataAccess<T>
     {
+        public const string BASE_DIR = "data" ;
         private readonly string _mainPath;
 
         public FileDataAccess(string mainPath)

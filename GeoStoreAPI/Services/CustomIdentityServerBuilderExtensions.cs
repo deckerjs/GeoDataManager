@@ -68,9 +68,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IIdentityServerBuilder AddIdentityServices(this IIdentityServerBuilder builder)
         {
-            builder.Services.AddScoped<IFileDataAccess<AppUser>>(x => new FileDataAccess<AppUser>(Path.Combine(Directory.GetCurrentDirectory(), UserDataAccess.USER_DATA)));
-            builder.Services.AddScoped<IFileDataAccess<AppRole>>(x => new FileDataAccess<AppRole>(Path.Combine(Directory.GetCurrentDirectory(), RoleDataAccess.ROLE_DATA)));
-            builder.Services.AddScoped<IFileDataAccess<AppUserRoles>>(x => new FileDataAccess<AppUserRoles>(Path.Combine(Directory.GetCurrentDirectory(), UserRolesDataAccess.USER_ROLE_DATA)));
+            builder.Services.AddScoped<IFileDataAccess<AppUser>>(x => new FileDataAccess<AppUser>(Path.Combine(Directory.GetCurrentDirectory(),FileDataAccess<AppUser>.BASE_DIR, UserDataAccess.USER_DATA)));
+            builder.Services.AddScoped<IFileDataAccess<AppRole>>(x => new FileDataAccess<AppRole>(Path.Combine(Directory.GetCurrentDirectory(), FileDataAccess<AppRole>.BASE_DIR,RoleDataAccess.ROLE_DATA)));
+            builder.Services.AddScoped<IFileDataAccess<AppUserRoles>>(x => new FileDataAccess<AppUserRoles>(Path.Combine(Directory.GetCurrentDirectory(), FileDataAccess<AppUserRoles>.BASE_DIR,UserRolesDataAccess.USER_ROLE_DATA)));
 
             builder.Services.AddScoped<IUserDataAccess, UserDataAccess>();
             builder.Services.AddScoped<IRoleDataAccess, RoleDataAccess>();

@@ -43,7 +43,7 @@ namespace geostoreapi
                 });
             });
 
-            services.AddScoped<IFileDataAccess<GeoData>>(x => new FileDataAccess<GeoData>(Path.Combine(Directory.GetCurrentDirectory(), GeoDataAccess.GEODATA)));
+            services.AddScoped<IFileDataAccess<GeoData>>(x => new FileDataAccess<GeoData>(Path.Combine(Directory.GetCurrentDirectory(), FileDataAccess<GeoData>.BASE_DIR,GeoDataAccess.GEODATA)));
             services.AddScoped<IGeoDataAccess, GeoDataAccess>();
             services.AddScoped<IGeoDataRepository, GeoDataRepository>();
             services.AddScoped<IGPXTransform, GPXTransform>();
