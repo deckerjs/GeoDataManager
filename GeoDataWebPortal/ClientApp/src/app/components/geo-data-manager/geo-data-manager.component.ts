@@ -7,9 +7,9 @@ import { Component, OnInit, Input } from "@angular/core";
 })
 export class GeoDataManagerComponent implements OnInit {
   
-  public showEditor: boolean = false;
+  public showEditor: boolean = true;
   public showViewer: boolean = true;
-  public showImport: boolean = false;
+  public showImport: boolean = true;
 
   ngOnInit() { }
 }

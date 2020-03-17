@@ -71,4 +71,9 @@ export class GeoDataSelectorComponent implements OnInit {
     this.selectedDataset = item;
     this.msgService.publishGeoDatasetSelected(item);
   }
+
+  public reload(): void {
+    this.loadDatasetsFromRepo();
+  }
+
 }

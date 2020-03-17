@@ -2,7 +2,15 @@
   <div class="card-header">Available Data</div>
 
   <div class="card-body px-2">
-    <p class="card-text">Geo Datasets</p>
+    <div class="card-text">
+      <div class="mx-auto">Geo Datasets</div>
+      <div class="mx-auto">
+        <button class="btn btn-primary btn-sm my-1 mx-auto" (click)="reload()">
+          <i class="text-primary fa fa-sync"></i>                  
+          Reload
+        </button>
+      </div> 
+    </div>
     <div class="list-group mx-0 px-0 py-1">
       <div *ngFor="let item of datasetCollection" class="list-group-item list-group-item-action mx-0 px-1 my-1">
 
