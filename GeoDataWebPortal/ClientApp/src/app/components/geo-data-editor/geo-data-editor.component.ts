@@ -12,8 +12,9 @@ import { debounce, debounceTime } from 'rxjs/operators';
 })
 export class GeoDataEditorComponent implements OnInit {
 
-  editorOptions = { theme: "vs-dark", language: "json" };
-
+  public editorOptions = { theme: "vs-dark", language: "json" };
+  private monacoEditor: any;
+  
   private _rawText: string;
   get rawText(): string {
     return this._rawText;
@@ -100,7 +101,7 @@ export class GeoDataEditorComponent implements OnInit {
     this.data.ID = Guid.newGuid();
   }
 
-  private monacoEditor: any;
+  
 
   private editorAutoFormat() {
     console.log('monico editor:', this.monacoEditor)
