@@ -14,6 +14,7 @@ import { ConfigurationSettings } from '../portal-settings/models/urlsettings';
 export class GeoDataAPIService {
 
   private readonly API_ENDPOINT: string = 'api/GeoData';
+  private readonly API_GPX_ENDPOINT: string = 'api/gpxupload';
   private readonly API_HEALTH_ENDPOINT: string = 'health';
 
   constructor(
@@ -59,6 +60,18 @@ export class GeoDataAPIService {
     );
   }
 
+  public gpxUpload(data: string): Observable<any> {
+    return this.getSettingsObservable().pipe(
+      switchMap(settings => {
+        return this.getXMLHttpHeaders().pipe(
+          switchMap(httpHeaders => {
+            const url = this.getGeoDataURL(settings, this.API_GPX_ENDPOINT);            
+            return this.http.post(url, data, { headers: httpHeaders });
+          }));
+      })
+    );
+  }
+
   public update(data: GeoDataset) {
     return this.getSettingsObservable().pipe(
       switchMap(settings => {
@@ -94,6 +107,15 @@ export class GeoDataAPIService {
     }));
   }
 
+  private getXMLHttpHeaders(): Observable<HttpHeaders> {
+    return this.authService.token.pipe(switchMap(beartoken => {
+      return of( new HttpHeaders({
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Authorization': 'Bearer ' + beartoken
+      }));
+    }));
+  }
+  
   private getGeoDataSingleURL(urlSettings: ConfigurationSettings, endPoint: string, id: string): string {
     return urlSettings.GeoDataApiUrl + '/' + endPoint + '/' + id;
   }
@@ -113,23 +135,23 @@ export class GeoDataAPIService {
   private getApiHealth(): Observable<any> {
     return this.getSettingsObservable().pipe(
       switchMap(settings => {
-        console.log('get health settings,this.API_HEALTH_ENDPOINT:',settings, this.API_HEALTH_ENDPOINT)
+        console.log('get health settings,this.API_HEALTH_ENDPOINT:', settings, this.API_HEALTH_ENDPOINT)
         const url = this.getGeoDataURL(settings, this.API_HEALTH_ENDPOINT);
         console.log('get health url:', url)
-        return this.http.get(url, {responseType: 'text'});
+        return this.http.get(url, { responseType: 'text' });
       })
     );
   }
 
   public apiHealthCheckPolling(): Observable<any> {
-    return this.getApiHealth()    
-    .pipe(
-      catchError(err=>{
-        console.log(err);
-        return of('UnHealthy');
-      }),
-      delay(5000), 
-      repeat());
+    return this.getApiHealth()
+      .pipe(
+        catchError(err => {
+          console.log(err);
+          return of('UnHealthy');
+        }),
+        delay(5000),
+        repeat());
   }
 
 }

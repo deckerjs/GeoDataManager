@@ -1,43 +1,48 @@
-<p>
-  Import GPX files
-</p>
-
 <div class="card-deck w-85 mx-3 my-3 h-100">
-  
-    <div class="card text-white bg-secondary h-100">
-      <div class="card-body">
-        <button class="btn btn-primary my-1 mx-1" (click)="onClick()"> select file </button>
-        <input type="file" #fileUpload id="fileUpload" name="fileUpload" multiple="multiple" accept="GPX/*"
-          style="display:none;" />
-      </div>
 
-      
-      <!-- <div class="card text-white bg-secondary h-100"> -->
-        
-        <div class="card-body">
-          <ul>
-            <li *ngFor="let file of files">
-              <button class="btn">
-                {{file.data.name}} -
-                {{file.data.size}}
-              </button>
-            </li>
-          </ul>
-        </div>
-        
-      </div>
-    <!-- </div> -->
-
-    <div class="card text-white bg-secondary h-100">
-      <div class="card-body">
-
-        <ngx-monaco-editor style="height: 600px;" [options]="editorOptions" [(ngModel)]="selectedFile"
-          (onInit)="onEditorInit($event)"></ngx-monaco-editor>
-          
-      </div>
+  <div class="card text-white bg-secondary h-100 col-4">
+    <h5 class="card-title">Import GPX files</h5>
+    <div class="card-title">
+      <button class="btn btn-primary my-1 mx-1" (click)="onFileOpenDialogClick()"> select file </button>
+      <input type="file" #fileOpenDialog id="fileOpenDialog" name="fileOpenDialog" multiple="multiple" accept="GPX/*"
+        style="display:none;" />
     </div>
 
-  
+    <div class="card-body">
+      <ul>
+        <li *ngFor="let file of files" class="my-1">
+          <button class="btn w-100 text-left p-2" (click)="fileSelected(file)">
+            <div class="row">
+              <div class="col-9"><span class="text-primary ">{{file.data.name}} </span></div>
+              <div class="col-3"><span class="text-info "> {{formatBytes(file.data.size)}} </span></div>
+            </div>
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card-title">
+      <button class="btn btn-success my-1 mx-1" (click)="onUploadClick()">
+        Upload Selected file
+      </button>
+      <span class="text-white">
+        {{selectedFile?.data.name}}
+      </span>
+    </div>
+
+  </div>
+
+  <div class="card text-white bg-secondary h-100 col-8">
+    <div class="card-body">
+
+      <ngx-monaco-editor style="height: 600px;" [options]="editorOptions" [(ngModel)]="selectedFileContent"
+        (onInit)="onEditorInit($event)">
+      </ngx-monaco-editor>
+
+    </div>
+  </div>
+
+
 
 
 </div>
