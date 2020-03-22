@@ -4,29 +4,29 @@
   </ion-toolbar>
 </ion-header> -->
 
-<div *ngIf="isAuthenticated">
-  <button class="btn btn-secondary btn-sm " (click)='logoutCurrentUser()'>Logout</button>
+<div *ngIf="isAuthenticated" class="my-3">
+  <button class="btn btn-secondary btn-sm align-middle" type="submit" (click)='logoutCurrentUser()'>
+    <span class="mx-1 align-middle">Logout</span>
+    <fa-icon [icon]="['fas', 'sign-out-alt']" class=""></fa-icon>
+  </button>
 </div>
-<div *ngIf="!isAuthenticated">
 
-  <form #loginForm="ngForm" class="form-inline my-3" (ngSubmit)="onSubmit(loginForm)">
-    
-      <input 
-      class="form-control mr-sm-2 py-1 h-50"
-       type="text" 
-       placeholder="User"
-       ngModel name="email" 
-       required #emailCtrl="ngModel"
-       >
-      <input class="form-control mr-sm-2 py-1 h-50" 
-        type="password" 
-        placeholder="Password"
-        ngModel name="password" 
-        required minlength="3" 
-        #passwordCtrl="ngModel"
-        >
-      <button class="btn btn-secondary btn-sm " type="submit">Login</button>
-    
+<div *ngIf="!isAuthenticated" class="my-3">
+
+  <form #loginForm="ngForm" class="form-inline" (ngSubmit)="onSubmit(loginForm)">
+
+    <input class="form-control mr-sm-2 py-1 h-50" type="text" placeholder="User" ngModel name="email" required
+      #emailCtrl="ngModel">
+    <input class="form-control mr-sm-2 py-1 h-50" type="password" placeholder="Password" ngModel name="password"
+      required minlength="3" #passwordCtrl="ngModel">
+
+    <button class="btn btn-secondary btn-sm align-middle" type="submit">
+      <span class="mx-1 align-middle">Login </span>
+      <fa-icon [icon]="['fas', 'sign-in-alt']" class=""></fa-icon>
+    </button>
+
+
+
   </form>
 
 </div>

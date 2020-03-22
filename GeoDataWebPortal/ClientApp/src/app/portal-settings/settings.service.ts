@@ -14,8 +14,7 @@ export class SettingsService {
 
   constructor(private http: HttpClient) {}
 
-  public getSettings(): Observable<ConfigurationSettings> {
-    console.log('get settings')
+  public getSettings(): Observable<ConfigurationSettings> {    
     return this.http.get<ConfigurationSettings>(this.API_ENDPOINT);
   }
 

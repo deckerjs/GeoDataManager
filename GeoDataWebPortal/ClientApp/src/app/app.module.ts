@@ -1,9 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-
-// import { AgmCoreModule } from '@agm/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
@@ -14,7 +10,6 @@ import { GeoDataManagerComponent } from './components/geo-data-manager/geo-data-
 import { GeoDataSelectorComponent } from './components/geo-data-selector/geo-data-selector.component';
 import { GmapViewComponent } from './components/gmap-view/gmap-view.component';
 import { MainViewComponent } from './components/main-view/main-view.component';
-import { GeoDataLocalRepositoryService } from './services/geo-data-local-repository.service';
 import { GeoDataMessageBusService } from './services/geo-data-message-bus.service';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { FormsModule } from '@angular/forms';
@@ -22,7 +17,8 @@ import { GeoDataEditorComponent } from './components/geo-data-editor/geo-data-ed
 import { HttpClientModule } from '@angular/common/http';
 import { AuthComponent } from './auth/auth.component';
 import { GeoDataViewerComponent } from './components/geo-data-viewer/geo-data-viewer.component';
-
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -41,12 +37,13 @@ import { GeoDataViewerComponent } from './components/geo-data-viewer/geo-data-vi
   imports: [
     BrowserModule,
     FormsModule,
-    AppRoutingModule,
-    NgbModule,
+    AppRoutingModule,    
     MonacoEditorModule.forRoot(),
-    HttpClientModule
+    HttpClientModule,
+    NgbModule,
+    FontAwesomeModule
   ],
-  providers: [GeoDataLocalRepositoryService, GeoDataMessageBusService],
+  providers: [GeoDataMessageBusService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

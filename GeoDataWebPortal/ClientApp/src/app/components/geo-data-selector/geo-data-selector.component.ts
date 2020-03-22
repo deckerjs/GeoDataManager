@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { GeoDataLocalRepositoryService } from '../../services/geo-data-local-repository.service';
 import {
   GeoDataMessageBusService,
   MessageType
@@ -7,6 +6,8 @@ import {
 import { GeoDataset } from '../../models/geo-dataset';
 import { GeoDataAPIService } from 'src/app/services/geo-data-api.service';
 import { AuthService } from 'src/app/auth/auth.service';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faSync } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-geo-data-selector',
@@ -17,13 +18,14 @@ export class GeoDataSelectorComponent implements OnInit {
   public datasetCollection: Array<GeoDataset>;
   public selectedDataset: GeoDataset;
 
-  constructor(
-    private localDataService: GeoDataLocalRepositoryService,
+  constructor(    
     private apiDataService: GeoDataAPIService,
     private msgService: GeoDataMessageBusService,
-    private authService: AuthService
+    private authService: AuthService,
+    private falibrary: FaIconLibrary
   ) {
     this.datasetCollection = [];
+    falibrary.addIcons(faSync);
   }
 
   ngOnInit() {
@@ -52,12 +54,6 @@ export class GeoDataSelectorComponent implements OnInit {
 
   private loadDatasetsFromRepo() {
     this.datasetCollection = [];
-
-    this.localDataService.getAllDatasets().subscribe({
-      next: x => {
-        this.datasetCollection.push(...x);
-      }
-    });
 
     this.apiDataService.GetAll().subscribe({
       next: x => {

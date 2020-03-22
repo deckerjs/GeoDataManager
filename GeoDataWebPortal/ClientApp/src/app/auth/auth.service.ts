@@ -20,8 +20,7 @@ export class AuthService {
   constructor(private http: HttpClient, private settingsService: SettingsService) { }
 
   public get currentUser(): BehaviorSubject<User> {
-    if (!this._user){
-      console.log("newing up subject user")
+    if (!this._user){      
       this._user = new BehaviorSubject<User>(null);      
     }
     return this._user;
@@ -94,8 +93,7 @@ export class AuthService {
     this._user.next(null);
   }
 
-  private setUserData(userData: AuthResponseData, loginID:string) {
-    console.log("in setuserdata:", userData, "login", loginID)
+  private setUserData(userData: AuthResponseData, loginID:string) {    
     const expirationTime = new Date(
       new Date().getTime() + +userData.expires_in * 1000
     );

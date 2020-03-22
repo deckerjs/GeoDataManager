@@ -135,9 +135,8 @@ export class GeoDataAPIService {
   private getApiHealth(): Observable<any> {
     return this.getSettingsObservable().pipe(
       switchMap(settings => {
-        console.log('get health settings,this.API_HEALTH_ENDPOINT:', settings, this.API_HEALTH_ENDPOINT)
-        const url = this.getGeoDataURL(settings, this.API_HEALTH_ENDPOINT);
-        console.log('get health url:', url)
+        // console.log('get health settings,this.API_HEALTH_ENDPOINT:', settings, this.API_HEALTH_ENDPOINT)
+        const url = this.getGeoDataURL(settings, this.API_HEALTH_ENDPOINT);        
         return this.http.get(url, { responseType: 'text' });
       })
     );

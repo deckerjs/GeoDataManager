@@ -23,7 +23,7 @@ export class GeoDataImportComponent implements OnInit {
     this.editorAutoFormat();
   }
 
-  @ViewChild("fileOpenDialog", { static: false }) fileOpenDialog: ElementRef;
+  @ViewChild("fileOpenDialog") fileOpenDialog: ElementRef;
   public files = [];
   public selectedFile: any;
   public selectedFileContent: string;

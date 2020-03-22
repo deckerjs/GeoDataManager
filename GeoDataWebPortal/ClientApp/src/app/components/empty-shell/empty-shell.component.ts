@@ -1,4 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faCaretSquareLeft, faCaretSquareRight } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-empty-shell',
@@ -12,7 +14,8 @@ export class EmptyShellComponent implements OnInit {
   @Input() sideNavWidth: number = 200;
   @Input() mainContentScroll: string = "auto"
 
-  constructor() {
+  constructor(private falibrary: FaIconLibrary) {
+    falibrary.addIcons(faCaretSquareLeft, faCaretSquareRight);
   }
 
   ngOnInit() {}

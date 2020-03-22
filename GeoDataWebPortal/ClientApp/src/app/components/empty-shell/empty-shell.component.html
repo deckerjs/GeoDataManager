@@ -20,8 +20,8 @@
     <ul class="navbar-nav mr-2">
       <li class="nav-item">
         <div class="btn btn-secondary btn-sm" (click)="closeSideNav()">
-          <i *ngIf="sideNavWidth>0" class="fa fa-caret-square-o-left"></i>
-          <i *ngIf="sideNavWidth<1" class="fa fa-caret-square-o-right"></i>
+          <fa-icon *ngIf="sideNavWidth>0" [icon]="['fas', 'caret-square-left']"></fa-icon>
+          <fa-icon *ngIf="sideNavWidth<1" [icon]="['fas', 'caret-square-right']"></fa-icon>
         </div>
       </li>
     </ul>

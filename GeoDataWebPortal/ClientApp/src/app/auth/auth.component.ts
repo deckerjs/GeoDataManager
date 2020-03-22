@@ -5,6 +5,8 @@ import { NgForm } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService, AuthResponseData } from './auth.service';
 import { User } from './user.model';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faSignOutAlt, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-auth',
@@ -22,10 +24,13 @@ export class AuthComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private router: Router,
+    private falibrary: FaIconLibrary
     // private loadingCtrl: LoadingController,
     // private alertCtrl: AlertController,
     // public toastController: ToastController
-  ) { }
+  ) {
+    falibrary.addIcons(faSignOutAlt,faSignInAlt);
+   }
 
   ngOnInit() {
 
@@ -38,7 +43,6 @@ export class AuthComponent implements OnInit, OnDestroy {
     console.log("auth current user:", this.authService.currentUser )
     this.currentUserSub = this.authService.currentUser.subscribe({
       next: user => {
-        console.log("user sub:", user)
         this.currentUser = user;
       }
     });
@@ -46,22 +50,17 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 
   public authenticate(email: string, password: string):void {
-
-    console.log('authenticating with :', email, password)
     this.isLoading = true;
     let authObs = this.authService.login(email, password);
     
     authObs.subscribe(
             resData => {
-              console.log('auth result :',resData);
+              // console.log('auth result :',resData);
               this.presentToast();
               this.isLoading = false;
-              //loadingEl.dismiss();
-              //this.router.navigateByUrl('/');
             },
             errRes => {
               console.log('login error', errRes)
-              //loadingEl.dismiss();
               const code = errRes;
               let message = 'Authentication error. Check logs';
               this.showAlert(message);

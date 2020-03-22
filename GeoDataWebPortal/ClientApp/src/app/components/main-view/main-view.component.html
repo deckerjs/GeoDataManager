@@ -7,7 +7,7 @@
       
         <div class="navbar" id="navbarColor01">
           <a class="navbar-brand" href="#">
-            <i class="fa fa-map"></i>
+            <fa-icon [icon]="['fas', 'map']"></fa-icon>
           </a>
         <ul class="navbar-nav mr-auto">
 
@@ -45,10 +45,10 @@
     <ul class="navbar-nav ">
 
       <li class="nav-item ">
-        <i *ngIf="apiHealthy" class="text-success fa fa-heartbeat" placement="top-left"
-          ngbTooltip="API connection healthy"></i>
-        <i *ngIf="!apiHealthy" class="text-warning fa fa-heartbeat" placement="top-left"
-          ngbTooltip="API connection failure"></i>
+          <fa-icon *ngIf="apiHealthy" [icon]="['fas', 'heartbeat']" class="text-success" placement="top-left"
+          ngbTooltip="API connection healthy"></fa-icon>
+          <fa-icon *ngIf="!apiHealthy" [icon]="['fas', 'heartbeat']" class="text-warning" placement="top-left"
+          ngbTooltip="API connection failure"></fa-icon>
       </li>
 
     </ul>
