@@ -4,6 +4,8 @@ import { Guid } from "../../utilities/common-utilities";
 import { GeoDataMessageBusService, MessageType } from "../../services/geo-data-message-bus.service";
 import { GeoDataAPIService } from 'src/app/services/geo-data-api.service';
 import { debounce, debounceTime } from 'rxjs/operators';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faUpload, faTrash, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-geo-data-editor',
@@ -14,7 +16,7 @@ export class GeoDataEditorComponent implements OnInit {
 
   public editorOptions = { theme: "vs-dark", language: "json" };
   private monacoEditor: any;
-  
+
   private _rawText: string;
   get rawText(): string {
     return this._rawText;
@@ -30,8 +32,9 @@ export class GeoDataEditorComponent implements OnInit {
 
   constructor(
     private dataService: GeoDataAPIService,
-    private msgService: GeoDataMessageBusService
-  ) { }
+    private msgService: GeoDataMessageBusService,
+    private falibrary: FaIconLibrary) {
+      falibrary.addIcons(faUpload, faTrash, faPlusSquare); }
 
   ngOnInit() {
     this.msgService.subscribeGeoDatasetSelected().pipe(debounceTime(500)).subscribe(x => {
@@ -90,9 +93,24 @@ export class GeoDataEditorComponent implements OnInit {
     }
   }
 
-  public reset() {
+  public clear() {
     this.rawText = "";
     this.initNewDataset();
+  }
+
+  public delete() {
+    try {
+      if (this.data != null) {
+        this.dataService.delete(this.data.ID).subscribe(x => {
+          next: {
+            this.msgService.publishGeneral(MessageType.NewGeoDataAvailable, null);
+            this.clear();
+          }
+        });
+      }
+    } catch (e) {
+      this.problems = "API problems: " + e;
+    }
   }
 
   private initNewDataset() {
@@ -101,13 +119,13 @@ export class GeoDataEditorComponent implements OnInit {
     this.data.ID = Guid.newGuid();
   }
 
-  
+
 
   private editorAutoFormat() {
     console.log('monico editor:', this.monacoEditor)
     if (this.monacoEditor) {
-      setTimeout(() => { 
-        this.monacoEditor.trigger('bla','editor.action.formatDocument','bla'); 
+      setTimeout(() => {
+        this.monacoEditor.trigger('bla', 'editor.action.formatDocument', 'bla');
       }, 200);
     } else {
     }

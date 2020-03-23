@@ -32,9 +32,21 @@
         </div>
       </form>
 
-      <button type="button" class="btn btn-primary my-1 mx-1" (click)="update()">Update</button>
-      <button type="button" class="btn btn-primary my-1 mx-1" (click)="addNew()">Create</button>
-      <button type="button" class="btn btn-warning my-1 mx-1" (click)="reset()">Reset</button>
+      <button type="button" class="btn btn-primary my-1 mx-1 align-middle" (click)="update()">
+        <span class="mx-1 align-middle">Update</span>
+        <fa-icon [icon]="['fas', 'upload']" class="mx-1"></fa-icon>
+      </button>
+      <button type="button" class="btn btn-primary my-1 mx-1 align-middle" (click)="addNew()">
+        <span class="mx-1 align-middle">Create</span>
+        <fa-icon [icon]="['fas', 'square-plus']" class="mx-1"></fa-icon>
+      </button>
+      <button type="button" class="btn btn-warning my-1 mx-1 align-middle" (click)="clear()">
+        <span class="mx-1 align-middle">Clear</span>
+      </button>
+      <button type="button" class="btn btn-danger my-1 mx-1 align-middle" (click)="delete()">
+        <span class="mx-1 align-middle">Delete</span>
+        <fa-icon [icon]="['fas', 'trash']" class="mx-1"></fa-icon>
+      </button>
     </div>
 
     <h4 class="card-header">Data summary</h4>

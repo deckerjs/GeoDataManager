@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Subject, Observable } from "rxjs";
+import { Subject, Observable, BehaviorSubject } from "rxjs";
 import { filter } from "rxjs/operators";
 import { GeoDataset } from "../models/geo-dataset";
 
@@ -7,12 +7,12 @@ import { GeoDataset } from "../models/geo-dataset";
   providedIn: "root"
 })
 export class GeoDataMessageBusService {
-  private msgSubject: Subject<MessageData>;
-  private geoDatasetSelectedSubject: Subject<GeoDataset>;
+  private msgSubject: BehaviorSubject<MessageData>;
+  private geoDatasetSelectedSubject: BehaviorSubject<GeoDataset>;
 
   constructor() {
-    this.msgSubject = new Subject<MessageData>();
-    this.geoDatasetSelectedSubject = new Subject<GeoDataset>();
+    this.msgSubject = new BehaviorSubject<MessageData>(new MessageData());
+    this.geoDatasetSelectedSubject = new BehaviorSubject<GeoDataset>(new GeoDataset());
   }
 
   public subscribeGeoDatasetSelected(): Observable<GeoDataset> {

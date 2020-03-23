@@ -3,7 +3,10 @@
   <div class="card text-white bg-secondary h-100 col-4">
     <h5 class="card-title">Import GPX files</h5>
     <div class="card-title">
-      <button class="btn btn-primary my-1 mx-1" (click)="onFileOpenDialogClick()"> select file </button>
+      <button class="btn btn-primary my-1 mx-1 w-100 align-middle" (click)="onFileOpenDialogClick()">        
+        <span class="mx-1 align-middle">select file</span>
+        <fa-icon [icon]="['fas', 'file']" class="mx-1"></fa-icon>
+      </button>
       <input type="file" #fileOpenDialog id="fileOpenDialog" name="fileOpenDialog" multiple="multiple" accept="GPX/*"
         style="display:none;" />
     </div>
@@ -22,8 +25,9 @@
     </div>
 
     <div class="card-title">
-      <button class="btn btn-success my-1 mx-1" (click)="onUploadClick()">
-        Upload Selected file
+      <button class="btn btn-success my-1 mx-1 w-100 align-middle" (click)="onUploadClick()">
+        <span class="mx-1 align-middle">Upload Selected file</span>
+        <fa-icon [icon]="['fas', 'upload']" class="mx-1"></fa-icon>
       </button>
       <span class="text-white">
         {{selectedFile?.data.name}}

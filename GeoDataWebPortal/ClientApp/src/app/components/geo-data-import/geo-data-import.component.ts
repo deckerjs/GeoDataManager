@@ -4,6 +4,8 @@ import { map, catchError } from 'rxjs/operators';
 import { HttpEventType, HttpErrorResponse } from '@angular/common/http';
 import { of } from 'rxjs';
 import { GeoDataMessageBusService, MessageType } from 'src/app/services/geo-data-message-bus.service';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faUpload, faFile } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-geo-data-import',
@@ -17,7 +19,9 @@ export class GeoDataImportComponent implements OnInit {
 
   constructor(
     private dataService: GeoDataAPIService,
-    private msgService: GeoDataMessageBusService) { }
+    private msgService: GeoDataMessageBusService, private falibrary: FaIconLibrary) {
+    falibrary.addIcons(faUpload, faFile);
+  }
 
   ngOnInit() {
     this.editorAutoFormat();
