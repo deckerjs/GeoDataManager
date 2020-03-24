@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GeoDataset } from 'src/app/models/geo-dataset';
 import { GeoDataAPIService } from 'src/app/services/geo-data-api.service';
 import { GeoDataMessageBusService } from 'src/app/services/geo-data-message-bus.service';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-geo-data-viewer',

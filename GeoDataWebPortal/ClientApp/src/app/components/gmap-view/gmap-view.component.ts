@@ -7,7 +7,7 @@ import { FeatureCollection, LineString } from 'geojson';
 import { AreaBounds } from 'src/app/models/area-bounds';
 import { LatLngPoint } from 'src/app/models/lat-lng-point';
 import { SettingsService } from 'src/app/portal-settings/settings.service';
-import { take } from 'rxjs/operators';
+import { take, delay } from 'rxjs/operators';
 
 const outdoorsv9: string = 'outdoors-v9';
 const outdoorsv11: string = 'outdoors-v11';
@@ -40,12 +40,16 @@ export class GmapViewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.msgService.subscribeGeoDatasetSelected().subscribe(x => {
-      this.mapData = x;
-      this.buildMap();
-      this.map.flyTo({
-        center: [this.lng, this.lat]
-      });
+    this.msgService.subscribeGeoDatasetSelected().pipe(delay(100)).subscribe(x => {
+      console.log('incoming map data sub:', x)
+      if (x.Data != null) {
+        this.mapData = x;
+        this.buildMap();
+        this.map.flyTo({
+          center: [this.lng, this.lat]
+        });
+      }
+
     });
   }
 

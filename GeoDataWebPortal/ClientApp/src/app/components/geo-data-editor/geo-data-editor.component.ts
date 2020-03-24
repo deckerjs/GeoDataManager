@@ -3,7 +3,7 @@ import { GeoDataset } from "../../models/geo-dataset";
 import { Guid } from "../../utilities/common-utilities";
 import { GeoDataMessageBusService, MessageType } from "../../services/geo-data-message-bus.service";
 import { GeoDataAPIService } from 'src/app/services/geo-data-api.service';
-import { debounce, debounceTime } from 'rxjs/operators';
+import { debounce, debounceTime, delay } from 'rxjs/operators';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faUpload, faTrash, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 
@@ -37,7 +37,7 @@ export class GeoDataEditorComponent implements OnInit {
       falibrary.addIcons(faUpload, faTrash, faPlusSquare); }
 
   ngOnInit() {
-    this.msgService.subscribeGeoDatasetSelected().pipe(debounceTime(500)).subscribe(x => {
+    this.msgService.subscribeGeoDatasetSelected().pipe(delay(500),debounceTime(500)).subscribe(x => {
       this.data = x;
       this._rawText = JSON.stringify(x);
       this.editorAutoFormat();
