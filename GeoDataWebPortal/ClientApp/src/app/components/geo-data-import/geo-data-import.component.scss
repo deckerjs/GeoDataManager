@@ -2,5 +2,24 @@ ul,
 li {  
       margin: 0;  
       padding: 0;  
-      list-style: none;  
+      list-style: none;
+      font-size: .75rem; 
 }
+
+// @include media-breakpoint-up(sm) {
+//       li {
+//         font-size: .65rem;
+//       }
+//     }
+    
+//     @include media-breakpoint-up(md) {
+//       li {
+//         font-size: .75rem;
+//       }
+//     }
+    
+//     @include media-breakpoint-up(lg) {
+//       li {
+//         font-size: .85rem;
+//       }
+//     }

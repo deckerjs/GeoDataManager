@@ -1,11 +1,25 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { GeoDataAPIService } from 'src/app/services/geo-data-api.service';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, flatMap } from 'rxjs/operators';
 import { HttpEventType, HttpErrorResponse } from '@angular/common/http';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import { GeoDataMessageBusService, MessageType } from 'src/app/services/geo-data-message-bus.service';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faUpload, faFile } from '@fortawesome/free-solid-svg-icons';
+
+interface FileData {
+  name: string;
+  size: number;
+}
+
+class ImportFile {
+  constructor(data: FileData) {
+    this.data = data;
+  }
+  data: FileData;
+  inProgress: boolean;
+  progress: number;
+}
 
 @Component({
   selector: 'app-geo-data-import',
@@ -28,17 +42,17 @@ export class GeoDataImportComponent implements OnInit {
   }
 
   @ViewChild("fileOpenDialog") fileOpenDialog: ElementRef;
-  public files = [];
-  public selectedFile: any;
+  public files: ImportFile[] = [];
+  public selectedFile: ImportFile;
   public selectedFileContent: string;
 
   public onFileOpenDialogClick(): void {
-    console.log('open click')
     const fileDialog = this.fileOpenDialog.nativeElement;
     fileDialog.onchange = () => {
       for (let index = 0; index < fileDialog.files.length; index++) {
         const file = fileDialog.files[index];
         this.files.push({ data: file, inProgress: false, progress: 0 });
+        console.log("this is a file:", file)
         this.readFile(file);
       }
     };
@@ -51,6 +65,13 @@ export class GeoDataImportComponent implements OnInit {
 
   public fileSelected(file: any): void {
     this.selectedFile = file;
+    console.log("this is a selected file:", file)
+    this.readFile(file.data);
+
+    this.readFileAsString(file).subscribe(x => {
+      console.log('readFileAsString:', x);
+    });
+
   }
 
   private readFile(file: any): void {
@@ -61,26 +82,53 @@ export class GeoDataImportComponent implements OnInit {
     fileReader.readAsText(file);
   }
 
-  private uploadFile(file) {
+  private readFileAsString(file: any): Observable<string> {
 
-    this.dataService.gpxUpload(this.selectedFileContent)
-      .pipe(map(event => {
-        switch (event.type) {
-          case HttpEventType.UploadProgress:
-            file.progress = Math.round(event.loaded * 100 / event.total);
-            break;
-          case HttpEventType.Response:
-            return event;
-        }
-      }),
-        catchError((error: HttpErrorResponse) => {
-          console.log('gpxupload error:', error)
-          file.inProgress = false;
-          return of(`${file.data.name} upload failed.`);
-        }))
-      .subscribe((event: any) => {
-        console.log('uploaded:', event);
-        this.msgService.publishGeneral(MessageType.NewGeoDataAvailable, null);
+    let obs = Observable.create((observer: any) => {
+      let fileReader = new FileReader();
+      fileReader.onload = (e) => {
+        observer.next(fileReader.result.toString());
+        observer.complete();
+      }
+      fileReader.readAsText(file.data);
+    });
+
+    return obs;
+  }
+
+  private uploadFiles(files: ImportFile[]) {
+    files.forEach(x=>{ this.uploadFile(x)});    
+  }
+
+  private uploadFile(file: ImportFile) {
+
+    this.readFileAsString(file).pipe(flatMap((fileContent) => {
+
+      return this.dataService.gpxUpload(fileContent)
+        .pipe(map(event => {
+          if (event != null) {
+            switch (event.type) {
+              case HttpEventType.UploadProgress:
+                file.progress = Math.round(event.loaded * 100 / event.total);
+                break;
+              case HttpEventType.Response:
+                return event;
+            }
+          }
+        }),
+          catchError((error: HttpErrorResponse) => {
+            console.log('gpxupload error:', error)
+            file.inProgress = false;
+            return of(`${file.data.name} upload failed.`);
+          }));
+
+    })).subscribe(
+      {
+        next:
+          (x: any) => {
+            console.log('uploaded:', x);
+            this.msgService.publishGeneral(MessageType.NewGeoDataAvailable, null);
+          }
       });
 
   }
