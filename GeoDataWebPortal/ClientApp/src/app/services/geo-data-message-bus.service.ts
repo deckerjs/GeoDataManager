@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Subject, Observable, BehaviorSubject } from "rxjs";
-import { filter } from "rxjs/operators";
+import { filter, debounceTime } from "rxjs/operators";
 import { GeoDataset } from "../models/geo-dataset";
 
 @Injectable({
@@ -20,7 +20,7 @@ export class GeoDataMessageBusService {
   }
 
   public subscribeGeneral(type: MessageType): Observable<MessageData> {
-    return this.msgSubject.pipe(filter(x => x.messageType === type));
+    return this.msgSubject.pipe(filter(x => x.messageType === type), debounceTime(500));
   }
 
   public publishGeoDatasetSelected(data: GeoDataset) {

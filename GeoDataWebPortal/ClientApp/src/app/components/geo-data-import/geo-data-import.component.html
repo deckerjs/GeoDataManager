@@ -4,7 +4,7 @@
     <h5 class="card-title">Import GPX files</h5>
     <div class="card-title">
       <button class="btn btn-primary my-1 mx-1 w-100 align-middle" (click)="onFileOpenDialogClick()">        
-        <span class="mx-1 align-middle">select file</span>
+        <span class="mx-1 align-middle">Select Files</span>
         <fa-icon [icon]="['fas', 'file']" class="mx-1"></fa-icon>
       </button>
       <input type="file" #fileOpenDialog id="fileOpenDialog" name="fileOpenDialog" multiple="multiple" accept="GPX/*"
@@ -14,7 +14,6 @@
     <div class="card-body">
       <ul>
         <li *ngFor="let file of files" class="my-1">
-          <!-- <button class="btn w-100 text-left p-2" (click)="fileSelected(file)"> -->
           <button class="list-group-item list-group-item-action" (click)="fileSelected(file)">
             <div class="row">
               <div class="col-9"><span class="text-primary ">{{file.data.name}} </span></div>
@@ -27,16 +26,9 @@
 
     <div class="card-title">
       <button class="btn btn-success my-1 mx-1 w-100 align-middle" (click)="onUploadClick()">
-        <span class="mx-1 align-middle">Upload</span>
-        <fa-icon [icon]="['fas', 'upload']" class="mx-1"></fa-icon>
-      </button>
-      <button class="btn btn-success my-1 mx-1 w-100 align-middle" (click)="onUploadClick()">
         <span class="mx-1 align-middle">Upload files</span>
         <fa-icon [icon]="['fas', 'upload']" class="mx-1"></fa-icon>
       </button>
-      <span class="text-white">
-        {{selectedFile?.data.name}}
-      </span>
     </div>
 
   </div>

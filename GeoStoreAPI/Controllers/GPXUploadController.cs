@@ -22,7 +22,7 @@ namespace GeoStoreAPI.Controllers
         private readonly IGPXTransform _gpxTransform;
 
         public GPXUploadController(IGeoDataRepository dataRepository,
-            IUserIdentificationService userIdService, 
+            IUserIdentificationService userIdService,
             IGPXTransform gpxTransform)
         {
             _dataRepository = dataRepository;
@@ -31,10 +31,19 @@ namespace GeoStoreAPI.Controllers
         }
 
         [HttpPost]
-        public void Post([FromBody] Gpx gpx)
-        {            
-            var geoData = _gpxTransform.GetGeoDataFromGpx(gpx);
-            _dataRepository.Create(geoData, _userIdService.GetUserID());
+        public IActionResult Post([FromBody] Gpx gpx)
+        {
+            if (gpx != null && gpx.trk != null)
+            {
+                var geoData = _gpxTransform.GetGeoDataFromGpx(gpx);
+                _dataRepository.Create(geoData, _userIdService.GetUserID());
+                //todo: return Created(url) for new object
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Not Created. Missing Gpx data");
+            }
         }
 
     }
