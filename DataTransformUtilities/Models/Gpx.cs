@@ -42,10 +42,26 @@ namespace DataTransformUtilities.Models
         public Trkseg trkseg { get; set; }
     }
 
-    [XmlRoot(ElementName = "gpx", Namespace = "http://www.topografix.com/GPX/1/1")]
+    [XmlRoot(ElementName = "wpt", Namespace = "http://www.topografix.com/GPX/1/1")]
+    public class Wpt
+    {
+        [XmlAttribute("lat")]
+        public double lat { get; set; }
+        [XmlAttribute("lon")]
+        public double lon { get; set; }
+        public double ele { get; set; }
+        public string name { get; set; }
+        public string cmt { get; set; }
+        public string desc { get; set; }
+        public string sym { get; set; }
+    }
+
+        [XmlRoot(ElementName = "gpx", Namespace = "http://www.topografix.com/GPX/1/1")]
     public class Gpx
     {
         public Trk trk { get; set; }
+        [XmlElement("wpt")]
+        public List<Wpt> wpt { get; set; }
     }
 
 }

@@ -33,7 +33,7 @@ namespace GeoStoreAPI.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Gpx gpx)
         {
-            if (gpx != null && gpx.trk != null)
+            if (gpx != null )
             {
                 var geoData = _gpxTransform.GetGeoDataFromGpx(gpx);
                 _dataRepository.Create(geoData, _userIdService.GetUserID());

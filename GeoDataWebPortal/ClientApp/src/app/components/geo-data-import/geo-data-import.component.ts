@@ -5,7 +5,7 @@ import { HttpEventType, HttpErrorResponse } from '@angular/common/http';
 import { of, Observable, from, Subject, queueScheduler, asyncScheduler } from 'rxjs';
 import { GeoDataMessageBusService, MessageType } from 'src/app/services/geo-data-message-bus.service';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faUpload, faFile } from '@fortawesome/free-solid-svg-icons';
+import { faUpload, faFile, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 interface FileData {
   name: string;
@@ -34,7 +34,7 @@ export class GeoDataImportComponent implements OnInit {
   constructor(
     private dataService: GeoDataAPIService,
     private msgService: GeoDataMessageBusService, private falibrary: FaIconLibrary) {
-    falibrary.addIcons(faUpload, faFile);
+    falibrary.addIcons(faUpload, faFile, faTrash);
   }
 
   ngOnInit() {
@@ -52,7 +52,6 @@ export class GeoDataImportComponent implements OnInit {
       for (let index = 0; index < fileDialog.files.length; index++) {
         const file = fileDialog.files[index];
         this.files.push({ data: file, inProgress: false, progress: 0 });
-        console.log("this is a file:", file)
         this.readFile(file);
       }
     };
@@ -60,19 +59,16 @@ export class GeoDataImportComponent implements OnInit {
   }
 
   public onUploadClick(): void {
-    // this.uploadFile(this.selectedFile);
     this.uploadFiles(this.files);
   }
 
   public fileSelected(file: any): void {
     this.selectedFile = file;
-    console.log("this is a selected file:", file)
     this.readFile(file.data);
+  }
 
-    this.readFileAsString(file).subscribe(x => {
-      console.log('readFileAsString:', x);
-    });
-
+  public removeFile(file: ImportFile): void {
+    this.files = this.files.filter(item => item.data.name !== file.data.name);
   }
 
   private readFile(file: any): void {
@@ -98,35 +94,18 @@ export class GeoDataImportComponent implements OnInit {
   }
 
   private uploadFiles(files: ImportFile[]) {
-    //files.forEach(x=>{ this.uploadFile(x)});   
-
-    // let uploadQueue = new Subject<ImportFile>();
-    // uploadQueue.subscribe(x=>{
-    //   this.uploadFile(x);
-    // });
-
-    // from(files,queueScheduler).pipe(mergeMap(x => this.uploadFile(x),1))
-    // from(files,queueScheduler).pipe(mergeMap(x => this.uploadFile(x)))
-    // from(files,asyncScheduler).pipe(concatMap(x => this.uploadFile(x)))
-    from(files,asyncScheduler).pipe(mergeMap(x => this.uploadFile(x)))
+    from(files, asyncScheduler).pipe(mergeMap(x => this.uploadFile(x)))
       .subscribe(
         {
           next:
             (x: any) => {
-              console.log('uploaded:', x);
               this.msgService.publishGeneral(MessageType.NewGeoDataAvailable, null);
             }
         });
-
-        //often last file fails upload with no content being sent
-        //smaller sets seem to complete more
-
   }
 
   private uploadFile(file: ImportFile): Observable<any> {
-    console.log('uploadFile file:',file)
     return this.readFileAsString(file).pipe(flatMap((fileContent) => {
-      console.log('fileContent:',fileContent)
       return this.dataService.gpxUpload(fileContent)
         .pipe(map(event => {
           if (event != null) {
@@ -144,7 +123,6 @@ export class GeoDataImportComponent implements OnInit {
             file.inProgress = false;
             return of(`${file.data.name} upload failed.`);
           }));
-
     }));
 
   }

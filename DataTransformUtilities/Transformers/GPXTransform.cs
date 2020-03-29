@@ -11,34 +11,49 @@ namespace DataTransformUtilities.Transformers
 
         public GeoData GetGeoDataFromGpx(Gpx gpx)
         {
-            var geoData = new GeoData()
-            {
-                UserID = "",
-                ID = Guid.NewGuid().ToString(),
-                DateCreated = DateTime.Now,
-                Description = gpx.trk.name,
-                Tags = { "Transformed From GPX" },
-                DateModified = DateTime.Now,
-                Data = GetFeatureCollection(gpx)
-            };
+            var geoData = new GeoData();
+            string dataDescription = "Gpx Import ";
 
+            geoData.UserID = "";
+            geoData.ID = Guid.NewGuid().ToString();
+            geoData.DateCreated = DateTime.Now;
+            geoData.Tags = new List<string> { "Transformed From GPX" };
+            geoData.DateModified = DateTime.Now;
+
+            var features = new List<Feature>();
+
+            if (gpx.trk != null)
+            {
+                if(!string.IsNullOrEmpty(gpx.trk.name)) dataDescription = string.Concat(dataDescription, "- Track Name: ", gpx.trk.name);
+                features.AddRange(GetTrkFeatures(gpx.trk));
+            }
+
+            if (gpx.wpt != null)
+            {
+                dataDescription = string.Concat(dataDescription, "- ", " Waypoints: ", gpx.wpt.Count());
+                features.AddRange(GetWptFeatures(gpx.wpt));
+            }
+
+            geoData.Description = dataDescription;
+            geoData.Data = new FeatureCollection(features);
             return geoData;
         }
-        private FeatureCollection GetFeatureCollection(Gpx gpx)
+
+        private List<Feature> GetTrkFeatures(Trk trk)
         {
             List<Position> coords = new List<Position>();
             List<DateTime> coordTimes = new List<DateTime>();
 
-            foreach (var coord in gpx.trk.trkseg.trkpt)
+            foreach (var coord in trk.trkseg.trkpt)
             {
                 coords.Add(new Position(coord.lon, coord.lat, coord.ele));
                 coordTimes.Add(coord.time);
             }
-            
+
             var geom1 = new LineString(coords);
 
             var props = new Dictionary<string, object>();
-            props["Name"] = gpx.trk.name;
+            props["Name"] = trk.name;
             props["StartTime"] = coordTimes.First();
             props["EndtTime"] = coordTimes.Last();
             props["CoordinateTimes"] = coordTimes;
@@ -48,11 +63,27 @@ namespace DataTransformUtilities.Transformers
             var features = new List<Feature>();
             features.Add(feature1);
 
-            var data = new FeatureCollection(features);
-
-            return data;
+            return features;
         }
 
+        private List<Feature> GetWptFeatures(List<Wpt> wpts)
+        {            
+            var features = new List<Feature>();
+            foreach (var wpt in wpts)
+            {
+                var pos = new Position(wpt.lon, wpt.lat, wpt.ele);
+                var props = new Dictionary<string, object>();
+                props["Name"] = wpt.name;
+                props["Cmt"] = wpt.cmt;
+                props["Desc"] = wpt.desc;
+                props["Sym"] = wpt.sym;
 
+                var point = new Point(pos);
+                var feature = new Feature(point, props);
+
+                features.Add(feature);
+            }
+            return features;
+        }
     }
 }
