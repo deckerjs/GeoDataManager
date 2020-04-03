@@ -71,14 +71,17 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddScoped<IFileDataAccess<AppUser>>(x => new FileDataAccess<AppUser>(Path.Combine(Directory.GetCurrentDirectory(),FileDataAccess<AppUser>.BASE_DIR, UserDataAccess.USER_DATA)));
             builder.Services.AddScoped<IFileDataAccess<AppRole>>(x => new FileDataAccess<AppRole>(Path.Combine(Directory.GetCurrentDirectory(), FileDataAccess<AppRole>.BASE_DIR,RoleDataAccess.ROLE_DATA)));
             builder.Services.AddScoped<IFileDataAccess<AppUserRoles>>(x => new FileDataAccess<AppUserRoles>(Path.Combine(Directory.GetCurrentDirectory(), FileDataAccess<AppUserRoles>.BASE_DIR,UserRolesDataAccess.USER_ROLE_DATA)));
+            builder.Services.AddScoped<IFileDataAccess<UserDataPermission>>(x => new FileDataAccess<UserDataPermission>(Path.Combine(Directory.GetCurrentDirectory(), FileDataAccess<UserDataPermission>.BASE_DIR, UserDataPermissionDataAccess.USER_DATA_PERMISSION)));
 
             builder.Services.AddScoped<IUserDataAccess, UserDataAccess>();
             builder.Services.AddScoped<IRoleDataAccess, RoleDataAccess>();
             builder.Services.AddScoped<IUserRolesDataAccess, UserRolesDataAccess>();
+            builder.Services.AddScoped<IUserDataPermissionDataAccess, UserDataPermissionDataAccess>();
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IRoleRepository, RoleRepository>();
             builder.Services.AddScoped<IUserRolesRepository, UserRolesRepository>();
+            builder.Services.AddScoped<IUserDataPermissionRepository, UserDataPermissionRepository>();
 
             builder.Services.AddScoped<IDataProtectionService, DataProtectionService>();
 

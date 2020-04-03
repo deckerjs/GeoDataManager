@@ -30,4 +30,8 @@
     <Content Update="nlog.config" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="data\UserDataPermission\UserDataPermission\" />
+  </ItemGroup>
+
 </Project>

@@ -22,6 +22,7 @@ namespace GeoStoreAPI.DataAccess
 
         public void Delete(Guid id, string userID)
         {
+            //todo: refactor the user check login out into the repo instead of here
             var data = _fileDataAccess.GetItem(GEODATA, id.ToString());
             if (data!=null && data.UserID == userID)
             {
