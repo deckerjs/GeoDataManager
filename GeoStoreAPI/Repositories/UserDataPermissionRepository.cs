@@ -20,7 +20,7 @@ namespace GeoStoreAPI.Repositories
 
         public void Create(UserDataPermission data, string userID)
         {
-            var existing = GetAllGrantedToUser(x => x.OwnerUserID == userID, data.AllowedUserID);
+            var existing = GetAllGrantedToUser(data.AllowedUserID, x => x.OwnerUserID == userID);
             if(existing!=null && !existing.Any())
             {
                 data.OwnerUserID = userID;
@@ -49,14 +49,14 @@ namespace GeoStoreAPI.Repositories
             return null;
         }
 
-        public IEnumerable<UserDataPermission> GetAllGrantedToUser(Func<UserDataPermission, bool> filter, string userID)
+        public IEnumerable<UserDataPermission> GetAllGrantedToUser(string userID, Func<UserDataPermission, bool> filter )
         {
             Func<UserDataPermission, bool> userFilter = (x) => x.AllowedUserID == userID;
             Func<UserDataPermission, bool> combinedFilter = (x) => filter(x) && userFilter(x);
             return _dataAccess.GetAll(combinedFilter);
         }
 
-        public IEnumerable<UserDataPermission> GetAllForOwnerUser(Func<UserDataPermission, bool> filter, string userID)
+        public IEnumerable<UserDataPermission> GetAllForOwnerUser(string userID, Func<UserDataPermission, bool> filter)
         {
             Func<UserDataPermission, bool> userFilter = (x) => x.OwnerUserID == userID;
             Func<UserDataPermission, bool> combinedFilter = (x) => filter(x) && userFilter(x);

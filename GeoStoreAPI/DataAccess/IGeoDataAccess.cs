@@ -6,11 +6,10 @@ namespace GeoStoreAPI.DataAccess
 {
     public interface IGeoDataAccess
     {
-        void Create(GeoData geoData, string userID);
-        GeoData Get(Guid id, string userID);
-        void Delete(Guid id, string userID);
-        IEnumerable<GeoData> GetAll(string userID, Func<GeoData, bool> filter);
-        GeoData Getsingle(Guid id, string userID);
-        void Update(Guid id, GeoData geoData, string userID);
+        void Create(GeoData geoData);
+        GeoData Get(string id);
+        void Delete(string id);
+        IEnumerable<GeoData> GetAll(Func<GeoData, bool> filter);        
+        void Update(string id, GeoData geoData);
     }
 }

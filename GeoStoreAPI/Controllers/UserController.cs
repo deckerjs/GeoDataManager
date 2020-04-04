@@ -73,7 +73,7 @@ namespace GeoStoreAPI.Controllers
         {
             Func<UserDataPermission, bool> filter = x => true;
             string userID = _userIdService.GetUserID();
-            return _dataPermissionRepository.GetAllForOwnerUser(filter, userID).ToList();
+            return _dataPermissionRepository.GetAllForOwnerUser(userID,filter).ToList();
         }
 
         [Authorize(Roles = "user")]
@@ -112,7 +112,7 @@ namespace GeoStoreAPI.Controllers
         {
             Func<UserDataPermission, bool> filter = x => true;
             string userID = _userIdService.GetUserID();
-            return _dataPermissionRepository.GetAllGrantedToUser(filter, userID).ToList();
+            return _dataPermissionRepository.GetAllGrantedToUser(userID,filter).ToList();
         }
 
     }

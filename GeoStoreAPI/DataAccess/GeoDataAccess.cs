@@ -14,53 +14,29 @@ namespace GeoStoreAPI.DataAccess
         {
             _fileDataAccess = fileDataAccess;
         }
-        public void Create(GeoData geoData, string userID)
+        public void Create(GeoData geoData)
         {
-            geoData.UserID = userID;
-            _fileDataAccess.CreateItem(GEODATA, geoData.ID.ToString(), geoData);
+            _fileDataAccess.CreateItem(GEODATA, geoData.ID, geoData);
         }
 
-        public void Delete(Guid id, string userID)
+        public void Delete(string id)
         {
-            //todo: refactor the user check login out into the repo instead of here
-            var data = _fileDataAccess.GetItem(GEODATA, id.ToString());
-            if (data!=null && data.UserID == userID)
-            {
-                _fileDataAccess.DeleteItem(GEODATA, id.ToString());
-            }
+            _fileDataAccess.DeleteItem(GEODATA, id);
         }
 
-        public GeoData Get(Guid id, string userID)
+        public IEnumerable<GeoData> GetAll(Func<GeoData, bool> filter)
         {
-            var data = _fileDataAccess.GetItem(GEODATA, id.ToString());
-            if (data!=null && data.UserID == userID)
-            {
-                return data;
-            }
-            return null;
+            return _fileDataAccess.GetAllItems(GEODATA, filter);
         }
 
-        public IEnumerable<GeoData> GetAll(string userID, Func<GeoData, bool> filter)
+        public GeoData Get(string id)
         {
-            Func<GeoData, bool> userFilter = (x) => x.UserID == userID;
-            Func<GeoData, bool>  combinedFilter = (x) => filter(x) && userFilter(x);
-            return _fileDataAccess.GetAllItems(GEODATA, combinedFilter);
+            return _fileDataAccess.GetItem(GEODATA, id);
         }
 
-        public GeoData Getsingle(Guid id, string userID)
+        public void Update(string id, GeoData geoData)
         {
-            var data = _fileDataAccess.GetItem(GEODATA, id.ToString());
-            if (data.UserID == userID)
-            {
-                return data;
-            }
-            return null;
-        }
-
-        public void Update(Guid id, GeoData geoData, string userID)
-        {
-            geoData.UserID = userID;
-            _fileDataAccess.SaveItem(GEODATA,id.ToString(),geoData);
+            _fileDataAccess.SaveItem(GEODATA, id, geoData);
         }
     }
 }
