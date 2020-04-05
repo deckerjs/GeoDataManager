@@ -1,0 +1,49 @@
+<div class="card text-light bg-secondary h-100">
+
+    <h5 class="card-header">Server Provided Settings</h5>
+
+    <div class="card-body bg-dark">
+
+        <div class="card-title my-1">
+            <span class="text-light mr-1"><strong>ConfigurationSettings</strong></span>
+        </div>
+
+        <div class="card-text">
+            <strong>Auth url:</strong> {{configurationSettings.AuthUrl}}
+        </div>
+        <div class="card-text">
+            <strong>Api url:</strong> {{configurationSettings.GeoDataApiUrl}}
+        </div>
+
+    </div>
+
+    <h5 class="card-header">Data Permissions</h5>
+
+    <div class="card-body bg-dark">
+
+        <div class="card-title my-1">
+            <span class="text-white"><strong>Permissions You Have Granted</strong></span>
+        </div>
+
+        <div *ngFor="let p of userDataPermissions" class="card-text">
+            <div class="card-text"><strong>Allowed User ID:</strong> {{p.AllowedUserID}}</div>
+            <div class="card-text"><strong>Read:</strong> {{p.Read}}</div>
+            <div class="card-text"><strong>Write:</strong> {{p.Write}}</div>
+        </div>
+        <hr>
+
+        <div class="card-title my-1">
+            <span class="text-white"><strong>Permissions GrantedTo You</strong></span>
+        </div>
+
+        <div *ngFor="let p of userDataGrantedPermissions" class="card-text">
+            <div class="card-text"><strong>Owner User ID:</strong> {{p.OwnerUserID}}</div>
+            <div class="card-text"><strong>Read:</strong> {{p.Read}}</div>
+            <div class="card-text"><strong>Write:</strong> {{p.Write}}</div>
+        </div>
+
+    </div>
+
+    <div class="card-footer">
+    </div>
+</div>

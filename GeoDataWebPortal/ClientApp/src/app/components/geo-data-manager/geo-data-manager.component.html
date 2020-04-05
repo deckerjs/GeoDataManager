@@ -18,4 +18,10 @@
     </ng-template>
   </ngb-tab>
 
+  <ngb-tab *ngIf="showSettings" title="Settings">
+    <ng-template ngbTabContent>
+      <app-data-settings></app-data-settings>
+    </ng-template>
+  </ngb-tab>
+
 </ngb-tabset>

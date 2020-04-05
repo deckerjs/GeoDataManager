@@ -19,6 +19,7 @@ import { AuthComponent } from './auth/auth.component';
 import { GeoDataViewerComponent } from './components/geo-data-viewer/geo-data-viewer.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { DataSettingsComponent } from './components/data-settings/data-settings.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MainViewComponent,
     GeoDataEditorComponent,
     AuthComponent,
-    GeoDataViewerComponent
+    GeoDataViewerComponent,
+    DataSettingsComponent
   ],
   imports: [
     BrowserModule,
