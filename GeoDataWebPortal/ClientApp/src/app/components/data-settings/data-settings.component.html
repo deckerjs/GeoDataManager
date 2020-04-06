@@ -45,5 +45,13 @@
     </div>
 
     <div class="card-footer">
+        <div class="card-title my-1">
+            <span class="text-white"><strong>User List</strong></span>
+        </div>
+        <div *ngFor="let u of userList" class="card-text">
+            <div class="card-text"><strong>User ID:</strong> {{u.ID}}</div>
+            <div class="card-text"><strong>User Name:</strong> {{u.UserName}}</div>            
+        </div>
+
     </div>
 </div>

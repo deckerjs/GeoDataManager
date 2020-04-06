@@ -36,7 +36,6 @@ namespace GeoStoreAPI.Controllers
             _userRepository.CreateUser(user);
         }
 
-
         [Authorize(Roles = "user")]
         [HttpGet]
         public ActionResult<AppUser> Get()
@@ -55,6 +54,18 @@ namespace GeoStoreAPI.Controllers
             var user = _userRepository.GetUser(userID);
             user.UpdateWith(userUpdate);
             _userRepository.UpdateUser(user);
+        }
+
+        [Authorize(Roles = "user")]
+        [HttpGet("userlist")]
+        public ActionResult<List<AppUser>> GetUserList()
+        {            
+            var users = _userRepository
+                .GetAllUsers(x=>x.Disabled == false)
+                .Select(x=> new AppUser { ID = x.ID, UserName = x.UserName })
+                .ToList();
+            
+            return users;
         }
 
         [Authorize(Roles = "user")]

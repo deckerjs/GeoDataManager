@@ -7,6 +7,7 @@ import { AuthService } from '../auth/auth.service';
 import { switchMap, delay, repeat, tap, catchError } from 'rxjs/operators';
 import { ConfigurationSettings } from '../portal-settings/models/urlsettings';
 import { UserDataPermission } from '../models/user-data-permission';
+import { AppUser } from '../models/app-user';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class UserSettingsAPIService {
   private readonly API_MAIN_ENDPOINT: string = 'api/User';
   private readonly DATA_PERMISSIONS_ENDPOINT: string = 'DataPermissions';
   private readonly DATA_PERMISSIONS_GRANTED_ENDPOINT: string = 'DataPermissions/Granted';  
+  private readonly USER_LIST_ENDPOINT: string = 'UserList';
 
   constructor(
     private http: HttpClient,
@@ -83,6 +85,20 @@ export class UserSettingsAPIService {
                 const httpPrms = new HttpParams();
                 httpPrms.append('filter', filter);
                 return this.http.get<Array<UserDataPermission>>(url, { headers: httpHeaders, params: httpPrms });
+              }));
+          })
+        );
+      }
+
+      public getAllUsers(filter?: string): Observable<Array<AppUser>> {
+        return this.getSettingsObservable().pipe(
+          switchMap(settings => {
+            return this.getHttpHeaders().pipe(
+              switchMap(httpHeaders => {
+                const url = this.getUserApiURL(settings, this.USER_LIST_ENDPOINT);
+                const httpPrms = new HttpParams();
+                httpPrms.append('filter', filter);
+                return this.http.get<Array<AppUser>>(url, { headers: httpHeaders, params: httpPrms });
               }));
           })
         );

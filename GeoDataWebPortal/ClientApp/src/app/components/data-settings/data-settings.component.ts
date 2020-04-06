@@ -6,6 +6,7 @@ import { faTrash, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { ConfigurationSettings } from 'src/app/services/configuration-settings.service';
 import { UserSettingsAPIService } from 'src/app/services/user-settings-api.service';
 import { UserDataPermission } from 'src/app/models/user-data-permission';
+import { AppUser } from 'src/app/models/app-user';
 
 @Component({
   selector: 'app-data-settings',
@@ -17,6 +18,7 @@ export class DataSettingsComponent implements OnInit {
   configurationSettings: ConfigurationSettings;
   userDataPermissions: UserDataPermission[] = [];
   userDataGrantedPermissions: UserDataPermission[] = [];
+  userList: AppUser[]=[];
 
   constructor(
     private settingsService: SettingsService,
@@ -46,6 +48,14 @@ export class DataSettingsComponent implements OnInit {
       }
     });
     
+    this.dataService.getAllUsers().subscribe({
+      next: x => {
+        this.userList = x;
+      }
+    });
+
+
+
   }
 
 }
