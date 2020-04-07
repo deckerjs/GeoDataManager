@@ -51,7 +51,20 @@ export class UserSettingsAPIService {
         );
       }
 
-      public update(data: UserDataPermission) {
+      public createUserDataPermission(data: UserDataPermission) {
+        return this.getSettingsObservable().pipe(
+          switchMap(settings => {
+            return this.getHttpHeaders().pipe(
+              switchMap(httpHeaders => {
+                const url = this.getUserApiURL(settings, this.DATA_PERMISSIONS_ENDPOINT);
+                console.log("post:", data, " url:", url, "headers:", Headers)
+                return this.http.post<UserDataPermission>(url, data, { headers: httpHeaders });
+              }));
+          })
+        );
+      }
+
+      public updateUserDataPermission(data: UserDataPermission) {
         return this.getSettingsObservable().pipe(
           switchMap(settings => {
             return this.getHttpHeaders().pipe(

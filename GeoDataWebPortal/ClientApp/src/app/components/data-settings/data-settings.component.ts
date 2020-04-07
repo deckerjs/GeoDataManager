@@ -18,7 +18,7 @@ export class DataSettingsComponent implements OnInit {
   configurationSettings: ConfigurationSettings;
   userDataPermissions: UserDataPermission[] = [];
   userDataGrantedPermissions: UserDataPermission[] = [];
-  userList: AppUser[]=[];
+  userList: AppUser[] = [];
 
   constructor(
     private settingsService: SettingsService,
@@ -29,13 +29,40 @@ export class DataSettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.refreshConfigurationSettings();
+    this.refreshUserData();
+    this.refreshPermissionData();
+  }
 
-    this.settingsService.getSettings().subscribe({
+  public addDataPermission(id: string): void {
+    let newData: UserDataPermission = {
+      ID: null,
+      AllowedUserID: id,
+      OwnerUserID: null,
+      Read: true,
+      ResourceName: null,
+      Write: false
+    }
+    this.dataService.createUserDataPermission(newData).subscribe({
       next: x => {
-        this.configurationSettings = x;
+        this.refreshPermissionData();
       }
     });
+  }
 
+  public removeDataPermission(id: string): void {
+    this.dataService.deleteUserDataPermission(id).subscribe({
+      next: x => {
+        this.refreshPermissionData();
+      }
+    });
+  }
+
+  public getUserNameFromId(id: string): string {
+    return this.userList.find(x => x.ID == id).UserName;
+  }
+
+  public refreshPermissionData(): void {
     this.dataService.getAllUserDataPermissions().subscribe({
       next: x => {
         this.userDataPermissions = x;
@@ -47,15 +74,22 @@ export class DataSettingsComponent implements OnInit {
         this.userDataGrantedPermissions = x;
       }
     });
-    
+  }
+
+  public refreshUserData(): void {
     this.dataService.getAllUsers().subscribe({
       next: x => {
         this.userList = x;
       }
     });
+  }
 
-
-
+  public refreshConfigurationSettings(): void {
+    this.settingsService.getSettings().subscribe({
+      next: x => {
+        this.configurationSettings = x;
+      }
+    });
   }
 
 }

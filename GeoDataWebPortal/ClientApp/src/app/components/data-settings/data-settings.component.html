@@ -25,11 +25,44 @@
             <span class="text-white"><strong>Permissions You Have Granted</strong></span>
         </div>
 
+        <table class="bg-light text-dark">
+            <tr>
+                <td>
+                    User dropdown here:
+                </td>
+                <td>
+                    <a (click)="addDataPermission()" class="btn btn-link text-info">Add</a>
+                </td>
+            </tr>
+            <tr>
+                <th><strong>Allowed User</strong></th>
+                <th><strong>Read</strong></th>
+                <th><strong>Write</strong></th>
+                <th></th>
+            </tr>
+            <tr *ngFor="let p of userDataPermissions">
+                <td>
+                    {{getUserNameFromId(p.AllowedUserID)}}
+                </td>
+                <td>
+                    {{p.Read}}
+                </td>
+                <td>
+                    {{p.Write}}
+                </td>
+                <td>
+                    <a (click)="removeDataPermission(p.ID)" class="btn btn-link text-warning">Remove</a>
+                </td>
+            </tr>
+
+        </table>
+
         <div *ngFor="let p of userDataPermissions" class="card-text">
             <div class="card-text"><strong>Allowed User ID:</strong> {{p.AllowedUserID}}</div>
             <div class="card-text"><strong>Read:</strong> {{p.Read}}</div>
             <div class="card-text"><strong>Write:</strong> {{p.Write}}</div>
         </div>
+
         <hr>
 
         <div class="card-title my-1">
@@ -50,7 +83,7 @@
         </div>
         <div *ngFor="let u of userList" class="card-text">
             <div class="card-text"><strong>User ID:</strong> {{u.ID}}</div>
-            <div class="card-text"><strong>User Name:</strong> {{u.UserName}}</div>            
+            <div class="card-text"><strong>User Name:</strong> {{u.UserName}}</div>
         </div>
 
     </div>
