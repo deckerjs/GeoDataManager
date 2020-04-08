@@ -25,20 +25,37 @@
             <span class="text-white"><strong>Permissions You Have Granted</strong></span>
         </div>
 
-        <table class="bg-light text-dark">
+        <table class="bg-light text-dark table table-sm mb-0">
+            <thead>
+                <tr>
+                    <td class="col-2">
+                        <div ngbDropdown class="d-inline-block">
+                            <button class="btn btn-primary" id="userSelect" ngbDropdownToggle>Users</button>
+                            <div ngbDropdownMenu aria-labelledby="userSelect">
+                                <button *ngFor="let u of userList" ngbDropdownItem (click)="selectedUser=u">
+                                    {{u.UserName}}
+                                </button>
+                            </div>
+                        </div>
+                        <span class="mx-2">{{selectedUser?.UserName}}</span>
+                    </td>
+                    <td class="col-2">
+                        <a (click)="addDataPermission(selectedUser.ID)" class="btn btn-link text-info">Add</a>
+                    </td>
+                    <td class="col-2"></td>
+                    <td class="col-2"></td>
+                    <td class="col-4"></td>
+                </tr>
+            </thead>            
+        </table>
+
+        <table class="bg-light text-dark table table-sm mt-0">
             <tr>
-                <td>
-                    User dropdown here:
-                </td>
-                <td>
-                    <a (click)="addDataPermission()" class="btn btn-link text-info">Add</a>
-                </td>
-            </tr>
-            <tr>
-                <th><strong>Allowed User</strong></th>
-                <th><strong>Read</strong></th>
-                <th><strong>Write</strong></th>
-                <th></th>
+                <th class="col-2" scope="col">Allowed User</th>
+                <th class="col-2" scope="col">Read</th>
+                <th class="col-2" scope="col">Write</th>
+                <th class="col-2" scope="col"></th>
+                <th class="col-4" scope="col"></th>
             </tr>
             <tr *ngFor="let p of userDataPermissions">
                 <td>
@@ -53,15 +70,11 @@
                 <td>
                     <a (click)="removeDataPermission(p.ID)" class="btn btn-link text-warning">Remove</a>
                 </td>
+                <td></td>
+                <td></td>
             </tr>
 
         </table>
-
-        <div *ngFor="let p of userDataPermissions" class="card-text">
-            <div class="card-text"><strong>Allowed User ID:</strong> {{p.AllowedUserID}}</div>
-            <div class="card-text"><strong>Read:</strong> {{p.Read}}</div>
-            <div class="card-text"><strong>Write:</strong> {{p.Write}}</div>
-        </div>
 
         <hr>
 
@@ -69,22 +82,36 @@
             <span class="text-white"><strong>Permissions GrantedTo You</strong></span>
         </div>
 
-        <div *ngFor="let p of userDataGrantedPermissions" class="card-text">
-            <div class="card-text"><strong>Owner User ID:</strong> {{p.OwnerUserID}}</div>
-            <div class="card-text"><strong>Read:</strong> {{p.Read}}</div>
-            <div class="card-text"><strong>Write:</strong> {{p.Write}}</div>
-        </div>
+        <table class="bg-light text-dark table table-sm mt-0">
+            <tr>
+                <th class="col-2" scope="col">Owner User</th>
+                <th class="col-2" scope="col">Read</th>
+                <th class="col-2" scope="col">Write</th>
+                <th class="col-2" scope="col"></th>
+                <th class="col-4" scope="col"></th>
+            </tr>
+            <tr *ngFor="let p of userDataGrantedPermissions">
+                <td>
+                    {{getUserNameFromId(p.OwnerUserID)}}
+                </td>
+                <td>
+                    {{p.Read}}
+                </td>
+                <td>
+                    {{p.Write}}
+                </td>
+                <td>
+                    
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+
+        </table>
 
     </div>
 
     <div class="card-footer">
-        <div class="card-title my-1">
-            <span class="text-white"><strong>User List</strong></span>
-        </div>
-        <div *ngFor="let u of userList" class="card-text">
-            <div class="card-text"><strong>User ID:</strong> {{u.ID}}</div>
-            <div class="card-text"><strong>User Name:</strong> {{u.UserName}}</div>
-        </div>
 
     </div>
 </div>

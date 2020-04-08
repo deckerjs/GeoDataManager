@@ -15,10 +15,12 @@ import { AppUser } from 'src/app/models/app-user';
 })
 export class DataSettingsComponent implements OnInit {
 
-  configurationSettings: ConfigurationSettings;
-  userDataPermissions: UserDataPermission[] = [];
-  userDataGrantedPermissions: UserDataPermission[] = [];
-  userList: AppUser[] = [];
+  public configurationSettings: ConfigurationSettings;
+  public userDataPermissions: UserDataPermission[] = [];
+  public userDataGrantedPermissions: UserDataPermission[] = [];
+  public userList: AppUser[] = [];
+
+  public selectedUser:AppUser;
 
   constructor(
     private settingsService: SettingsService,
@@ -45,6 +47,7 @@ export class DataSettingsComponent implements OnInit {
     }
     this.dataService.createUserDataPermission(newData).subscribe({
       next: x => {
+        this.selectedUser=null;
         this.refreshPermissionData();
       }
     });
