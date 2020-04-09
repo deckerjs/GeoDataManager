@@ -47,9 +47,30 @@ namespace GeoStoreAPI.Controllers
         }
 
         [HttpPost]
-        public void Post([FromBody] GeoData geoData)
+        public string Post([FromBody] GeoData geoData)
         {
-            _dataRepository.Create(geoData, _userIdService.GetUserID());
+            return _dataRepository.Create(geoData, _userIdService.GetUserID());
+        }
+
+        [HttpPost("{id}/data/features/geometry/coordinates")]
+        public string PostCoordinates(string id, [FromBody] List<Position> coordinates)
+        {
+            GeoData data;
+
+            if (string.IsNullOrEmpty(id))
+            {
+                var newId = _dataRepository.Create(new GeoData(), _userIdService.GetUserID());
+                data = _dataRepository.GetSingle(newId, _userIdService.GetUserID());
+            }
+            else
+            {
+                data = _dataRepository.GetSingle(id, _userIdService.GetUserID());
+            }
+
+            var featureCollection = _dataRepository.GetCoordinatesFeatureCollection(coordinates);
+            _dataRepository.AppendFeatureCollection(data.ID, featureCollection);
+
+            return data.ID;
         }
 
         [HttpPut("{id}")]
@@ -63,6 +84,6 @@ namespace GeoStoreAPI.Controllers
         {
             _dataRepository.Delete(id, _userIdService.GetUserID());
         }
-
+                
     }
 }
