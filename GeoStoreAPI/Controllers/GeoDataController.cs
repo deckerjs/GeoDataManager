@@ -23,7 +23,7 @@ namespace GeoStoreAPI.Controllers
             IUserIdentificationService userIdService)
         {
             _dataRepository = dataRepository;
-            _userIdService = userIdService;            
+            _userIdService = userIdService;
         }
 
         [HttpGet]
@@ -36,7 +36,7 @@ namespace GeoStoreAPI.Controllers
         [HttpGet]
         [Route("Shared")]
         public ActionResult<IEnumerable<GeoData>> GetShared([FromQuery]string filterCriteria)
-        {   
+        {
             return _dataRepository.GetShared(_userIdService.GetUserID(), (x) => true).ToList();
         }
 
@@ -53,25 +53,49 @@ namespace GeoStoreAPI.Controllers
         }
 
         [HttpPost("{id}/data/features/geometry/coordinates")]
-        public string PostCoordinates(string id, [FromBody] List<Position> coordinates)
+        public ActionResult<string> PostCoordinates(string id, [FromBody] List<Coordinate> coordinates)
         {
             GeoData data;
 
-            if (string.IsNullOrEmpty(id))
+            data = _dataRepository.GetSingle(id, _userIdService.GetUserID());
+
+            if (data != null)
             {
-                var newId = _dataRepository.Create(new GeoData(), _userIdService.GetUserID());
-                data = _dataRepository.GetSingle(newId, _userIdService.GetUserID());
-            }
-            else
-            {
-                data = _dataRepository.GetSingle(id, _userIdService.GetUserID());
+                _dataRepository.AppendMultiPointCollection(data.ID, coordinates);
+                return data.ID;
             }
 
-            var featureCollection = _dataRepository.GetCoordinatesFeatureCollection(coordinates);
-            _dataRepository.AppendFeatureCollection(data.ID, featureCollection);
+            return NotFound();
+        }
+
+        [HttpPost("data/features/geometry/coordinates")]
+        public ActionResult<string> PostCoordinatesToNewObject([FromBody] List<Coordinate> coordinates)
+        {
+            GeoData data;
+
+            var newId = _dataRepository.Create(new GeoData(), _userIdService.GetUserID());
+            data = _dataRepository.GetSingle(newId, _userIdService.GetUserID());
+
+            _dataRepository.AppendMultiPointCollection(data.ID, coordinates);
 
             return data.ID;
         }
+
+        [HttpGet("{id}/data/features/geometry/coordinates")]
+        public ActionResult<List<Coordinate>> GetCoordinates(string id)
+        {
+            GeoData data;
+
+            data = _dataRepository.GetSingle(id, _userIdService.GetUserID());
+
+            if (data != null)
+            {
+                return _dataRepository.GetCoordinatesFromFeatureCollection(data.Data);
+            }
+
+            return NotFound();
+        }
+
 
         [HttpPut("{id}")]
         public void Put(string id, [FromBody] GeoData geoData)
@@ -84,6 +108,6 @@ namespace GeoStoreAPI.Controllers
         {
             _dataRepository.Delete(id, _userIdService.GetUserID());
         }
-                
+
     }
 }

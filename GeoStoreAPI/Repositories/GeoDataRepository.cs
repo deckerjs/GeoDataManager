@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using GeoStoreAPI.DataAccess;
 using GeoDataModels.Models;
+using System.Linq;
 
 namespace GeoStoreAPI.Repositories
 {
@@ -95,43 +96,71 @@ namespace GeoStoreAPI.Repositories
             }
         }
 
-
-
-
-
         //todo: there has to be a better way to append data, this seems wrong
-        public void AppendFeatureCollection(string id, FeatureCollection featureCollection)
+        //this is an ugly hack due to not being able to append to an existing collection.
+        //can't append to the coordinate IEnumerable in the geometry, its readonly
+        //instead I am creating new multiline feature, adding existing coordinates, then adding new ones.
+        //then since i cant be bothered to figure out which one we were trying to append to
+        //only the new multipoint will be added back to the feature collection
+        //todo sooner rather than later: get rid of the bamcis dependency
+        public void AppendMultiPointCollection(string id, IEnumerable<Coordinate> incomingCoords)
         {
-            var features = new List<Feature>();
-            foreach (var item in featureCollection.Features)
-            {
-                features.Add((Feature)item);
-            }
 
+            if (incomingCoords == null) return;
+
+            var coordsCombined = new List<Position>();
             var existingGeoData = _dataAccess.Get(id);
 
-            foreach (var item in existingGeoData.Data.Features)
+            var existingMultiPoint = existingGeoData.Data.Features.Where(x => x.Geometry is BAMCIS.GeoJSON.MultiPoint).FirstOrDefault();
+            if (existingMultiPoint != null)
             {
-                features.Add((Feature)item);
+                var geometry = (BAMCIS.GeoJSON.MultiPoint)existingMultiPoint.Geometry;
+                coordsCombined.AddRange(geometry.Coordinates.Select(x => new Position(x.Longitude, x.Latitude,x.Elevation)));                
             }
 
+            coordsCombined.AddRange(GetPositionsFromCoordinates(incomingCoords));
+            
+            var multiPoint = new MultiPoint(coordsCombined);
+            var features = new List<Feature>();
+            features.Add(new Feature(multiPoint));
             var appendedData = new FeatureCollection(features);
 
+            //this will wipe out any other features if there were any. hooray for read only collection properties
             existingGeoData.Data = appendedData;
             existingGeoData.DateModified = DateTime.Now;
 
             _dataAccess.Update(existingGeoData.ID, existingGeoData);
         }
 
-
-        public FeatureCollection GetCoordinatesFeatureCollection(IEnumerable<Position> coords)
+        private List<Position> GetPositionsFromCoordinates(IEnumerable<Coordinate> coords)
         {
-            var geom = new MultiPoint(coords);
+            return new List<Position>(coords.Select(x => new Position(x.Longitude, x.Latitude, x.Elevation)));
+        }
+
+        public List<Coordinate> GetCoordinatesFromFeatureCollection(FeatureCollection featureCollection)
+        {
+            var existingMultiPoint = featureCollection.Features.Where(x => x.Geometry is BAMCIS.GeoJSON.MultiPoint).FirstOrDefault();
+            if (existingMultiPoint != null)
+            {
+                var geometry = (BAMCIS.GeoJSON.MultiPoint)existingMultiPoint.Geometry;
+                return geometry.Coordinates.Select(x => new Coordinate() { Latitude = x.Latitude, Longitude = x.Longitude, Elevation = x.Elevation }).ToList();
+            }
+            return null;
+        }
+
+        private MultiPoint GetMultiPointFromCoordinates(IEnumerable<Coordinate> coords)
+        {
+            return new MultiPoint(coords.Select(x => new Position(x.Longitude, x.Latitude, x.Elevation)));
+        }
+
+        private FeatureCollection GetCoordinatesFeatureCollection(IEnumerable<Coordinate> coords)
+        {
+            var geom = new MultiPoint(coords.Select(x => new Position(x.Longitude, x.Latitude, x.Elevation)));
             var feature = new Feature(geom);
             var features = new List<Feature>();
 
             features.Add(feature);
-            return new FeatureCollection(features);            
+            return new FeatureCollection(features);
         }
 
         private IEnumerable<GeoData> GetMockData()

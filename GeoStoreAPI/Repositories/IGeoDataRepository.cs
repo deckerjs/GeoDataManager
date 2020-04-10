@@ -11,9 +11,8 @@ namespace GeoStoreAPI.Repositories
         GeoData GetSingle(string id, string userID);
         string Create(GeoData geoData, string userID);
         void Update(string id, GeoData geoData, string userID);
-        void Delete(string id, string userID);
-
-        FeatureCollection GetCoordinatesFeatureCollection(IEnumerable<Position> coords);
-        void AppendFeatureCollection(string id, FeatureCollection featureCollection);
+        void Delete(string id, string userID);                
+        void AppendMultiPointCollection(string id, IEnumerable<Coordinate> coords);
+        List<Coordinate> GetCoordinatesFromFeatureCollection(FeatureCollection featureCollection);
     }
 }
