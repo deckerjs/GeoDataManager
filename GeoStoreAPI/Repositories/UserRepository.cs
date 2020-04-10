@@ -13,12 +13,17 @@ namespace GeoStoreAPI.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly IUserDataAccess _dataAccess;
+        private readonly IUserRolesRepository _userRolesRepository;
         private readonly AppOptions _options;
         private readonly IDataProtectionService _dataProtection;
 
-        public UserRepository(IUserDataAccess dataAccess, AppOptions options, IDataProtectionService dataProtection)
+        public UserRepository(IUserDataAccess dataAccess,
+            IUserRolesRepository userRolesRepository,
+            AppOptions options, 
+            IDataProtectionService dataProtection)
         {
             _dataAccess = dataAccess;
+            _userRolesRepository = userRolesRepository;
             _options = options;
             _dataProtection = dataProtection;
         }
@@ -63,6 +68,7 @@ namespace GeoStoreAPI.Repositories
             string userID = Guid.NewGuid().ToString();
             user.Password = _dataProtection.GetPasswordHash(user.Password);
             _dataAccess.Create(user, userID);
+            _userRolesRepository.CreateUserRoles(new AppUserRoles() { UserID = user.ID, RoleIDs = { "user" } });
         }
 
         public void UpdateUser(AppUser user)
@@ -78,6 +84,7 @@ namespace GeoStoreAPI.Repositories
             var existingUser = _dataAccess.Get(userID);
             if(existingUser != null){                
                 _dataAccess.Delete(userID);
+                _userRolesRepository.RemoveUserRoles(userID);
             }            
         }
     }
