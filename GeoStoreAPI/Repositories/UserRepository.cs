@@ -76,6 +76,7 @@ namespace GeoStoreAPI.Repositories
             var existingUser = _dataAccess.Get(user.ID);
             if(existingUser != null && user != null){
                 existingUser.UpdateWith(user);
+                existingUser.Password = _dataProtection.GetPasswordHash(user.Password);
                 _dataAccess.Update(existingUser, existingUser.ID);
             }
         }

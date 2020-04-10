@@ -36,7 +36,10 @@ namespace GeoStoreAPI.Repositories
 
         public void RemoveUserRoles(string userID)
         {
-            _dataAccess.Delete(userID);
+            if (GetUserRoles(userID) != null)
+            {
+                _dataAccess.Delete(userID);
+            }
         }
 
     }
