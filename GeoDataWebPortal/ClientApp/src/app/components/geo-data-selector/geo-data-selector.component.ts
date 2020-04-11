@@ -7,7 +7,12 @@ import { GeoDataset } from '../../models/geo-dataset';
 import { GeoDataAPIService } from 'src/app/services/geo-data-api.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faSync } from '@fortawesome/free-solid-svg-icons';
+import { faSync, faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { AppUser } from 'src/app/models/app-user';
+import { UserSettingsAPIService } from 'src/app/services/user-settings-api.service';
+import { stringify } from 'querystring';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-geo-data-selector',
@@ -17,19 +22,25 @@ import { faSync } from '@fortawesome/free-solid-svg-icons';
 export class GeoDataSelectorComponent implements OnInit {
   public datasetCollection: Array<GeoDataset>;
   public selectedDataset: GeoDataset;
+  public userList: AppUser[] = [];
+  public showFilter: boolean = false;
+  public filterShowShared: boolean = false;
+  public filterForSelectedUser: AppUser;
 
-  constructor(    
+  constructor(
     private apiDataService: GeoDataAPIService,
     private msgService: GeoDataMessageBusService,
     private authService: AuthService,
+    private userDataService: UserSettingsAPIService,
     private falibrary: FaIconLibrary
   ) {
     this.datasetCollection = [];
-    falibrary.addIcons(faSync);
+    falibrary.addIcons(faSync, faChevronDown, faChevronRight);
   }
 
   ngOnInit() {
     this.loadDatasetsFromRepo();
+
     this.msgService
       .subscribeGeneral(MessageType.NewGeoDataAvailable)
       .subscribe(x => {
@@ -45,7 +56,7 @@ export class GeoDataSelectorComponent implements OnInit {
             this.clearDataset();
           }
         }
-      })
+      });
   }
 
   private clearDataset() {
@@ -55,12 +66,28 @@ export class GeoDataSelectorComponent implements OnInit {
   private loadDatasetsFromRepo() {
     this.datasetCollection = [];
 
-    this.apiDataService.GetAll().subscribe({
-      next: x => {
-        console.log("pushing api data collection", x)
-        this.datasetCollection.push(...x);
+    this.refreshUserData().subscribe({
+      next: u => {
+        this.apiDataService.GetAll().subscribe({
+          next: x => {
+            console.log("pushing api data collection", x)
+            this.datasetCollection.push(...x);
+          }
+        });
       }
     });
+  }
+
+  public refreshUserData(): Observable<AppUser[]> {
+    return this.userDataService.getAllUsers().pipe(tap(
+      x => {
+        this.userList = x;
+      }
+    ));
+  }
+
+  public getUserNameFromId(id: string): string {
+    return this.userDataService.getUserNameFromId(id, this.userList);
   }
 
   public selectDataset(item: GeoDataset) {
@@ -70,6 +97,10 @@ export class GeoDataSelectorComponent implements OnInit {
 
   public reload(): void {
     this.loadDatasetsFromRepo();
+  }
+
+  public filterToggle(): void {
+    this.showFilter = !this.showFilter;
   }
 
 }

@@ -12,7 +12,7 @@ namespace DataTransformUtilities.Transformers
         public GeoData GetGeoDataFromGpx(Gpx gpx)
         {
             var geoData = new GeoData();
-            string dataDescription = "Gpx Import ";
+            string dataDescription = "";
 
             geoData.UserID = "";
             geoData.ID = Guid.NewGuid().ToString();
@@ -24,13 +24,21 @@ namespace DataTransformUtilities.Transformers
 
             if (gpx.trk != null)
             {
-                if(!string.IsNullOrEmpty(gpx.trk.name)) dataDescription = string.Concat(dataDescription, "- Track Name: ", gpx.trk.name);
+                if (!string.IsNullOrEmpty(gpx.trk.name))
+                {
+                    dataDescription = string.Concat(dataDescription, gpx.trk.name);
+                }
+                else
+                {
+                    dataDescription = string.Concat(dataDescription, "Un-named track");
+                }
+
                 features.AddRange(GetTrkFeatures(gpx.trk));
             }
 
-            if (gpx.wpt != null)
+            if (gpx.wpt != null && gpx.wpt.Any())
             {
-                dataDescription = string.Concat(dataDescription, "- ", " Waypoints: ", gpx.wpt.Count());
+                dataDescription = string.Concat(dataDescription, "Waypoints: ", gpx.wpt.Count());
                 features.AddRange(GetWptFeatures(gpx.wpt));
             }
 
@@ -50,7 +58,16 @@ namespace DataTransformUtilities.Transformers
                 coordTimes.Add(coord.time);
             }
 
-            var geom1 = new LineString(coords);
+
+            BAMCIS.GeoJSON.Geometry geom1;
+            if (coords.Count > 1)
+            {
+                geom1 = new LineString(coords);
+            }
+            else
+            {
+                geom1 = new Point(coords.First());
+            }
 
             var props = new Dictionary<string, object>();
             props["Name"] = trk.name;
@@ -67,7 +84,7 @@ namespace DataTransformUtilities.Transformers
         }
 
         private List<Feature> GetWptFeatures(List<Wpt> wpts)
-        {            
+        {
             var features = new List<Feature>();
             foreach (var wpt in wpts)
             {

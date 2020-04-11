@@ -58,7 +58,12 @@ namespace GeoStoreAPI.DataAccess
 
         public IEnumerable<T> GetAllItems(string storageGroup, Func<T, bool> filter)
         {
-            return GetAllFiles(storageGroup).Select(x => ReadItemFromFile(storageGroup, x)).Where(x=>filter(x));
+            var files = GetAllFiles(storageGroup).Select(x => ReadItemFromFile(storageGroup, x)).Where(x=>x!=null).ToList();
+            if (files != null && files.Any())
+            {
+                return files.Where(x => filter(x));
+            }
+            else return null;
         }
 
         public T GetItem(string storageGroup, string name)

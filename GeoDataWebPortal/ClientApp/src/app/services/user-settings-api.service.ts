@@ -117,6 +117,15 @@ export class UserSettingsAPIService {
         );
       }
 
+
+      public getUserNameFromId(id: string, userList:Array<AppUser>): string {
+        const user = userList.find(x => x.ID == id);
+        if(user!=null){
+          return user.UserName;
+        }
+        return "";
+      }
+
       private getUserApiURL(urlSettings: ConfigurationSettings, endPoint: string): string {
         return urlSettings.GeoDataApiUrl + '/' +  this.API_MAIN_ENDPOINT + '/' + endPoint;
       }

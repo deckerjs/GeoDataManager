@@ -2,32 +2,91 @@
   <div class="card-header">Available Data</div>
 
   <div class="card-body px-2">
+
     <div class="card-text">
-      <div class="mx-auto">Geo Datasets</div>
+      <div class="mx-auto">Datasets</div>
+
       <div class="mx-auto">
-        <button class="btn btn-primary btn-sm my-1 w-100 " (click)="reload()">          
+        <button class="btn btn-primary btn-sm my-1 w-100 " (click)="reload()">
           <span class="mx-1">Reload</span>
           <fa-icon [icon]="['fas', 'sync']" class="mx-1 text-success"></fa-icon>
         </button>
-      </div> 
+      </div>
+
+      <div class="mx-auto">
+
+        <button *ngIf="showFilter" class="btn btn-primary btn-sm my-1 w-100 " (click)="filterToggle()">
+          <span class="mx-1">Filter</span>
+          <fa-icon [icon]="['fas', 'chevron-down']" class="mx-1 text-success"></fa-icon>
+        </button>
+
+        <button *ngIf="!showFilter" class="btn btn-primary btn-sm my-1 w-100 " (click)="filterToggle()">
+          <span class="mx-1">Filter</span>
+          <fa-icon [icon]="['fas', 'chevron-right']" class="mx-1 text-success"></fa-icon>
+        </button>
+
+        <div class="card bg-light text-primary txtsmaller" [ngbCollapse]="!showFilter">
+          <div class="form-check mx-2 my-1 align-middle">
+            <input type="checkbox" class="form-check-input" id="showSharedCheck" [(ngModel)]="filterShowShared">
+            <label class="form-check-label align-middle" for="showSharedCheck">Show Shared Data</label>
+          </div>
+
+          <div *ngIf="filterShowShared" class="mx-2 my-1 align-middle">
+            <div ngbDropdown class="d-inline-block">
+              <button class="btn btn-secondary btn-sm" id="userSelect" ngbDropdownToggle>Users</button>
+              <div ngbDropdownMenu aria-labelledby="userSelect">
+                <button *ngFor="let u of userList" ngbDropdownItem (click)="filterForSelectedUser=u">
+                  {{u.UserName}}
+                </button>
+              </div>
+            </div>
+            <div>{{filterForSelectedUser?.UserName}}</div>
+          </div>
+
+          <div class="mx-2 my-1 align-middle">
+            Tags:
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
-    <div class="list-group mx-0 px-0 py-1">
-      <div *ngFor="let item of datasetCollection" class="list-group-item list-group-item-action mx-0 px-1 my-1">
+
+    <div class="list-group mx-0 px-0 py-1 ">
+      <div *ngFor="let item of datasetCollection"
+        class="list-group-item list-group-item-action txtsmaller mx-0 px-1 my-1">
 
         <div class="container mx-0 px-1" (click)="selectDataset(item)">
 
           <div class="row">
-            <div class="col-12 txtlimit txtsmaller ">
+            <div class="col-12 txtlimit">
               {{item.Description}}
-            </div>          
+            </div>
           </div>
-          
+
           <div class="row">
-            <div class="col-8 txtsmaller ">Coordinates:</div>
-            <div class="col-4 txtsmaller ">
+            <div class="col-8">
+              <span class="text-primary">Coordinates: </span>
+            </div>
+            <div class="col-4">
               <div class="badge badge-info">
                 {{item.Data.features[0].geometry.coordinates.length}}
               </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12 txtlimit">
+              <span class="text-primary">Created: </span>
+              <span>{{item.DateCreated|date}}</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12 txtlimit">
+              <span class="text-primary">User: </span>
+              <span>{{ getUserNameFromId(item?.UserID) }}</span>
             </div>
           </div>
 

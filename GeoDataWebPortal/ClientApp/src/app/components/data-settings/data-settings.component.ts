@@ -20,7 +20,7 @@ export class DataSettingsComponent implements OnInit {
   public userDataGrantedPermissions: UserDataPermission[] = [];
   public userList: AppUser[] = [];
 
-  public selectedUser:AppUser;
+  public selectedUser: AppUser;
 
   constructor(
     private settingsService: SettingsService,
@@ -47,7 +47,7 @@ export class DataSettingsComponent implements OnInit {
     }
     this.dataService.createUserDataPermission(newData).subscribe({
       next: x => {
-        this.selectedUser=null;
+        this.selectedUser = null;
         this.refreshPermissionData();
       }
     });
@@ -62,7 +62,7 @@ export class DataSettingsComponent implements OnInit {
   }
 
   public getUserNameFromId(id: string): string {
-    return this.userList.find(x => x.ID == id).UserName;
+    return this.dataService.getUserNameFromId(id, this.userList);
   }
 
   public refreshPermissionData(): void {
