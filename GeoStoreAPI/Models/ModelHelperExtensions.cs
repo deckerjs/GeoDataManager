@@ -15,6 +15,7 @@ namespace GeoStoreAPI.Models
                 existingUser.Email = userUpdate.Email;
                 existingUser.Disabled = userUpdate.Disabled;
                 existingUser.Claims = userUpdate.Claims;
+                existingUser.Hidden = userUpdate.Hidden;
             }
             else
             {

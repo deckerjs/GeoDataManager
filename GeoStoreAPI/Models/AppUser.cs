@@ -18,6 +18,7 @@ namespace GeoStoreAPI.Models
         public bool EmailVerified { get; set; }
         public bool Disabled { get; set; }
         public string Password { get; set; }
+        public bool Hidden { get; set; }
         public ICollection<Claim> Claims { get; set; }
     }
 

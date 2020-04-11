@@ -61,7 +61,7 @@ namespace GeoStoreAPI.Controllers
         public ActionResult<List<AppUser>> GetUserList()
         {            
             var users = _userRepository
-                .GetAllUsers(x=>x.Disabled == false)
+                .GetAllUsers(x=>x.Disabled == false && x.Hidden == false)
                 .Select(x=> new AppUser { ID = x.ID, UserName = x.UserName })
                 .ToList();
             
