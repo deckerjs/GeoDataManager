@@ -17,27 +17,31 @@ namespace GeoStoreAPI.Controllers
     {
         private readonly IGeoDataRepository _dataRepository;
         private readonly IUserIdentificationService _userIdService;
+        private readonly IQueryStringFilterBuilderService _filterBuilder;
 
         public GeoDataController(
             IGeoDataRepository dataRepository,
-            IUserIdentificationService userIdService)
+            IUserIdentificationService userIdService,
+            IQueryStringFilterBuilderService filterBuilder)
         {
             _dataRepository = dataRepository;
             _userIdService = userIdService;
+            _filterBuilder = filterBuilder;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<GeoData>> GetAll([FromQuery]string filterCriteria)
+        public ActionResult<IEnumerable<GeoData>> GetAll()
         {
-            //todo: filter criteria builder from incoming filterCriteria
-            return _dataRepository.GetAll(_userIdService.GetUserID(), (x) => true).ToList();
+            Func<GeoData, bool> filter = _filterBuilder.GetFilter<GeoData>();
+            return _dataRepository.GetAll(_userIdService.GetUserID(), filter).ToList();
         }
 
         [HttpGet]
         [Route("Shared")]
-        public ActionResult<IEnumerable<GeoData>> GetShared([FromQuery]string filterCriteria)
+        public ActionResult<IEnumerable<GeoData>> GetShared()
         {
-            return _dataRepository.GetShared(_userIdService.GetUserID(), (x) => true).ToList();
+            Func<GeoData, bool> filter = _filterBuilder.GetFilter<GeoData>();
+            return _dataRepository.GetShared(_userIdService.GetUserID(), filter).ToList();
         }
 
         [HttpGet("{id}")]

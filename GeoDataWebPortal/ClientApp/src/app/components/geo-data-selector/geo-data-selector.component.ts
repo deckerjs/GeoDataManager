@@ -26,6 +26,7 @@ export class GeoDataSelectorComponent implements OnInit {
   public showFilter: boolean = false;
   public filterShowShared: boolean = false;
   public filterForSelectedUser: AppUser;
+  public currentUserId: string;
 
   constructor(
     private apiDataService: GeoDataAPIService,
@@ -57,6 +58,14 @@ export class GeoDataSelectorComponent implements OnInit {
           }
         }
       });
+
+    this.authService.userId
+      .subscribe({
+        next: x => {
+          this.currentUserId = x;
+        }
+      })
+
   }
 
   private clearDataset() {
@@ -68,14 +77,31 @@ export class GeoDataSelectorComponent implements OnInit {
 
     this.refreshUserData().subscribe({
       next: u => {
-        this.apiDataService.GetAll().subscribe({
+        this.apiDataService.GetAllOwned().subscribe({
           next: x => {
-            console.log("pushing api data collection", x)
+            this.appendViewData(x, false);
             this.datasetCollection.push(...x);
           }
         });
       }
     });
+
+    if (this.filterShowShared) {
+      const apiFilter: Map<string, string> = new Map<string, string>();
+      if (this.filterForSelectedUser != null) {
+        apiFilter.set('UserID', this.filterForSelectedUser.ID);
+      }
+      this.refreshUserData().subscribe({
+        next: u => {
+          this.apiDataService.GetAllShared(apiFilter).subscribe({
+            next: x => {
+              this.appendViewData(x, true);
+              this.datasetCollection.push(...x);
+            }
+          });
+        }
+      });
+    }
   }
 
   public refreshUserData(): Observable<AppUser[]> {
@@ -86,7 +112,14 @@ export class GeoDataSelectorComponent implements OnInit {
     ));
   }
 
-  public getUserNameFromId(id: string): string {
+  private appendViewData(x: GeoDataset[], isShared:boolean) {
+    x.forEach(ds => {
+      ds['isShared'] = isShared;
+      ds['userName'] = this.getUserNameFromId(ds.UserID);
+    });
+  }
+
+  private getUserNameFromId(id: string): string {
     return this.userDataService.getUserNameFromId(id, this.userList);
   }
 

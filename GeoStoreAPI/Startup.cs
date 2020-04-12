@@ -47,7 +47,8 @@ namespace geostoreapi
             services.AddScoped<IGeoDataAccess, GeoDataAccess>();
             services.AddScoped<IGeoDataRepository, GeoDataRepository>();
             services.AddScoped<IGPXTransform, GPXTransform>();
-
+            services.AddScoped<IQueryStringFilterBuilderService, QueryStringFilterBuilderService>();
+        
             services.Configure<AppOptions>(Configuration.GetSection("AppOptions"));
             services.AddScoped<AppOptions>(x => x.GetService<IOptions<AppOptions>>().Value);
 

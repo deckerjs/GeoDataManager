@@ -14,6 +14,7 @@ import { ConfigurationSettings } from '../portal-settings/models/urlsettings';
 export class GeoDataAPIService {
 
   private readonly API_ENDPOINT: string = 'api/GeoData';
+  private readonly API_ENDPOINT_SHARED: string = 'api/GeoData/shared';
   private readonly API_GPX_ENDPOINT: string = 'api/gpxupload';
   private readonly API_HEALTH_ENDPOINT: string = 'health';
 
@@ -34,14 +35,21 @@ export class GeoDataAPIService {
     );
   }
 
-  public GetAll(filter?: string): Observable<Array<GeoDataset>> {
+  public GetAllOwned(filter?: Map<string, string>): Observable<Array<GeoDataset>> {
+    return this.GetAll(this.API_ENDPOINT, filter);
+  }
+
+  public GetAllShared(filter?: Map<string, string>): Observable<Array<GeoDataset>> {
+    return this.GetAll(this.API_ENDPOINT_SHARED, filter);
+  }
+
+  public GetAll(apiUrl:string, filter?: Map<string, string>): Observable<Array<GeoDataset>> {
     return this.getSettingsObservable().pipe(
       switchMap(settings => {
         return this.getHttpHeaders().pipe(
           switchMap(httpHeaders => {
-            const url = this.getGeoDataURL(settings, this.API_ENDPOINT);
-            const httpPrms = new HttpParams();
-            httpPrms.append('filter', filter);
+            const url = this.getGeoDataURL(settings, apiUrl);
+            const httpPrms = this.getFilterQueryStringPrms(filter);            
             return this.http.get<Array<GeoDataset>>(url, { headers: httpHeaders, params: httpPrms });
           }));
       })
@@ -65,7 +73,7 @@ export class GeoDataAPIService {
       switchMap(settings => {
         return this.getXMLHttpHeaders().pipe(
           switchMap(httpHeaders => {
-            const url = this.getGeoDataURL(settings, this.API_GPX_ENDPOINT);            
+            const url = this.getGeoDataURL(settings, this.API_GPX_ENDPOINT);
             return this.http.post(url, data, { headers: httpHeaders });
           }));
       })
@@ -109,13 +117,13 @@ export class GeoDataAPIService {
 
   private getXMLHttpHeaders(): Observable<HttpHeaders> {
     return this.authService.token.pipe(switchMap(beartoken => {
-      return of( new HttpHeaders({
+      return of(new HttpHeaders({
         'Content-Type': 'application/xml; charset=utf-8',
         'Authorization': 'Bearer ' + beartoken
       }));
     }));
   }
-  
+
   private getGeoDataSingleURL(urlSettings: ConfigurationSettings, endPoint: string, id: string): string {
     return urlSettings.GeoDataApiUrl + '/' + endPoint + '/' + id;
   }
@@ -132,11 +140,20 @@ export class GeoDataAPIService {
     return httpHeaders;
   }
 
+  private getFilterQueryStringPrms(filter: Map<string, string>): HttpParams {
+    let httpPrms = new HttpParams();
+    if(filter!=null){
+      filter.forEach((val,key) => {
+        httpPrms = httpPrms.append(key, val);        
+      });
+    }
+    return httpPrms;
+  }
+
   private getApiHealth(): Observable<any> {
     return this.getSettingsObservable().pipe(
-      switchMap(settings => {
-        // console.log('get health settings,this.API_HEALTH_ENDPOINT:', settings, this.API_HEALTH_ENDPOINT)
-        const url = this.getGeoDataURL(settings, this.API_HEALTH_ENDPOINT);        
+      switchMap(settings => {        
+        const url = this.getGeoDataURL(settings, this.API_HEALTH_ENDPOINT);
         return this.http.get(url, { responseType: 'text' });
       })
     );

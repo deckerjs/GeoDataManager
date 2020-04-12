@@ -59,6 +59,12 @@
 
         <div class="container mx-0 px-1" (click)="selectDataset(item)">
 
+          <div *ngIf="item['isShared']==true" class="row">
+            <div class="col-12 text-info">
+              (Shared)
+            </div>
+          </div>
+          
           <div class="row">
             <div class="col-12 txtlimit">
               {{item.Description}}
@@ -86,7 +92,7 @@
           <div class="row">
             <div class="col-12 txtlimit">
               <span class="text-primary">User: </span>
-              <span>{{ getUserNameFromId(item?.UserID) }}</span>
+              <span>{{ item['userName'] }}</span>
             </div>
           </div>
 
