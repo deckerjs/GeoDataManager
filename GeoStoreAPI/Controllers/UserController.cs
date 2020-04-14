@@ -18,7 +18,7 @@ namespace GeoStoreAPI.Controllers
         private readonly IUserIdentificationService _userIdService;
         private readonly IUserDataPermissionRepository _dataPermissionRepository;
 
-        public UserController(IUserRepository userRepository, 
+        public UserController(IUserRepository userRepository,
             IUserIdentificationService userIdService,
             IUserDataPermissionRepository dataPermissionRepository)
         {
@@ -59,12 +59,12 @@ namespace GeoStoreAPI.Controllers
         [Authorize(Roles = "user")]
         [HttpGet("userlist")]
         public ActionResult<List<AppUser>> GetUserList()
-        {            
+        {
             var users = _userRepository
-                .GetAllUsers(x=>x.Disabled == false && x.Hidden == false)
-                .Select(x=> new AppUser { ID = x.ID, UserName = x.UserName })
+                .GetAllUsers(x => x.Disabled == false && x.Hidden == false)
+                .Select(x => new AppUser { ID = x.ID, UserName = x.UserName })
                 .ToList();
-            
+
             return users;
         }
 
@@ -74,7 +74,7 @@ namespace GeoStoreAPI.Controllers
         public void Post([FromBody] UserDataPermission dataPermission)
         {
             string userID = _userIdService.GetUserID();
-            _dataPermissionRepository.Create(dataPermission,userID);
+            _dataPermissionRepository.Create(dataPermission, userID);
         }
 
         [Authorize(Roles = "user")]
@@ -84,14 +84,19 @@ namespace GeoStoreAPI.Controllers
         {
             Func<UserDataPermission, bool> filter = x => true;
             string userID = _userIdService.GetUserID();
-            return _dataPermissionRepository.GetAllForOwnerUser(userID,filter).ToList();
+            var result = _dataPermissionRepository.GetAllForOwnerUser(userID, filter);
+            if (result != null)
+            {
+                return result.ToList();
+            }
+            return new List<UserDataPermission>();
         }
 
         [Authorize(Roles = "user")]
         [Route("DataPermissions/{dataPermissionId}")]
         [HttpGet]
         public ActionResult<UserDataPermission> GetDataPermission(string dataPermissionId)
-        {            
+        {
             string userID = _userIdService.GetUserID();
             return _dataPermissionRepository.Get(dataPermissionId, userID);
         }
@@ -123,7 +128,12 @@ namespace GeoStoreAPI.Controllers
         {
             Func<UserDataPermission, bool> filter = x => true;
             string userID = _userIdService.GetUserID();
-            return _dataPermissionRepository.GetAllGrantedToUser(userID,filter).ToList();
+            var results = _dataPermissionRepository.GetAllGrantedToUser(userID, filter);
+            if (results != null)
+            {
+                return results.ToList();
+            }
+            return new List<UserDataPermission>();
         }
 
     }

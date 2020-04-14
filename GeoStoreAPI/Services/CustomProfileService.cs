@@ -53,10 +53,16 @@ namespace GeoStoreAPI.Services
         {
             var claims = new List<Claim>();
             var userRoles = _userRolesRepository.GetUserRoles(userID);
-
-            foreach (var roleID in userRoles.RoleIDs)
+            if (userRoles != null)
             {
-                claims.Add(new Claim(ClaimTypes.Role, roleID));
+                foreach (var roleID in userRoles.RoleIDs)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, roleID));
+                }
+            }
+            else
+            {
+                _logger.LogWarning($"UserID:{userID} has no roles");
             }
 
             return claims;

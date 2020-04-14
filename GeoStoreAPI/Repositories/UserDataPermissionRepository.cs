@@ -21,7 +21,7 @@ namespace GeoStoreAPI.Repositories
         public void Create(UserDataPermission data, string userID)
         {
             var existing = GetAllGrantedToUser(data.AllowedUserID, x => x.OwnerUserID == userID);
-            if(existing!=null && !existing.Any())
+            if(existing==null || !existing.Any())
             {
                 data.OwnerUserID = userID;
                 data.ID = Guid.NewGuid().ToString();
