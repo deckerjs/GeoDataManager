@@ -4,13 +4,13 @@ using GeoDataModels.Models;
 
 namespace GeoStoreAPI.DataAccess
 {
-    public class GeoDataAccess : IGeoDataAccess
+    public class GeoDataFileDataAccess : IGeoDataAccess
     {
         private readonly IFileDataAccess<GeoData> _fileDataAccess;
 
         public const string GEODATA = "GeoData";
 
-        public GeoDataAccess(IFileDataAccess<GeoData> fileDataAccess)
+        public GeoDataFileDataAccess(IFileDataAccess<GeoData> fileDataAccess)
         {
             _fileDataAccess = fileDataAccess;
         }

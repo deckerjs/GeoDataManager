@@ -63,10 +63,11 @@ namespace GeoStoreAPI.Repositories
             return _dataAccess.GetAll(combinedFilter);
         }
 
-        public void Update(UserDataPermission data, string userID)
+        public void Update(string id, string userID, UserDataPermission data)
         {
+            data.ID = id;
             data.OwnerUserID = userID;
-            _dataAccess.Update(data);
+            _dataAccess.Update(id, data);
         }
     }
 }

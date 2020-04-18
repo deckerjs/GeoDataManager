@@ -30,8 +30,8 @@ namespace GeoStoreAPI.Repositories
             _dataAccess.Create(role);
         }
 
-        public void UpdateRole(AppRole role){
-            _dataAccess.Update(role);
+        public void UpdateRole(string roleID, AppRole role){
+            _dataAccess.Update(roleID, role);
         }
 
         public void RemoveRole(string roleID)

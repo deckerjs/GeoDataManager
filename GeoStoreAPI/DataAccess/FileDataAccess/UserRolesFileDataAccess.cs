@@ -6,13 +6,13 @@ namespace GeoStoreAPI.DataAccess
 {
 
 
-    public class UserRolesDataAccess : IUserRolesDataAccess
+    public class UserRolesFileDataAccess : IUserRolesDataAccess
     {
 
         private readonly IFileDataAccess<AppUserRoles> _fileDataAccess;
         public const string USER_ROLE_DATA = "UserRoleData";
 
-        public UserRolesDataAccess(IFileDataAccess<AppUserRoles> fileDataAccess)
+        public UserRolesFileDataAccess(IFileDataAccess<AppUserRoles> fileDataAccess)
         {
             _fileDataAccess = fileDataAccess;
         }
@@ -47,16 +47,9 @@ namespace GeoStoreAPI.DataAccess
             return _fileDataAccess.GetAllItems(USER_ROLE_DATA, combinedFilter);
         }
 
-        public AppUserRoles Getsingle(string userID)
+        public void Update(string id, AppUserRoles userRoleData)
         {
-            return _fileDataAccess.GetItem(USER_ROLE_DATA, userID);
+            _fileDataAccess.SaveItem(USER_ROLE_DATA, id, userRoleData);
         }
-
-        public void Update(AppUserRoles userRoleData)
-        {
-            _fileDataAccess.SaveItem(USER_ROLE_DATA, userRoleData.UserID, userRoleData);
-        }
-
-
     }
 }

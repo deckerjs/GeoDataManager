@@ -60,14 +60,16 @@ namespace GeoStoreAPI.Repositories
         public void CreateUser(string userID, AppUser user)
         {
             user.Password = _dataProtection.GetPasswordHash(user.Password);
-            _dataAccess.Create(user, userID);
+            user.ID = userID;
+            _dataAccess.Create(user);
         }
 
         public void CreateUser(AppUser user)
         {
             string userID = Guid.NewGuid().ToString();
             user.Password = _dataProtection.GetPasswordHash(user.Password);
-            _dataAccess.Create(user, userID);
+            user.ID = userID;
+            _dataAccess.Create(user);
             _userRolesRepository.CreateUserRoles(new AppUserRoles() { UserID = user.ID, RoleIDs = { "user" } });
         }
 
@@ -76,8 +78,8 @@ namespace GeoStoreAPI.Repositories
             var existingUser = _dataAccess.Get(user.ID);
             if(existingUser != null && user != null){
                 existingUser.UpdateWith(user);
-                existingUser.Password = _dataProtection.GetPasswordHash(user.Password);
-                _dataAccess.Update(existingUser, existingUser.ID);
+                existingUser.Password = _dataProtection.GetPasswordHash(user.Password);                
+                _dataAccess.Update(existingUser.ID, existingUser);
             }
         }
 

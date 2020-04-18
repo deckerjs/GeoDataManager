@@ -12,6 +12,6 @@ namespace GeoStoreAPI.DataAccess
         UserDataPermission Get(string id);
         void Delete(string id);
         IEnumerable<UserDataPermission> GetAll(Func<UserDataPermission, bool> filter);
-        void Update(UserDataPermission data);
+        void Update(string id, UserDataPermission data);
     }
 }

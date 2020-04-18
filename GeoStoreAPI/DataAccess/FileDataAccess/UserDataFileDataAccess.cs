@@ -4,19 +4,18 @@ using GeoStoreAPI.Models;
 
 namespace GeoStoreAPI.DataAccess
 {
-    public class UserDataAccess : IUserDataAccess
+    public class UserDataFileDataAccess : IUserDataAccess
     {
         private readonly IFileDataAccess<AppUser> _fileDataAccess;
 
         public const string USER_DATA = "UserData";
 
-        public UserDataAccess(IFileDataAccess<AppUser> fileDataAccess)
+        public UserDataFileDataAccess(IFileDataAccess<AppUser> fileDataAccess)
         {
             _fileDataAccess = fileDataAccess;
         }
-        public void Create(AppUser userData, string userID)
-        {
-            userData.ID = userID;
+        public void Create(AppUser userData)
+        {            
             _fileDataAccess.CreateItem(USER_DATA, userData.ID.ToString(), userData);
         }
 
@@ -55,7 +54,7 @@ namespace GeoStoreAPI.DataAccess
             return null;
         }
 
-        public void Update(AppUser userData, string userID)
+        public void Update(string userID, AppUser userData)
         {
             userData.ID = userID;
             _fileDataAccess.SaveItem(USER_DATA,userID,userData);

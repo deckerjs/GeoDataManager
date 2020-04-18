@@ -4,12 +4,12 @@ using GeoStoreAPI.Models;
 
 namespace GeoStoreAPI.DataAccess
 {
-    public class RoleDataAccess : IRoleDataAccess
+    public class RoleDataFileDataAccess : IRoleDataAccess
     {
         private readonly IFileDataAccess<AppRole> _fileDataAccess;
         public const string ROLE_DATA = "RoleData";
 
-        public RoleDataAccess(IFileDataAccess<AppRole> fileDataAccess)
+        public RoleDataFileDataAccess(IFileDataAccess<AppRole> fileDataAccess)
         {
             _fileDataAccess = fileDataAccess;
         }
@@ -49,9 +49,9 @@ namespace GeoStoreAPI.DataAccess
             return _fileDataAccess.GetItem(ROLE_DATA, id.ToString());
         }
 
-        public void Update(AppRole roleData)
+        public void Update(string id, AppRole roleData)
         {            
-            _fileDataAccess.SaveItem(ROLE_DATA,roleData.RoleID,roleData);
+            _fileDataAccess.SaveItem(ROLE_DATA,id,roleData);
         }
 
     }

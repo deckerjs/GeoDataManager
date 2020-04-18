@@ -6,10 +6,10 @@ namespace GeoStoreAPI.DataAccess
 {
     public interface IUserDataAccess
     {
-        void Create(AppUser userData, string userID);
+        void Create(AppUser userData);
         AppUser Get(string userID);
         void Delete(string userID);
         IEnumerable<AppUser> GetAll(Func<AppUser, bool> filter);
-        void Update(AppUser userData, string userID);        
+        void Update(string userID, AppUser userData);        
     }
 }

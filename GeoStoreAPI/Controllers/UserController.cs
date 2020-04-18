@@ -107,7 +107,7 @@ namespace GeoStoreAPI.Controllers
         public IActionResult UpdateDataPermission([FromBody] UserDataPermission dataPermission)
         {
             string userID = _userIdService.GetUserID();
-            _dataPermissionRepository.Update(dataPermission, userID);
+            _dataPermissionRepository.Update(dataPermission.ID,userID, dataPermission);
             return Ok();
         }
 

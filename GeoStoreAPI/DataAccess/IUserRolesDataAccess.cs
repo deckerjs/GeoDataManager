@@ -8,9 +8,8 @@ namespace GeoStoreAPI.DataAccess
     {
         void Create(AppUserRoles userRoleData);
         void Delete(string id);
-        AppUserRoles Get(string roleID);
+        AppUserRoles Get(string id);
         IEnumerable<AppUserRoles> GetAll(Func<AppUserRoles, bool> filter);
-        AppUserRoles Getsingle(string userID);
-        void Update(AppUserRoles userRoleData);
+        void Update(string id, AppUserRoles userRoleData);
     }
 }

@@ -14,6 +14,6 @@ namespace GeoStoreAPI.Repositories
         UserDataPermission Get(string dataPermissionId, string userID);
         IEnumerable<UserDataPermission> GetAllGrantedToUser(string userID, Func<UserDataPermission, bool> filter);
         IEnumerable<UserDataPermission> GetAllForOwnerUser(string userID, Func<UserDataPermission, bool> filter);
-        void Update(UserDataPermission data, string userID);
+        void Update(string id, string userID, UserDataPermission data);
     }
 }

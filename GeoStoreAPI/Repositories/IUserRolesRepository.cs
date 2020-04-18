@@ -7,6 +7,6 @@ namespace GeoStoreAPI.Repositories
         void CreateUserRoles(AppUserRoles userRoles);
         AppUserRoles GetUserRoles(string userID);
         void RemoveUserRoles(string userID);
-        void UpdateUserRoles(AppUserRoles userRoles);
+        void UpdateUserRoles(string id, AppUserRoles userRoles);
     }
 }

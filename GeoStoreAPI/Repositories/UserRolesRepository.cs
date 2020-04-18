@@ -29,9 +29,9 @@ namespace GeoStoreAPI.Repositories
             _dataAccess.Create(userRoles);
         }
 
-        public void UpdateUserRoles(AppUserRoles userRoles)
+        public void UpdateUserRoles(string id, AppUserRoles userRoles)
         {
-            _dataAccess.Update(userRoles);
+            _dataAccess.Update(id, userRoles);
         }
 
         public void RemoveUserRoles(string userID)

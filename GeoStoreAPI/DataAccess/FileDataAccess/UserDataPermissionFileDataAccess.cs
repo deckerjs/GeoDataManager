@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace GeoStoreAPI.DataAccess
 {
-    public class UserDataPermissionDataAccess : IUserDataPermissionDataAccess
+    public class UserDataPermissionFileDataAccess : IUserDataPermissionDataAccess
     {
         public const string USER_DATA_PERMISSION = "UserDataPermission";
         private readonly IFileDataAccess<UserDataPermission> _fileDataAccess;
 
-        public UserDataPermissionDataAccess(IFileDataAccess<UserDataPermission> fileDataAccess)
+        public UserDataPermissionFileDataAccess(IFileDataAccess<UserDataPermission> fileDataAccess)
         {
             _fileDataAccess = fileDataAccess;
         }
@@ -46,9 +46,9 @@ namespace GeoStoreAPI.DataAccess
             return _fileDataAccess.GetAllItems(USER_DATA_PERMISSION, combinedFilter);
         }
 
-        public void Update(UserDataPermission data)
+        public void Update(string id, UserDataPermission data)
         {
-            _fileDataAccess.SaveItem(USER_DATA_PERMISSION, data.ID, data);
+            _fileDataAccess.SaveItem(USER_DATA_PERMISSION, id, data);
         }
     }
 }
