@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GeoStoreAPI.DataAccess
+namespace GeoStoreAPI.DataAccess.FileDataAccess
 {
     public class UserDataPermissionFileDataAccess : IUserDataPermissionDataAccess
     {

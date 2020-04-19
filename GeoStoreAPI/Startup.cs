@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using GeoDataModels.Models;
 using DataTransformUtilities.Transformers;
 using Newtonsoft.Json.Serialization;
+using GeoStoreAPI.Extensions;
 
 namespace geostoreapi
 {
@@ -43,12 +44,13 @@ namespace geostoreapi
                 });
             });
 
-            services.AddScoped<IFileDataAccess<GeoData>>(x => new FileDataAccess<GeoData>(Path.Combine(Directory.GetCurrentDirectory(), FileDataAccess<GeoData>.BASE_DIR,GeoDataFileDataAccess.GEODATA)));
-            services.AddScoped<IGeoDataAccess, GeoDataFileDataAccess>();
-            services.AddScoped<IGeoDataRepository, GeoDataRepository>();
-            services.AddScoped<IGPXTransform, GPXTransform>();
-            services.AddScoped<IQueryStringFilterBuilderService, QueryStringFilterBuilderService>();
-        
+            services.AddGeoStoreApiServices();
+            //todo: figure out how to swap between injected storage methods based on configuration
+            //for File storage:
+            services.AddFileDataAccessServices();
+            //for MongoDB:
+            //services.AddMongoDataAccessServices(Configuration);
+
             services.Configure<AppOptions>(Configuration.GetSection("AppOptions"));
             services.AddScoped<AppOptions>(x => x.GetService<IOptions<AppOptions>>().Value);
 
@@ -91,7 +93,9 @@ namespace geostoreapi
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "GeoStoreAPI V1");
             });
-            
+
+            app.InitializeMongo();
+
             app.SeedUserData(serviceProvider);
         }
 

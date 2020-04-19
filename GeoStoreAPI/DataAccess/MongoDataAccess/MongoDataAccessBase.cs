@@ -50,9 +50,18 @@ namespace GeoStoreAPI.DataAccess.MongoDataAccess
 
         public IEnumerable<T> GetAll(Func<T, bool> funcFilter)
         {
-            Expression<Func<T, bool>> theFilter = x=> funcFilter(x);
-            var filter = Builders<T>.Filter.Where(theFilter);
-            return GetCollection().Find(filter).ToList();
+            //todo: figure out how to give mongo a custom filter that works
+            //Expression<Func<T, bool>> theFilter = x=> funcFilter(x);
+            //Expression<Func<T, bool>> theFilter = Expression.Lambda<Func<T, bool>>(Expression.Equal(.Body, Expression.Constant(id)),.Parameters.First());
+            //var filter = Builders<T>.Filter.Where(theFilter);
+
+            //Temporary Hack
+            var filter = Builders<T>.Filter.Where(x=>true);
+
+            var tempResult = GetCollection().Find(filter).ToList();
+
+            //Temporary Hack
+            return tempResult.Where(funcFilter).ToList();
         }
 
         public void Update(string id, T dataItem)

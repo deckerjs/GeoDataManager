@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using GeoStoreAPI.Models;
 
-namespace GeoStoreAPI.DataAccess
+namespace GeoStoreAPI.DataAccess.FileDataAccess
 {
     public class RoleDataFileDataAccess : IRoleDataAccess
     {

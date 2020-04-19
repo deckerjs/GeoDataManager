@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GeoStoreAPI.DataAccess
+namespace GeoStoreAPI.DataAccess.FileDataAccess
 {
     public class FileDataAccess<T> : IFileDataAccess<T>
     {
