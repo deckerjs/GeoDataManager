@@ -48,7 +48,8 @@ namespace GeoStoreAPI.Repositories
         public AppUser GetUser(string subjectId)
         {
             var users = _dataAccess.GetAll(x => x.ID == subjectId);
-            return users.FirstOrDefault();
+            if(users!=null)return users.FirstOrDefault();
+            return null;
         }
 
         public AppUser FindByUsername(string username)

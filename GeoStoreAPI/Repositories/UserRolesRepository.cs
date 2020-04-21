@@ -20,8 +20,9 @@ namespace GeoStoreAPI.Repositories
 
         public AppUserRoles GetUserRoles(string userID)
         {
-            var userRole = _dataAccess.GetAll(r => r.UserID == userID);
-            return userRole.FirstOrDefault();
+            var userRoles = _dataAccess.GetAll(r => r.UserID == userID);
+            if(userRoles!=null)return userRoles.FirstOrDefault();
+            return null;
         }
 
         public void CreateUserRoles(AppUserRoles userRoles)

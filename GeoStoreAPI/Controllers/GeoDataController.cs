@@ -33,7 +33,10 @@ namespace GeoStoreAPI.Controllers
         public ActionResult<IEnumerable<GeoData>> GetAll()
         {
             Func<GeoData, bool> filter = _filterBuilder.GetFilter<GeoData>();
-            return _dataRepository.GetAll(_userIdService.GetUserID(), filter).ToList();
+
+            var result = _dataRepository.GetAll(_userIdService.GetUserID(), filter);
+            if(result!=null) return result.ToList();
+            return null;
         }
 
         [HttpGet]

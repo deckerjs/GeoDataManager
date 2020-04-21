@@ -21,8 +21,9 @@ namespace GeoStoreAPI.Repositories
 
         public AppRole GetRole(string roleId)
         {
-            var role = _dataAccess.GetAll(r => r.RoleID == roleId);
-            return role.FirstOrDefault();
+            var roles = _dataAccess.GetAll(r => r.RoleID == roleId);
+            if(roles!=null) return roles.FirstOrDefault();
+            return null;
         }
 
         public void CreateRole(AppRole role)
