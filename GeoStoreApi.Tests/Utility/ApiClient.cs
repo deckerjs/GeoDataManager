@@ -59,6 +59,23 @@ namespace GeoStoreApi.Tests.Utility
             return default;
         }
 
+        public async Task<string> PostCollection(string url, IEnumerable<T> body)
+        {
+            string json = JsonSerializer.Serialize(body);
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync(url, content);
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                ThrowBadResponse(response);
+            }
+
+            return default;
+        }
+
         public async Task<T> Get(string url)
         {
             var response = _client.GetAsync(url).Result;
