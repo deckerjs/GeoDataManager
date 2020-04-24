@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <UserSecretsId>ea441089-f2f7-4c05-a04d-4bb5f2fe55f0</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +24,12 @@
   <ItemGroup>
     <ProjectReference Include="..\GeoDataModels\GeoDataModels.csproj" />
     <ProjectReference Include="..\GeoStoreAPI\GeoStoreAPI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
