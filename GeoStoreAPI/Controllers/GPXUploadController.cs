@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DataTransformUtilities.Models;
 using DataTransformUtilities.Transformers;
+using CoordinateDataModels;
 
 namespace GeoStoreAPI.Controllers
 {
@@ -17,13 +18,13 @@ namespace GeoStoreAPI.Controllers
     [Authorize]
     public class GPXUploadController : ControllerBase
     {
-        private readonly IGeoDataRepository _dataRepository;
+        private readonly ICoordinateDataRepository _dataRepository;
         private readonly IUserIdentificationService _userIdService;
-        private readonly IGPXTransform _gpxTransform;
-
-        public GPXUploadController(IGeoDataRepository dataRepository,
+        private readonly IGPXTransform<CoordinateData> _gpxTransform;
+        
+        public GPXUploadController(ICoordinateDataRepository dataRepository,
             IUserIdentificationService userIdService,
-            IGPXTransform gpxTransform)
+            IGPXTransform<CoordinateData> gpxTransform)
         {
             _dataRepository = dataRepository;
             _userIdService = userIdService;
@@ -35,7 +36,7 @@ namespace GeoStoreAPI.Controllers
         {
             if (gpx != null )
             {
-                var geoData = _gpxTransform.GetGeoDataFromGpx(gpx);
+                var geoData = _gpxTransform.GetDataFromGpx(gpx);
                 _dataRepository.Create(geoData, _userIdService.GetUserID());
                 //todo: return Created(url) for new object
                 return Ok();

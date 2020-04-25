@@ -7,6 +7,7 @@ using NUnit.Framework;
 using System.IO;
 using GeoDataModels.Models;
 using System.Threading.Tasks;
+using GeoStoreAPI.Models;
 
 namespace GeoStoreApi.Tests
 {
@@ -34,7 +35,7 @@ namespace GeoStoreApi.Tests
         {
             var api = new GeoDataApiClient(_clientSettings);
 
-            var newData = new GeoData()
+            var newData = new GeoJsonData()
             {
                 Description = "test item 1",
                 Tags = { "test tag 1", "test tag 2" },

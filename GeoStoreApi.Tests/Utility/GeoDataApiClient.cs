@@ -1,4 +1,5 @@
 ﻿using GeoDataModels.Models;
+using GeoStoreAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,29 +9,29 @@ namespace GeoStoreApi.Tests.Utility
 {
     public class GeoDataApiClient
     {
-        private readonly ApiClient<GeoData> _client;
+        private readonly ApiClient<GeoJsonData> _client;
         private readonly ApiClient<Coordinate> _coordinatesClient;
         private string _baseUrl;
 
         public GeoDataApiClient(ApiClientSettings apiClientsettings)
         {
-            _client = new ApiClient<GeoData>(apiClientsettings);
+            _client = new ApiClient<GeoJsonData>(apiClientsettings);
             _coordinatesClient = new ApiClient<Coordinate>(apiClientsettings);
             _baseUrl = "apiClientsettings.BaseUrl/api/GeoData";
         }
                 
-        public async Task<IEnumerable<GeoData>> GetAll()
+        public async Task<IEnumerable<GeoJsonData>> GetAll()
         {
             return await _client.GetCollection(_baseUrl);
         }
 
-        public async Task<GeoData> GetById(string id)
+        public async Task<GeoJsonData> GetById(string id)
         {
             string url = $"{_baseUrl}/{id}";
             return await _client.Get(url);
         }
 
-        public async Task<IEnumerable<GeoData>> GetShared()
+        public async Task<IEnumerable<GeoJsonData>> GetShared()
         {
             string url = $"{_baseUrl}/shared";
             return await _client.GetCollection(url);
@@ -42,7 +43,7 @@ namespace GeoStoreApi.Tests.Utility
             return await _coordinatesClient.GetCollection(url);
         }
                
-        public async Task<string> Post(GeoData geoData)
+        public async Task<string> Post(GeoJsonData geoData)
         {
             return await _client.Post(_baseUrl, geoData);
         }
@@ -58,7 +59,7 @@ namespace GeoStoreApi.Tests.Utility
             return await _coordinatesClient.PostCollection(url, coordinates);
         }
 
-        public async Task Put(string id, GeoData data)
+        public async Task Put(string id, GeoJsonData data)
         {
             string url = $"{_baseUrl}/{id}";
             await _client.Put(url, data);

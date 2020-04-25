@@ -44,12 +44,12 @@ namespace geostoreapi
                 });
             });
 
-            services.AddGeoStoreApiServices();
+            services.AddDataStoreApiServices();
             //todo: figure out how to swap between injected storage methods based on configuration
             //for File storage:
-            services.AddFileDataAccessServices();
+            //services.AddFileDataAccessServices();
             //for MongoDB:
-            //services.AddMongoDataAccessServices(Configuration);
+            services.AddMongoDataAccessServices(Configuration);
 
             services.Configure<AppOptions>(Configuration.GetSection("AppOptions"));
             services.AddScoped<AppOptions>(x => x.GetService<IOptions<AppOptions>>().Value);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CoordinateDataModels;
 using DataTransformUtilities.Transformers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,7 +30,7 @@ namespace DataConversionAPI
             IMvcBuilder builder = services.AddMvc();
             builder.AddXmlSerializerFormatters();
 
-            services.AddScoped<IGPXTransform, GPXTransform>();
+            services.AddScoped<IGPXTransform<CoordinateData>, GPXToCoordinateDataTransform>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../GeoDataModels/GeoDataModels.csproj" />
+    <ProjectReference Include="..\CoordinateDataModels\CoordinateDataModels.csproj" />
   </ItemGroup>
 
 </Project>

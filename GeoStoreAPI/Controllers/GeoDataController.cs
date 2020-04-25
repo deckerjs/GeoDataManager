@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CoordinateDataModels;
+using DataTransformUtilities.Transformers;
 using GeoDataModels.Models;
 using GeoStoreAPI.Repositories;
 using GeoStoreAPI.Services;
@@ -15,12 +17,12 @@ namespace GeoStoreAPI.Controllers
     [Authorize]
     public class GeoDataController : ControllerBase
     {
-        private readonly IGeoDataRepository _dataRepository;
+        private readonly ICoordinateDataRepository _dataRepository;
         private readonly IUserIdentificationService _userIdService;
         private readonly IQueryStringFilterBuilderService _filterBuilder;
 
         public GeoDataController(
-            IGeoDataRepository dataRepository,
+            ICoordinateDataRepository dataRepository,
             IUserIdentificationService userIdService,
             IQueryStringFilterBuilderService filterBuilder)
         {
@@ -30,91 +32,112 @@ namespace GeoStoreAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<GeoData>> GetAll()
+        public ActionResult<IEnumerable<GeoJsonData>> GetAll()
         {
-            Func<GeoData, bool> filter = _filterBuilder.GetFilter<GeoData>();
+            Func<CoordinateData, bool> filter = _filterBuilder.GetFilter<CoordinateData>();
 
-            var result = _dataRepository.GetAll(_userIdService.GetUserID(), filter);
-            if(result!=null) return result.ToList();
+            var result = _dataRepository.GetAll(_userIdService.GetUserID(), filter).ToList();            
+             
+            if (result != null) return GetGeoJsonFromCoordinateData(result);
             return null;
         }
 
+
         [HttpGet]
         [Route("Shared")]
-        public ActionResult<IEnumerable<GeoData>> GetShared()
+        public ActionResult<IEnumerable<GeoJsonData>> GetShared()
         {
-            Func<GeoData, bool> filter = _filterBuilder.GetFilter<GeoData>();
-            return _dataRepository.GetShared(_userIdService.GetUserID(), filter).ToList();
+            Func<CoordinateData, bool> filter = _filterBuilder.GetFilter<CoordinateData>();
+            var result = _dataRepository.GetShared(_userIdService.GetUserID(), filter).ToList();
+
+            if (result != null) return GetGeoJsonFromCoordinateData(result);
+            return null;
         }
 
         [HttpGet("{id}")]
-        public ActionResult<GeoData> Get(string id)
+        public ActionResult<GeoJsonData> Get(string id)
         {
-            return _dataRepository.GetSingle(id, _userIdService.GetUserID());
+            var result = _dataRepository.GetSingle(id, _userIdService.GetUserID());
+
+            if (result != null) return GetGeoJsonFromCoordinateData(result);
+            return null;
         }
 
-        [HttpPost]
-        public string Post([FromBody] GeoData geoData)
-        {
-            return _dataRepository.Create(geoData, _userIdService.GetUserID());
-        }
+        //[HttpPost]
+        //public string Post([FromBody] GeoJsonData geoData)
+        //{
+        //    return _dataRepository.Create(geoData, _userIdService.GetUserID());
+        //}
 
-        [HttpPost("{id}/data/features/geometry/coordinates")]
-        public ActionResult<string> PostCoordinates(string id, [FromBody] List<Coordinate> coordinates)
-        {
-            GeoData data;
+        //[HttpPost("{id}/data/features/geometry/coordinates")]
+        //public ActionResult<string> PostCoordinates(string id, [FromBody] List<Coordinate> coordinates)
+        //{
+        //    //GeoJsonData data;
 
-            data = _dataRepository.GetSingle(id, _userIdService.GetUserID());
+        //    //data = _dataRepository.GetSingle(id, _userIdService.GetUserID());
 
-            if (data != null)
-            {
-                _dataRepository.AppendMultiPointCollection(data.ID, coordinates);
-                return data.ID;
-            }
+        //    //if (data != null)
+        //    //{
+        //    //    _dataRepository.AppendMultiPointCollection(data.ID, coordinates);
+        //    //    return data.ID;
+        //    //}
 
-            return NotFound();
-        }
+        //    //return NotFound();
+            
+        //}
 
-        [HttpPost("data/features/geometry/coordinates")]
-        public ActionResult<string> PostCoordinatesToNewObject([FromBody] List<Coordinate> coordinates)
-        {
-            GeoData data;
+        //[HttpPost("data/features/geometry/coordinates")]
+        //public ActionResult<string> PostCoordinatesToNewObject([FromBody] List<Coordinate> coordinates)
+        //{
+        //    //GeoJsonData data;
 
-            var newId = _dataRepository.Create(new GeoData(), _userIdService.GetUserID());
-            data = _dataRepository.GetSingle(newId, _userIdService.GetUserID());
+        //    //var newId = _dataRepository.Create(new GeoJsonData(), _userIdService.GetUserID());
+        //    //data = _dataRepository.GetSingle(newId, _userIdService.GetUserID());
 
-            _dataRepository.AppendMultiPointCollection(data.ID, coordinates);
+        //    //_dataRepository.AppendMultiPointCollection(data.ID, coordinates);
 
-            return data.ID;
-        }
+        //    //return data.ID;
+            
+        //}
 
         [HttpGet("{id}/data/features/geometry/coordinates")]
-        public ActionResult<List<Coordinate>> GetCoordinates(string id)
+        public ActionResult<List<CoordinateDataModels.Coordinate>> GetCoordinates(string id)
         {
-            GeoData data;
+            //GeoJsonData data;
 
-            data = _dataRepository.GetSingle(id, _userIdService.GetUserID());
+            //data = _dataRepository.GetSingle(id, _userIdService.GetUserID());
 
-            if (data != null)
-            {
-                return _dataRepository.GetCoordinatesFromFeatureCollection(data.Data);
-            }
+            //if (data != null)
+            //{
+            //    return _dataRepository.GetCoordinatesFromFeatureCollection(data.Data);
+            //}
 
             return NotFound();
         }
 
 
-        [HttpPut("{id}")]
-        public void Put(string id, [FromBody] GeoData geoData)
+        //[HttpPut("{id}")]
+        //public void Put(string id, [FromBody] GeoJsonData geoData)
+        //{
+        //    _dataRepository.Update(id, geoData, _userIdService.GetUserID());
+        //}
+
+        //[HttpDelete("{id}")]
+        //public void Delete(string id)
+        //{
+        //    _dataRepository.Delete(id, _userIdService.GetUserID());
+        //}
+
+        private GeoJsonData GetGeoJsonFromCoordinateData(CoordinateData coordinateData)
         {
-            _dataRepository.Update(id, geoData, _userIdService.GetUserID());
+            return CoordinateDataToGeoJsonTransformer.GetGeoJsonFromCoordinateData(coordinateData);
         }
 
-        [HttpDelete("{id}")]
-        public void Delete(string id)
+        private List<GeoJsonData> GetGeoJsonFromCoordinateData(List<CoordinateData> coordinateData)
         {
-            _dataRepository.Delete(id, _userIdService.GetUserID());
+            var geoJsonData = new List<GeoJsonData>();
+            coordinateData.ForEach(x => geoJsonData.Add(CoordinateDataToGeoJsonTransformer.GetGeoJsonFromCoordinateData(x)));
+            return geoJsonData;
         }
-
     }
 }

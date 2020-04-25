@@ -1,20 +1,21 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using CoordinateDataModels;
 using GeoDataModels.Models;
 
 namespace GeoStoreAPI.DataAccess.FileDataAccess
 {
-    public class GeoDataFileDataAccess : IGeoDataAccess
+    public class CoordinateDataFileDataAccess : ICoordinateDataAccess
     {
-        private readonly IFileDataAccess<GeoJsonData> _fileDataAccess;
+        private readonly IFileDataAccess<CoordinateData> _fileDataAccess;
 
-        public const string DATA_GROUP = "GeoData";
+        public const string DATA_GROUP = "CoordinateData";
 
-        public GeoDataFileDataAccess(IFileDataAccess<GeoJsonData> fileDataAccess)
+        public CoordinateDataFileDataAccess(IFileDataAccess<CoordinateData> fileDataAccess)
         {
             _fileDataAccess = fileDataAccess;
         }
-        public void Create(GeoJsonData geoData)
+        public void Create(CoordinateData geoData)
         {
             _fileDataAccess.CreateItem(DATA_GROUP, geoData.ID, geoData);
         }
@@ -24,17 +25,17 @@ namespace GeoStoreAPI.DataAccess.FileDataAccess
             _fileDataAccess.DeleteItem(DATA_GROUP, id);
         }
 
-        public IEnumerable<GeoJsonData> GetAll(Func<GeoJsonData, bool> filter)
+        public IEnumerable<CoordinateData> GetAll(Func<CoordinateData, bool> filter)
         {
             return _fileDataAccess.GetAllItems(DATA_GROUP, filter);
         }
 
-        public GeoJsonData Get(string id)
+        public CoordinateData Get(string id)
         {
             return _fileDataAccess.GetItem(DATA_GROUP, id);
         }
 
-        public void Update(string id, GeoJsonData geoData)
+        public void Update(string id, CoordinateData geoData)
         {
             _fileDataAccess.SaveItem(DATA_GROUP, id, geoData);
         }

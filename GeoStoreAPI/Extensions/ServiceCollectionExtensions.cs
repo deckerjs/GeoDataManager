@@ -1,4 +1,5 @@
-﻿using DataTransformUtilities.Transformers;
+﻿using CoordinateDataModels;
+using DataTransformUtilities.Transformers;
 using GeoDataModels.Models;
 using GeoStoreAPI.DataAccess;
 using GeoStoreAPI.DataAccess.FileDataAccess;
@@ -19,7 +20,7 @@ namespace GeoStoreAPI.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddGeoStoreApiServices(this IServiceCollection services)
+        public static IServiceCollection AddDataStoreApiServices(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
@@ -29,8 +30,12 @@ namespace GeoStoreAPI.Extensions
             services.AddScoped<IUserIdentificationService, UserIdentificationService>();
             services.AddScoped<IDataProtectionService, DataProtectionService>();
 
-            services.AddScoped<IGeoDataRepository, GeoDataRepository>();
-            services.AddScoped<IGPXTransform, GPXTransform>();
+            //services.AddScoped<IGeoDataRepository, GeoDataRepository>();
+            services.AddScoped<ICoordinateDataRepository, CoordinateDataRepository>();
+
+            services.AddScoped<IGPXTransform<GeoJsonData>, GPXToGeoJsonTransform>();
+            services.AddScoped<IGPXTransform<CoordinateData>, GPXToCoordinateDataTransform>();
+
             services.AddScoped<IQueryStringFilterBuilderService, QueryStringFilterBuilderService>();
 
             return services;
@@ -48,8 +53,11 @@ namespace GeoStoreAPI.Extensions
             services.AddScoped<IUserRolesDataAccess, UserRolesFileDataAccess>();
             services.AddScoped<IUserDataPermissionDataAccess, UserDataPermissionFileDataAccess>();
 
-            services.AddScoped<IFileDataAccess<GeoData>>(x => new FileDataAccess<GeoData>(Path.Combine(Directory.GetCurrentDirectory(), FileDataAccess<GeoData>.BASE_DIR, GeoDataFileDataAccess.GEODATA)));
-            services.AddScoped<IGeoDataAccess, GeoDataFileDataAccess>();
+            //services.AddScoped<IFileDataAccess<GeoJsonData>>(x => new FileDataAccess<GeoJsonData>(Path.Combine(Directory.GetCurrentDirectory(), FileDataAccess<GeoJsonData>.BASE_DIR, GeoDataFileDataAccess.DATA_GROUP)));
+            //services.AddScoped<IGeoDataAccess, GeoDataFileDataAccess>();
+
+            services.AddScoped<IFileDataAccess<CoordinateData>>(x => new FileDataAccess<CoordinateData>(Path.Combine(Directory.GetCurrentDirectory(), FileDataAccess<CoordinateData>.BASE_DIR, CoordinateDataFileDataAccess.DATA_GROUP)));
+            services.AddScoped<ICoordinateDataAccess, CoordinateDataFileDataAccess>();
 
             return services;
         }
@@ -64,7 +72,7 @@ namespace GeoStoreAPI.Extensions
             services.AddScoped<IRoleDataAccess, RoleDataMongoDataAccess>();
             services.AddScoped<IUserRolesDataAccess, UserRolesMongoDataAccess>();
             services.AddScoped<IUserDataPermissionDataAccess, UserDataPermissionMongoDataAccess>();
-            services.AddScoped<IGeoDataAccess, GeoDataMongoDataAccess>();
+            services.AddScoped<ICoordinateDataAccess, CoordinateDataMongoDataAccess>();
 
             return services;
         }

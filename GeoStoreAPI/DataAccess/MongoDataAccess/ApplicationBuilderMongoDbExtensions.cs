@@ -1,4 +1,5 @@
-﻿using GeoDataModels.Models;
+﻿using CoordinateDataModels;
+using GeoDataModels.Models;
 using GeoStoreAPI.Models;
 using Microsoft.AspNetCore.Builder;
 using MongoDB.Bson.Serialization;
@@ -19,39 +20,21 @@ namespace GeoStoreAPI.Extensions
 
         private static void AddBsonMapConfigurations()
         {   
-            // public MyClassSerializer : IBsonSerializer {
-            // implement Deserialize
-            // implement GetDefaultSerializationOptions
-            // implement Serialize
-            //}
-
-            //// register your custom serializer
-            //BsonSerializer.RegisterSerializer(
-            //typeof(MyClass),
-            //new MyClassSerializer()
-            //);
-
-
-            if (!BsonClassMap.IsClassMapRegistered(typeof(GeoData)))
+            if (!BsonClassMap.IsClassMapRegistered(typeof(CoordinateData)))
             {
-
-                //custom serializer
-                BsonClassMap.RegisterClassMap<GeoData>(cm =>
-                {
-                    cm.AutoMap();
-                    cm.GetMemberMap(c => c.Data).SetSerializer(new CustomGeoJsonSerializer());
-                    cm.SetIgnoreExtraElements(true);
-                });
-
+                //custom serializer. didnt work for bamcis geojsob type classes
                 //BsonClassMap.RegisterClassMap<GeoData>(cm =>
                 //{
                 //    cm.AutoMap();
-                //    //for readonly properties, since by default they will be ignored
-                //    //BsonClassMap.RegisterClassMap<GeoData>(cm => {
-                //    //    cm.MapProperty(c => c.SomeProperty);
-                //    //});
                 //    cm.SetIgnoreExtraElements(true);
+                //    //cm.GetMemberMap(c => c.Data).SetSerializer(new CustomGeoJsonSerializer());
                 //});
+
+                BsonClassMap.RegisterClassMap<CoordinateData>(cm =>
+                {
+                    cm.AutoMap();
+                    cm.SetIgnoreExtraElements(true);
+                });
             }
             if (!BsonClassMap.IsClassMapRegistered(typeof(AppRole)))
             {

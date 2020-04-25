@@ -17,22 +17,22 @@ namespace DataConversionAPI.Controllers
     [ApiController]
     public class GpxToGeoJsonController : ControllerBase
     {
-        private readonly IGPXTransform _gpxTransform;
+        private readonly IGPXTransform<GeoJsonData> _gpxTransform;
 
-        public GpxToGeoJsonController(IGPXTransform gpxTransform)
+        public GpxToGeoJsonController(IGPXTransform<GeoJsonData> gpxTransform)
         {
             _gpxTransform = gpxTransform;
         }
 
         [HttpPost("FromXML")]
-        public GeoData PostAsXML([FromBody] Gpx gpx)
+        public GeoJsonData PostAsXML([FromBody] Gpx gpx)
         {            
-            var geoData = _gpxTransform.GetGeoDataFromGpx(gpx);
+            var geoData = _gpxTransform.GetDataFromGpx(gpx);
             return geoData;
         }
 
         [HttpPost("FromText")]
-        public GeoData PostAsText()
+        public GeoJsonData PostAsText()
         {
             string plainText;
             using (var reader = new StreamReader(Request.Body))
@@ -44,7 +44,7 @@ namespace DataConversionAPI.Controllers
             using (MemoryStream stream = new MemoryStream(StringToUTF8ByteArray(plainText)))
             {
                 var gpx = (Gpx)new XmlSerializer(typeof(Gpx), "http://www.topografix.com/GPX/1/1").Deserialize(stream);
-                var geoData = _gpxTransform.GetGeoDataFromGpx(gpx);
+                var geoData = _gpxTransform.GetDataFromGpx(gpx);
                 return geoData;
             }
         }

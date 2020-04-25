@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using GeoStoreAPI.DataAccess;
 using GeoDataModels.Models;
 using System.Linq;
+using GeoStoreAPI.Models;
 
 namespace GeoStoreAPI.Repositories
 {
@@ -18,9 +19,9 @@ namespace GeoStoreAPI.Repositories
             _dataPermissionRepository = dataPermissionRepository;
         }
 
-        public string Create(GeoData incomingData, string userID)
+        public string Create(GeoJsonData incomingData, string userID)
         {
-            var createData = new GeoData()
+            var createData = new GeoJsonData()
             {
                 ID = Guid.NewGuid().ToString(),
                 UserID = userID,
@@ -44,29 +45,29 @@ namespace GeoStoreAPI.Repositories
             }
         }
 
-        public IEnumerable<GeoData> GetAll(string userID, Func<GeoData, bool> filter)
+        public IEnumerable<GeoJsonData> GetAll(string userID, Func<GeoJsonData, bool> filter)
         {
-            Func<GeoData, bool> userFilter = (x) => x.UserID == userID;
-            Func<GeoData, bool> combinedFilter = (x) => filter(x) && userFilter(x);
+            Func<GeoJsonData, bool> userFilter = (x) => x.UserID == userID;
+            Func<GeoJsonData, bool> combinedFilter = (x) => filter(x) && userFilter(x);
             return _dataAccess.GetAll(combinedFilter);
         }
 
-        public IEnumerable<GeoData> GetShared(string userID, Func<GeoData, bool> filter)
+        public IEnumerable<GeoJsonData> GetShared(string userID, Func<GeoJsonData, bool> filter)
         {
-            var data = new List<GeoData>();
+            var data = new List<GeoJsonData>();
             var grants = _dataPermissionRepository.GetAllGrantedToUser(userID, x => true);
 
             foreach (var grant in grants)
             {
-                Func<GeoData, bool> userFilter = (x) => x.UserID == grant.OwnerUserID;
-                Func<GeoData, bool> combinedFilter = (x) => filter(x) && userFilter(x);
+                Func<GeoJsonData, bool> userFilter = (x) => x.UserID == grant.OwnerUserID;
+                Func<GeoJsonData, bool> combinedFilter = (x) => filter(x) && userFilter(x);
                 data.AddRange(_dataAccess.GetAll(combinedFilter));
             }
 
             return data;
         }
 
-        public GeoData GetSingle(string id, string userID)
+        public GeoJsonData GetSingle(string id, string userID)
         {
             var data = _dataAccess.Get(id);
             if (data.UserID == userID)
@@ -76,12 +77,12 @@ namespace GeoStoreAPI.Repositories
             return null;
         }
 
-        public void Update(string id, GeoData incomingData, string userID)
+        public void Update(string id, GeoJsonData incomingData, string userID)
         {
             var existingData = _dataAccess.Get(id);
             if (existingData.UserID == userID)
             {
-                var updateData = new GeoData()
+                var updateData = new GeoJsonData()
                 {
                     ID = existingData.ID,
                     UserID = existingData.UserID,
@@ -163,10 +164,10 @@ namespace GeoStoreAPI.Repositories
             return new FeatureCollection(features);
         }
 
-        private IEnumerable<GeoData> GetMockData()
+        private IEnumerable<GeoJsonData> GetMockData()
         {
-            var testData = new List<GeoData>();
-            var data1 = new GeoData()
+            var testData = new List<GeoJsonData>();
+            var data1 = new GeoJsonData()
             {
                 UserID = "testuser1234",
                 ID = Guid.NewGuid().ToString(),
