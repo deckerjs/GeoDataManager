@@ -1,4 +1,5 @@
 ﻿using CoordinateDataModels;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace GeoStoreAPI.Repositories
         void Update(string id, CoordinateData geoData, string userID);
         void Delete(string id, string userID);
 
-        //void AppendMultiPointCollection(string id, IEnumerable<Coordinate> coords);
-        //List<Coordinate> GetCoordinatesFromFeatureCollection(FeatureCollection featureCollection);
+        void AddPointCollection(string id, IEnumerable<Coordinate> coordinates, string userID);
+        void AppendToPointCollection(string id, string pcid, IEnumerable<Coordinate> coordinates, string userID);        
     }
 }

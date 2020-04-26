@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using System.IO;
-using GeoDataModels.Models;
 using System.Threading.Tasks;
-using GeoStoreAPI.Models;
+using CoordinateDataModels;
+
 
 namespace GeoStoreApi.Tests
 {
@@ -33,13 +33,13 @@ namespace GeoStoreApi.Tests
         [Test]
         public async Task GeoDataTest1()
         {
-            var api = new GeoDataApiClient(_clientSettings);
+            var api = new CoordinateDataApiClient(_clientSettings);
 
-            var newData = new GeoJsonData()
+            var newData = new CoordinateData()
             {
                 Description = "test item 1",
-                Tags = { "test tag 1", "test tag 2" },
-                Data = GetTestFeatureCollection()
+                Tags = new List<string> { "test tag 1", "test tag 2" },
+                Data = GetTestPointCollection()
             };
 
             var newId = await api.Post(newData);
@@ -48,19 +48,21 @@ namespace GeoStoreApi.Tests
 
             var existingData = await api.GetById(newId);
 
-            Assert.IsTrue(existingData != null && existingData.Data.Features.Any());
+            Assert.IsTrue(existingData != null && existingData.Data.Any());
 
-            MultiPoint mpGeom = (MultiPoint)existingData.Data.Features.First().Geometry;
+            var existingPointCollection = existingData.Data.First();
 
-            Assert.IsTrue(mpGeom != null && mpGeom.Coordinates != null && mpGeom.Coordinates.Any());
+            int originalCoordCount = existingPointCollection.Coordinates.Count();
 
-            //todo: This is why I need to get rid of the GeoJson dependency for my models.
-            var newGodDamnCoordCollectionBecausePropertyIsGetOnly = (MultiPoint)mpGeom.Coordinates.Append(new Position(10, 10));
-            var newGodDamnFeatureCollection = new FeatureCollection(new List<Feature> { new Feature(newGodDamnCoordCollectionBecausePropertyIsGetOnly) });
+            existingPointCollection.Coordinates.AddRange(GetTestPointCollection().First().Coordinates);
 
-            existingData.Data = newGodDamnFeatureCollection;
+            int newCoordCount = existingPointCollection.Coordinates.Count();
 
             await api.Put(newId, existingData);
+
+            var updatedData = await api.GetById(newId);
+
+            Assert.AreEqual(newCoordCount, updatedData.Data.Where(x => x.ID == existingPointCollection.ID).First().Coordinates.Count());
 
             await api.Delete(newId);
 
@@ -76,28 +78,28 @@ namespace GeoStoreApi.Tests
             return config.GetSection("ApiClientSettings").Get<ApiClientSettings>();
         }
 
-        private FeatureCollection GetTestFeatureCollection()
-        {
-            var props = new Dictionary<string, object>();
 
+        private List<PointCollection> GetTestPointCollection()
+        {
+            List<PointCollection> pointCollection = new List<PointCollection>();
+
+            var props = new Dictionary<string, string>();
             props["Name"] = "prop 1 name";
 
-            var coords = new List<Position>(){
-                 new Position(-88.095398000000003, 42.918624000000001, 252.93600000000001),
-                 new Position(-88.095395999999994, 42.918604000000002, 245.953),
-                 new Position(-88.095110000000005, 42.918570000000003, 241.78899999999999)
+            var coords = new List<Coordinate>(){
+                 new Coordinate(-88.095398000000003, 42.918624000000001, 252.93600000000001, DateTime.Now),
+                 new Coordinate(-88.095395999999994, 42.918604000000002, 245.953, DateTime.Now),
+                 new Coordinate(-88.095110000000005, 42.918570000000003, 241.78899999999999, DateTime.Now)
              };
 
-            var geom1 = new MultiPoint(coords);
-            var feature1 = new Feature(geom1, props);
-            
-            var features = new List<Feature>() { feature1 };
-            
-            var data = new FeatureCollection(features);
-            return data;
+            pointCollection.Add(new PointCollection()
+            {
+                Coordinates = coords,
+                ID = "1234",
+                Metadata = props
+            });
+
+            return pointCollection;
         }
-
-
-
     }
 }

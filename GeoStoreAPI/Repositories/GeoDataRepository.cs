@@ -19,6 +19,7 @@ namespace GeoStoreAPI.Repositories
             _dataPermissionRepository = dataPermissionRepository;
         }
 
+        [Obsolete]
         public string Create(GeoJsonData incomingData, string userID)
         {
             var createData = new GeoJsonData()
@@ -36,6 +37,7 @@ namespace GeoStoreAPI.Repositories
             return createData.ID;
         }
 
+        [Obsolete]
         public void Delete(string id, string userID)
         {
             var data = _dataAccess.Get(id);
@@ -77,6 +79,7 @@ namespace GeoStoreAPI.Repositories
             return null;
         }
 
+        [Obsolete]
         public void Update(string id, GeoJsonData incomingData, string userID)
         {
             var existingData = _dataAccess.Get(id);
@@ -97,13 +100,7 @@ namespace GeoStoreAPI.Repositories
             }
         }
 
-        //todo: there has to be a better way to append data, this seems wrong
-        //this is an ugly hack due to not being able to append to an existing collection.
-        //can't append to the coordinate IEnumerable in the geometry, its readonly
-        //instead I am creating new multiline feature, adding existing coordinates, then adding new ones.
-        //then since i cant be bothered to figure out which one we were trying to append to
-        //only the new multipoint will be added back to the feature collection
-        //todo sooner rather than later: get rid of the bamcis dependency
+        [Obsolete]
         public void AppendMultiPointCollection(string id, IEnumerable<Coordinate> incomingCoords)
         {
 
@@ -138,6 +135,7 @@ namespace GeoStoreAPI.Repositories
             return new List<Position>(coords.Select(x => new Position(x.Longitude, x.Latitude, x.Elevation)));
         }
 
+        [Obsolete]
         public List<Coordinate> GetCoordinatesFromFeatureCollection(FeatureCollection featureCollection)
         {
             var existingMultiPoint = featureCollection.Features.Where(x => x.Geometry is BAMCIS.GeoJSON.MultiPoint).FirstOrDefault();

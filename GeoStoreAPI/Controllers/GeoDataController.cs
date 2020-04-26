@@ -61,72 +61,7 @@ namespace GeoStoreAPI.Controllers
 
             if (result != null) return GetGeoJsonFromCoordinateData(result);
             return null;
-        }
-
-        //[HttpPost]
-        //public string Post([FromBody] GeoJsonData geoData)
-        //{
-        //    return _dataRepository.Create(geoData, _userIdService.GetUserID());
-        //}
-
-        //[HttpPost("{id}/data/features/geometry/coordinates")]
-        //public ActionResult<string> PostCoordinates(string id, [FromBody] List<Coordinate> coordinates)
-        //{
-        //    //GeoJsonData data;
-
-        //    //data = _dataRepository.GetSingle(id, _userIdService.GetUserID());
-
-        //    //if (data != null)
-        //    //{
-        //    //    _dataRepository.AppendMultiPointCollection(data.ID, coordinates);
-        //    //    return data.ID;
-        //    //}
-
-        //    //return NotFound();
-            
-        //}
-
-        //[HttpPost("data/features/geometry/coordinates")]
-        //public ActionResult<string> PostCoordinatesToNewObject([FromBody] List<Coordinate> coordinates)
-        //{
-        //    //GeoJsonData data;
-
-        //    //var newId = _dataRepository.Create(new GeoJsonData(), _userIdService.GetUserID());
-        //    //data = _dataRepository.GetSingle(newId, _userIdService.GetUserID());
-
-        //    //_dataRepository.AppendMultiPointCollection(data.ID, coordinates);
-
-        //    //return data.ID;
-            
-        //}
-
-        [HttpGet("{id}/data/features/geometry/coordinates")]
-        public ActionResult<List<CoordinateDataModels.Coordinate>> GetCoordinates(string id)
-        {
-            //GeoJsonData data;
-
-            //data = _dataRepository.GetSingle(id, _userIdService.GetUserID());
-
-            //if (data != null)
-            //{
-            //    return _dataRepository.GetCoordinatesFromFeatureCollection(data.Data);
-            //}
-
-            return NotFound();
-        }
-
-
-        //[HttpPut("{id}")]
-        //public void Put(string id, [FromBody] GeoJsonData geoData)
-        //{
-        //    _dataRepository.Update(id, geoData, _userIdService.GetUserID());
-        //}
-
-        //[HttpDelete("{id}")]
-        //public void Delete(string id)
-        //{
-        //    _dataRepository.Delete(id, _userIdService.GetUserID());
-        //}
+        }               
 
         private GeoJsonData GetGeoJsonFromCoordinateData(CoordinateData coordinateData)
         {

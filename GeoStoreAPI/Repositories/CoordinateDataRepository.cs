@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GeoStoreAPI.DataAccess;
-using GeoDataModels.Models;
 using System.Linq;
-using GeoStoreAPI.Models;
 using CoordinateDataModels;
 
 namespace GeoStoreAPI.Repositories
@@ -71,7 +69,7 @@ namespace GeoStoreAPI.Repositories
         public CoordinateData GetSingle(string id, string userID)
         {
             var data = _dataAccess.Get(id);
-            if (data.UserID == userID)
+            if (data != null && data.UserID == userID)
             {
                 return data;
             }
@@ -80,44 +78,62 @@ namespace GeoStoreAPI.Repositories
 
         public void Update(string id, CoordinateData incomingData, string userID)
         {
-            var existingData = _dataAccess.Get(id);
-            if (existingData.UserID == userID)
+            var data = _dataAccess.Get(id);
+            if (data != null && data.UserID == userID)
             {
                 var updateData = new CoordinateData()
                 {
-                    ID = existingData.ID,
-                    UserID = existingData.UserID,
-                    DateCreated = existingData.DateCreated,
+                    ID = data.ID,
+                    UserID = data.UserID,
+                    DateCreated = data.DateCreated,
                     DateModified = DateTime.Now,
                     Description = incomingData.Description,
                     Tags = incomingData.Tags,
                     Data = incomingData.Data
                 };
-
                 _dataAccess.Update(id, updateData);
             }
         }
 
-        
+        public void AddPointCollection(string id, IEnumerable<Coordinate> coordinates, string userID)
+        {
+            var data = _dataAccess.Get(id);
+            if (data != null && data.UserID == userID)
+            {
+                int nextId = data.Data.Any() ? data.Data.Count() + 1 : 1;
+                var newPc = new PointCollection
+                {
+                    ID = nextId.ToString(),
+                    Coordinates = coordinates.ToList()
+                };
+                data.Data.Add(newPc);
+                _dataAccess.Update(id, data);
+            }
+        }
 
-        //private IEnumerable<CoordinateData> GetMockData()
-        //{
-        //    var testData = new List<CoordinateData>();
-        //    var data1 = new CoordinateData()
-        //    {
-        //        UserID = "testuser1234",
-        //        ID = Guid.NewGuid().ToString(),
-        //        DateCreated = DateTime.Now,
-        //        Description = "test description",
-        //        Tags = { "some tag", "some other tag", "tag 3" },
-        //        DateModified = DateTime.Now,
-        //        Data = GetSampleFeatureCollection()
-        //    };
-        //    testData.Add(data1);
-        //    return testData;
-        //}
+        public void AppendToPointCollection(string id, string pcid, IEnumerable<Coordinate> coordinates, string userID)
+        {
+            var data = _dataAccess.Get(id);
+            if (data != null && data.UserID == userID)
+            {
+                var pc = data.Data.Where(x => x.ID == pcid).FirstOrDefault();
+                if (pc != null)
+                {
+                    pc.Coordinates.AddRange(coordinates);
+                }
+                else
+                {
+                    var newPc = new PointCollection()
+                    {
+                        ID = pcid,
+                        Coordinates = coordinates.ToList()
+                    };
+                    data.Data.Add(newPc);
+                }
 
-        
+                _dataAccess.Update(id, data);
+            }
+        }
 
     }
 }

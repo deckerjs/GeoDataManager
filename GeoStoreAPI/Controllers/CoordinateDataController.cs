@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoordinateDataModels;
-using GeoDataModels.Models;
 using GeoStoreAPI.Repositories;
 using GeoStoreAPI.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -30,6 +29,10 @@ namespace GeoStoreAPI.Controllers
             _filterBuilder = filterBuilder;
         }
 
+        /// <summary>
+        /// Get all CoordinateData for current user
+        /// </summary>
+        /// <returns>List of CoordinateData</returns>
         [HttpGet]
         public ActionResult<IEnumerable<CoordinateData>> GetAll()
         {
@@ -40,6 +43,12 @@ namespace GeoStoreAPI.Controllers
             return null;
         }
 
+        /// <summary>
+        /// Gets all CoordinateData items shared to current user
+        /// Basic (experimental) querystring property filter available
+        /// ex: ?UserID='ABC123'
+        /// </summary>
+        /// <returns>List of CoordinateData</returns>
         [HttpGet]
         [Route("Shared")]
         public ActionResult<IEnumerable<CoordinateData>> GetShared()
@@ -48,73 +57,106 @@ namespace GeoStoreAPI.Controllers
             return _dataRepository.GetShared(_userIdService.GetUserID(), filter).ToList();
         }
 
+        /// <summary>
+        /// Get CoordinateData
+        /// </summary>
+        /// <param name="id">CoordinateData.ID</param>
+        /// <returns>CoordinateData</returns>
         [HttpGet("{id}")]
         public ActionResult<CoordinateData> Get(string id)
         {
-            return _dataRepository.GetSingle(id, _userIdService.GetUserID());
+            var data = _dataRepository.GetSingle(id, _userIdService.GetUserID());
+            if (data != null)
+            {
+                return data;
+            }
+            else
+            {
+                return NotFound();
+            }            
         }
 
+        /// <summary>
+        /// Create CoordinateData
+        /// </summary>
+        /// <param name="coordinateData">CoordinateData</param>
+        /// <returns>CoordinateData.ID</returns>
         [HttpPost]
-        public string Post([FromBody] CoordinateData geoData)
+        public string Post([FromBody] CoordinateData coordinateData)
         {
-            return _dataRepository.Create(geoData, _userIdService.GetUserID());
+            return _dataRepository.Create(coordinateData, _userIdService.GetUserID());
         }
 
-        //[HttpPost("{id}/data/features/geometry/coordinates")]
-        //public ActionResult<string> PostCoordinates(string id, [FromBody] List<Coordinate> coordinates)
-        //{
-        //    CoordinateData data;
+        /// <summary>
+        /// Append points to an existing PointCollection if it exists, 
+        /// otherwise it is created with the provided PointCollection id
+        /// </summary>
+        /// <param name="id">CoordinateData.ID</param>
+        /// <param name="pcid">PointCollection.ID</param>
+        /// <param name="coordinates">List of {lat,lon,ele,time}</param>
+        /// <returns></returns>
+        [HttpPost("{id}/data/{pcid}/coordinates")]
+        public ActionResult PostCoordinates(string id, string pcid, [FromBody] List<Coordinate> coordinates)
+        {
+            _dataRepository.AppendToPointCollection(id, pcid, coordinates, _userIdService.GetUserID());
+            return Ok();
+        }
 
-        //    data = _dataRepository.GetSingle(id, _userIdService.GetUserID());
+        /// <summary>
+        /// Creates a new CoordinateData item and returns the id
+        /// </summary>
+        /// <param name="coordinates">List of {lat,lon,ele,time}</param>
+        /// <returns>New Coordinatedata id</returns>
+        [HttpPost("{id}/data/coordinates")]
+        public ActionResult<string> PostCoordinatesToNewObject([FromBody] List<Coordinate> coordinates)
+        {
+            CoordinateData data = new CoordinateData();            
+            data.Data.Add(new PointCollection() { ID = "1", Coordinates = coordinates });
+            var newId = _dataRepository.Create(data, _userIdService.GetUserID());
+            return newId;
+        }
 
-        //    if (data != null)
-        //    {
-        //        _dataRepository.AppendMultiPointCollection(data.ID, coordinates);
-        //        return data.ID;
-        //    }
+        /// <summary>
+        /// Get Coordinate data only for given CoordinateData.ID, PointCollection.ID
+        /// </summary>
+        /// <param name="id">CoordinateData.ID</param>
+        /// <param name="pcid">PointCollection.ID</param>
+        /// <returns>List of {lat,lon,ele,time}</returns>
+        [HttpGet("{id}/data/{pcid}/coordinates")]
+        public ActionResult<List<Coordinate>> GetCoordinates(string id, string pcid)
+        {
+            CoordinateData data;
+            data = _dataRepository.GetSingle(id, _userIdService.GetUserID());
 
-        //    return NotFound();
-        //}
+            if (data != null && data.Data.Any())
+            {
+                var coords = data.Data.Where(x => x.ID == pcid).FirstOrDefault();
+                if(coords != null) return coords.Coordinates.ToList();
+            }
 
-        //[HttpPost("data/features/geometry/coordinates")]
-        //public ActionResult<string> PostCoordinatesToNewObject([FromBody] List<Coordinate> coordinates)
-        //{
-        //    CoordinateData data;
+            return NotFound();
+        }
 
-        //    var newId = _dataRepository.Create(new CoordinateData(), _userIdService.GetUserID());
-        //    data = _dataRepository.GetSingle(newId, _userIdService.GetUserID());
-
-        //    _dataRepository.AppendMultiPointCollection(data.ID, coordinates);
-
-        //    return data.ID;
-        //}
-
-        //[HttpGet("{id}/data/features/geometry/coordinates")]
-        //public ActionResult<List<Coordinate>> GetCoordinates(string id)
-        //{
-        //    CoordinateData data;
-
-        //    data = _dataRepository.GetSingle(id, _userIdService.GetUserID());
-
-        //    if (data != null)
-        //    {
-        //        return _dataRepository.GetCoordinatesFromFeatureCollection(data.Data);
-        //    }
-
-        //    return NotFound();
-        //}
-
-
+        /// <summary>
+        /// Update CoordinateData
+        /// </summary>
+        /// <param name="id">CoordinateData.ID</param>
+        /// <param name="coordinateData">CoordinateData</param>
         [HttpPut("{id}")]
-        public void Put(string id, [FromBody] CoordinateData geoData)
+        public void Put(string id, [FromBody] CoordinateData coordinateData)
         {
-            _dataRepository.Update(id, geoData, _userIdService.GetUserID());
+            _dataRepository.Update(id, coordinateData, _userIdService.GetUserID());
         }
 
+        /// <summary>
+        /// Delete CoordinateData
+        /// </summary>
+        /// <param name="id">CoordinateData.ID</param>
         [HttpDelete("{id}")]
-        public void Delete(string id)
+        public ActionResult Delete(string id)
         {
             _dataRepository.Delete(id, _userIdService.GetUserID());
+            return Ok();
         }
 
     }

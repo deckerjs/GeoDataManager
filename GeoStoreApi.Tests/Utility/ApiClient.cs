@@ -85,6 +85,10 @@ namespace GeoStoreApi.Tests.Utility
                 T results = JsonSerializer.Deserialize<T>(content);
                 return results;
             }
+            else if(response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return default;
+            }
             else
             {
                 ThrowBadResponse(response);

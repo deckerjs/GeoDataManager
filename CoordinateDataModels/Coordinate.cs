@@ -13,9 +13,9 @@ namespace CoordinateDataModels
             Time = time;
         }
 
-        public double Latitude { get; }
-        public double Longitude { get; }
-        public double Elevation { get; }
-        public DateTime? Time { get; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        public double Elevation { get; set; }
+        public DateTime? Time { get; set; }
     }
 }
