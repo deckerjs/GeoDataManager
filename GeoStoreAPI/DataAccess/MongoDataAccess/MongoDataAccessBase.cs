@@ -57,13 +57,8 @@ namespace GeoStoreAPI.DataAccess.MongoDataAccess
 
             //Temporary Hack
             var filter = Builders<T>.Filter.Where(x=>true);
-
-            var tempResult = GetCollection().Find(filter);
-            //.ToList();
-            var something = tempResult.ToList();
-            //Temporary Hack
-            //return tempResult.Where(funcFilter).ToList();
-            return something;
+            var tempResult = GetCollection().Find(filter).ToList();
+            return tempResult.Where(funcFilter).ToList();            
         }
 
         public void Update(string id, T dataItem)
