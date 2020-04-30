@@ -39,14 +39,16 @@ namespace GeoStoreAPI.Services
                 context.Caller);
 
             var user = await GetUserAsync(context.Subject.GetSubjectId());
-            var claims = new List<Claim>
+            if (user != null)
             {
-                new Claim("username", user.UserName),
-                new Claim("email", user.Email)
-            };
-            claims.AddRange(GetUserRoleClaims(user.ID));
-
-            context.IssuedClaims = claims;
+                var claims = new List<Claim>
+                {
+                    new Claim("username", user.UserName),
+                    new Claim("email", user.Email)
+                };
+                claims.AddRange(GetUserRoleClaims(user.ID));
+                context.IssuedClaims = claims;
+            }
         }
 
         private IEnumerable<Claim> GetUserRoleClaims(string userID)
@@ -76,7 +78,16 @@ namespace GeoStoreAPI.Services
 
         private async Task<AppUser> GetUserAsync(string subjectID)
         {
-            return await Task.FromResult(_userRepository.GetUser(subjectID));
+            var user = await Task.FromResult(_userRepository.GetUser(subjectID));
+            if (!user.Disabled)
+            {
+                return user;
+            }
+            else
+            {
+                _logger.LogInformation($"Disabled Login attempt {subjectID}");
+                return null;
+            }
         }
 
     }

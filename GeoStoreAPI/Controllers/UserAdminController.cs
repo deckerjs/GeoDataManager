@@ -15,10 +15,12 @@ namespace GeoStoreAPI.Controllers
     public class UserAdminController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
+        private readonly IUserRolesRepository _rolesRepository;
 
-        public UserAdminController(IUserRepository userRepository)
+        public UserAdminController(IUserRepository userRepository, IUserRolesRepository rolesRepository)
         {
             _userRepository = userRepository;
+            _rolesRepository = rolesRepository;
         }
 
         [HttpGet]        
@@ -55,6 +57,23 @@ namespace GeoStoreAPI.Controllers
         {
             _userRepository.DeleteUser(userID);
         }
+
+        [Route("Roles/{userId}")]
+        [HttpGet]
+        public ActionResult<AppUserRoles> GetRoles(string userId)
+        {
+            return _rolesRepository.GetUserRoles(userId);
+        }
+
+        [Route("Roles/{userId}")]
+        [HttpPut]
+        public ActionResult UpdateRoles(string userId, AppUserRoles roles)
+        {
+            _rolesRepository.UpdateUserRoles(userId, roles);
+            return Ok();
+        }
+
+
     }
 }
 

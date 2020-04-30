@@ -17,7 +17,7 @@ namespace GeoStoreAPI.Services
         public Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
             if (_userRepository.ValidateCredentials(context.UserName, context.Password))
-            {
+            {                
                 var user = _userRepository.FindByUsername(context.UserName);
                 context.Result = new GrantValidationResult(user.ID, OidcConstants.AuthenticationMethods.Password);
             }

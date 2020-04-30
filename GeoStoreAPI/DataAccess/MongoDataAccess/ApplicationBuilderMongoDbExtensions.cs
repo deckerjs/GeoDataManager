@@ -22,14 +22,6 @@ namespace GeoStoreAPI.Extensions
         {   
             if (!BsonClassMap.IsClassMapRegistered(typeof(CoordinateData)))
             {
-                //custom serializer. didnt work for bamcis geojsob type classes
-                //BsonClassMap.RegisterClassMap<GeoData>(cm =>
-                //{
-                //    cm.AutoMap();
-                //    cm.SetIgnoreExtraElements(true);
-                //    //cm.GetMemberMap(c => c.Data).SetSerializer(new CustomGeoJsonSerializer());
-                //});
-
                 BsonClassMap.RegisterClassMap<CoordinateData>(cm =>
                 {
                     cm.AutoMap();

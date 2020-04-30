@@ -10,7 +10,7 @@ namespace GeoStoreAPI.Models
         {
             if (existingUser.ID == userUpdate.ID)
             {
-                existingUser.UserName = userUpdate.UserName;
+                //existingUser.UserName = userUpdate.UserName;
                 existingUser.Password = userUpdate.Password;
                 existingUser.Email = userUpdate.Email;
                 existingUser.Disabled = userUpdate.Disabled;
