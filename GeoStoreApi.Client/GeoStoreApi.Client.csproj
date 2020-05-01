@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <RepositoryUrl>https://github.com/deckerjs/GeoDataManager</RepositoryUrl>
+    <RepositoryUrl>https://github.com/deckerjs/GeoDataManager.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>    
   </PropertyGroup>
 
