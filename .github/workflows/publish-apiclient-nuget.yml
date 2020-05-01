@@ -20,7 +20,7 @@ jobs:
       - name: Setup .NET Core @ Latest
         uses: actions/setup-dotnet@v1
         with:
-          source-url: https://nuget.pkg.github.com/deckerjs/GeoDataManager/index.json
+          source-url: https://nuget.pkg.github.com/deckerjs/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}        
 
