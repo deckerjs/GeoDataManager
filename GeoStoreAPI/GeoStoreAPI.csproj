@@ -19,7 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="../GeoDataModels/GeoDataModels.csproj" />
     <ProjectReference Include="../DataTransformUtilities/DataTransformUtilities.csproj" />
-    <ProjectReference Include="..\CoordinateDataModels\CoordinateDataModels.csproj" />
+    <ProjectReference Include="..\CoordinateDataModels\GeoStoreApi.Abstractions.CoordinateDataModels.csproj" />
   </ItemGroup>
 
   <ItemGroup>

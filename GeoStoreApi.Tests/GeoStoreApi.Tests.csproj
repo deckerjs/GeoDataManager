@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GeoDataModels\GeoDataModels.csproj" />
+    <ProjectReference Include="..\GeoStoreApi.Client\GeoStoreApi.Client.csproj" />
     <ProjectReference Include="..\GeoStoreAPI\GeoStoreAPI.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,3 @@
-using GeoStoreApi.Tests.Utility;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -7,12 +6,13 @@ using NUnit.Framework;
 using System.IO;
 using System.Threading.Tasks;
 using CoordinateDataModels;
-
+using GeoStoreApi.Client;
+using System.Reflection;
 
 namespace GeoStoreApi.Tests
 {
     public class Tests
-    {        
+    {
         private ApiClientSettings _clientSettings;
 
         [SetUp]
@@ -22,7 +22,7 @@ namespace GeoStoreApi.Tests
                .SetBasePath(Directory.GetCurrentDirectory())
                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
-               .AddUserSecrets<ApiClientSettings>()
+               .AddUserSecrets(typeof(Tests).Assembly)
                .AddEnvironmentVariables();
 
             IConfigurationRoot configuration = builder.Build();
@@ -91,6 +91,39 @@ namespace GeoStoreApi.Tests
                  new Coordinate(-88.095395999999994, 42.918604000000002, 245.953, DateTime.Now),
                  new Coordinate(-88.095110000000005, 42.918570000000003, 241.78899999999999, DateTime.Now)
              };
+
+            coords.AddRange(new[]{
+                 new Coordinate(-88.095398000000003, 42.918624000000001, 4940.6167, DateTime.Now,
+                 new GpsTelemetry()
+                 {
+                     Quality=1,
+                     Heading=144.6,
+                     FeetPerSecond=33.92,
+                     SatellitesInView=13,
+                     SignalToNoiseRatio=50,
+                     Hdop=.7
+                 }),
+                 new Coordinate(-88.095395999999994, 42.918604000000002, 245.953, DateTime.Now,
+                 new GpsTelemetry()
+                 {
+                     Quality=1,
+                     Heading=144.6,
+                     FeetPerSecond=33.92,
+                     SatellitesInView=13,
+                     SignalToNoiseRatio=50,
+                     Hdop=.7
+                 }),
+                 new Coordinate(-88.095110000000005, 42.918570000000003, 241.78899999999999, DateTime.Now,
+                 new GpsTelemetry()
+                 {
+                     Quality=1,
+                     Heading=144.6,
+                     FeetPerSecond=33.92,
+                     SatellitesInView=13,
+                     SignalToNoiseRatio=50,
+                     Hdop=.7
+                 })
+             });
 
             pointCollection.Add(new PointCollection()
             {

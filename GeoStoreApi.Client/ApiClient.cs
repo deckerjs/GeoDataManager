@@ -6,9 +6,9 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace GeoStoreApi.Tests.Utility
+namespace GeoStoreApi.Client
 {
-    public class ApiClient<T>
+    internal class ApiClient<T>
     {
         private HttpClient _client;
 

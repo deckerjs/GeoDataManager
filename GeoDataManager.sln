@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoDataWebPortal", "GeoData
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoStoreApi.Tests", "GeoStoreApi.Tests\GeoStoreApi.Tests.csproj", "{76C2FA4D-6ED0-4CD4-A578-596E5674E4F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoordinateDataModels", "CoordinateDataModels\CoordinateDataModels.csproj", "{6A4C10CC-87D8-4912-A03E-2547179AD0BC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoStoreApi.Abstractions.CoordinateDataModels", "CoordinateDataModels\GeoStoreApi.Abstractions.CoordinateDataModels.csproj", "{6A4C10CC-87D8-4912-A03E-2547179AD0BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoStoreApi.Client", "GeoStoreApi.Client\GeoStoreApi.Client.csproj", "{BFDC4378-5F57-41E5-A62D-2C3B5FCB75A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +113,18 @@ Global
 		{6A4C10CC-87D8-4912-A03E-2547179AD0BC}.Release|x64.Build.0 = Release|Any CPU
 		{6A4C10CC-87D8-4912-A03E-2547179AD0BC}.Release|x86.ActiveCfg = Release|Any CPU
 		{6A4C10CC-87D8-4912-A03E-2547179AD0BC}.Release|x86.Build.0 = Release|Any CPU
+		{BFDC4378-5F57-41E5-A62D-2C3B5FCB75A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFDC4378-5F57-41E5-A62D-2C3B5FCB75A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFDC4378-5F57-41E5-A62D-2C3B5FCB75A3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BFDC4378-5F57-41E5-A62D-2C3B5FCB75A3}.Debug|x64.Build.0 = Debug|Any CPU
+		{BFDC4378-5F57-41E5-A62D-2C3B5FCB75A3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BFDC4378-5F57-41E5-A62D-2C3B5FCB75A3}.Debug|x86.Build.0 = Debug|Any CPU
+		{BFDC4378-5F57-41E5-A62D-2C3B5FCB75A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFDC4378-5F57-41E5-A62D-2C3B5FCB75A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFDC4378-5F57-41E5-A62D-2C3B5FCB75A3}.Release|x64.ActiveCfg = Release|Any CPU
+		{BFDC4378-5F57-41E5-A62D-2C3B5FCB75A3}.Release|x64.Build.0 = Release|Any CPU
+		{BFDC4378-5F57-41E5-A62D-2C3B5FCB75A3}.Release|x86.ActiveCfg = Release|Any CPU
+		{BFDC4378-5F57-41E5-A62D-2C3B5FCB75A3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GeoStoreApi.Tests.Utility
+namespace GeoStoreApi.Client
 {
     public class ApiClientSettings
     {

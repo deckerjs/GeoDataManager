@@ -51,7 +51,7 @@ namespace DataTransformUtilities.Transformers
 
                 foreach (var coord in pointCollection.Coordinates)
                 {
-                    coords.Add(new Position(coord.Longitude, coord.Latitude, coord.Elevation));
+                    coords.Add(new Position(coord.Longitude, coord.Latitude, coord.Altitude));
                     coordTimes.Add(coord.Time.GetValueOrDefault());
                 }
 

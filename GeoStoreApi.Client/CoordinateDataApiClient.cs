@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GeoStoreApi.Tests.Utility
+namespace GeoStoreApi.Client
 {
     public class CoordinateDataApiClient
     {
@@ -54,7 +54,7 @@ namespace GeoStoreApi.Tests.Utility
         }
         public async Task<string> PostCoordinatesAndCreateNewCoordinateDataitem(List<Coordinate> coordinates)
         {
-            string url = $"{_baseUrl}/data/features/geometry/coordinates";
+            string url = $"{_baseUrl}/data/coordinates";
             return await _coordinatesClient.PostCollection(url, coordinates);
         }
 
