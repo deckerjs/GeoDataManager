@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CoordinateDataModels
 {
@@ -31,5 +32,6 @@ namespace CoordinateDataModels
         public DateTime? Time { get; set; }
 
         public GpsTelemetry Telemetry { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
     }
 }

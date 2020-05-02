@@ -12,13 +12,19 @@ namespace GeoStoreApi.Client
         private readonly ApiClient<Coordinate> _coordinatesClient;
         private string _baseUrl;
 
-        public CoordinateDataApiClient(ApiClientSettings apiClientsettings)
+        public CoordinateDataApiClient()
         {
-            _client = new ApiClient<CoordinateData>(apiClientsettings);
-            _coordinatesClient = new ApiClient<Coordinate>(apiClientsettings);
-            _baseUrl = $"{apiClientsettings.BaseUrl}/api/CoordinateData";
+            _client = new ApiClient<CoordinateData>();
+            _coordinatesClient = new ApiClient<Coordinate>();
         }
-                
+
+        public async Task Initialize(ApiClientSettings apiClientsettings)
+        {
+            _baseUrl = $"{apiClientsettings.BaseUrl}/api/CoordinateData";
+            await _client.Initialize(apiClientsettings);
+            await _coordinatesClient.Initialize(apiClientsettings);
+        }
+
         public async Task<IEnumerable<CoordinateData>> GetAll()
         {
             return await _client.GetCollection(_baseUrl);

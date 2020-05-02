@@ -12,15 +12,17 @@ namespace GeoStoreApi.Client
     {
         private HttpClient _client;
 
-        public ApiClient(ApiClientSettings apiClientsettings)
+        public ApiClient(){}
+
+        public async Task Initialize(ApiClientSettings apiClientsettings)
         {
-            _client = GetHttpClient(apiClientsettings);
+            _client = await GetHttpClient(apiClientsettings);
         }
 
-        private HttpClient GetHttpClient(ApiClientSettings settings)
+        private async Task<HttpClient> GetHttpClient(ApiClientSettings settings)
         {
             var client = new HttpClient();
-            var response = client.RequestPasswordTokenAsync(new PasswordTokenRequest
+            var response = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
                 UserName = settings.UserID,
                 Password = settings.Password,
@@ -28,7 +30,7 @@ namespace GeoStoreApi.Client
                 ClientId = settings.ClientID,
                 ClientSecret = settings.ClientSecret,
                 Scope = settings.ClientScope
-            }).Result;
+            });
 
             if (response.IsError)
             {

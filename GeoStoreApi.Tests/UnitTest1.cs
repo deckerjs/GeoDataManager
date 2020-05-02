@@ -33,7 +33,8 @@ namespace GeoStoreApi.Tests
         [Test]
         public async Task GeoDataTest1()
         {
-            var api = new CoordinateDataApiClient(_clientSettings);
+            var api = new CoordinateDataApiClient();
+            await api.Initialize(_clientSettings);
 
             var newData = new CoordinateData()
             {
