@@ -15,8 +15,6 @@ export class GeoDataAPIService {
 
   private readonly API_ENDPOINT: string = 'api/GeoData';
   private readonly API_ENDPOINT_SHARED: string = 'api/GeoData/shared';
-  private readonly API_GPX_ENDPOINT: string = 'api/gpxupload';
-  private readonly API_HEALTH_ENDPOINT: string = 'health';
 
   constructor(
     private http: HttpClient,
@@ -56,55 +54,6 @@ export class GeoDataAPIService {
     );
   }
 
-  public create(data: GeoDataset): Observable<any> {
-    return this.getSettingsObservable().pipe(
-      switchMap(settings => {
-        return this.getHttpHeaders().pipe(
-          switchMap(httpHeaders => {
-            const url = this.getGeoDataURL(settings, this.API_ENDPOINT);
-            return this.http.post<GeoDataset>(url, data, { headers: httpHeaders });
-          }));
-      })
-    );
-  }
-
-  public gpxUpload(data: string): Observable<any> {
-    return this.getSettingsObservable().pipe(
-      switchMap(settings => {
-        return this.getXMLHttpHeaders().pipe(
-          switchMap(httpHeaders => {
-            const url = this.getGeoDataURL(settings, this.API_GPX_ENDPOINT);
-            return this.http.post(url, data, { headers: httpHeaders });
-          }));
-      })
-    );
-  }
-
-  public update(data: GeoDataset) {
-    return this.getSettingsObservable().pipe(
-      switchMap(settings => {
-        return this.getHttpHeaders().pipe(
-          switchMap(httpHeaders => {
-            const url = this.getGeoDataURL(settings, this.API_ENDPOINT) + '/' + data.ID;
-            console.log("put:", data, " url:", url, "headers:", Headers)
-            return this.http.put<GeoDataset>(url, data, { headers: httpHeaders });
-          }));
-      })
-    );
-  }
-
-  public delete(id: string): Observable<GeoDataset> {
-    return this.getSettingsObservable().pipe(
-      switchMap(settings => {
-        return this.getHttpHeaders().pipe(
-          switchMap(httpHeaders => {
-            const url = this.getGeoDataSingleURL(settings, this.API_ENDPOINT, id);
-            return this.http.delete<GeoDataset>(url, { headers: httpHeaders });
-          }));
-      })
-    );
-  }
-
   private getSettingsObservable(): Observable<ConfigurationSettings> {
     return this.settingsService.getSettings();
   }
@@ -112,15 +61,6 @@ export class GeoDataAPIService {
   private getHttpHeaders(): Observable<HttpHeaders> {
     return this.authService.token.pipe(switchMap(beartoken => {
       return of(this.getHeaderOptions(beartoken));
-    }));
-  }
-
-  private getXMLHttpHeaders(): Observable<HttpHeaders> {
-    return this.authService.token.pipe(switchMap(beartoken => {
-      return of(new HttpHeaders({
-        'Content-Type': 'application/xml; charset=utf-8',
-        'Authorization': 'Bearer ' + beartoken
-      }));
     }));
   }
 
@@ -148,26 +88,6 @@ export class GeoDataAPIService {
       });
     }
     return httpPrms;
-  }
-
-  private getApiHealth(): Observable<any> {
-    return this.getSettingsObservable().pipe(
-      switchMap(settings => {        
-        const url = this.getGeoDataURL(settings, this.API_HEALTH_ENDPOINT);
-        return this.http.get(url, { responseType: 'text' });
-      })
-    );
-  }
-
-  public apiHealthCheckPolling(): Observable<any> {
-    return this.getApiHealth()
-      .pipe(
-        catchError(err => {
-          console.log(err);
-          return of('UnHealthy');
-        }),
-        delay(5000),
-        repeat());
   }
 
 }

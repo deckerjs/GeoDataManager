@@ -52,11 +52,13 @@
     <h4 class="card-header">Data summary</h4>
     <div class="card-body">
 
-      <h5 class="card-title">Type:</h5>
-      <p class="card-text bg-dark">{{data?.Data?.type}}</p>
+      <h5 class="card-title">Point Collections:</h5>
+      <p class="card-text bg-dark">{{data?.Data?.length}}</p>
 
-      <div class="card-title">Features Count:</div>
-      <div class="card-text bg-dark">{{data?.Data?.features?.length}}</div>
+      <div *ngFor="let pc of data?.Data" class="card-title my-1">
+        <span class="text-primary mr-1">Point collection {{pc.ID}} Coordinates Count:</span>
+        <span class="card-text">{{pc.Coordinates?.length}}</span>
+      </div>
 
       <div class="card-title">Properties:</div>
       <div class="card-text"></div>

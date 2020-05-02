@@ -1,11 +1,11 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { GeoDataset } from "../../models/geo-dataset";
 import { Guid } from "../../utilities/common-utilities";
-import { GeoDataMessageBusService, MessageType } from "../../services/geo-data-message-bus.service";
-import { GeoDataAPIService } from 'src/app/services/geo-data-api.service';
+import { CoordinateDataMessageBusService, MessageType } from "../../services/coordinate-data-message-bus.service";
 import { debounce, debounceTime, delay } from 'rxjs/operators';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faUpload, faTrash, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import { CoordinateDataAPIService } from 'src/app/services/coordinate-data-api.service';
+import { CoordinateData } from 'src/app/models/coordinate-data';
 
 @Component({
   selector: 'app-geo-data-editor',
@@ -27,17 +27,17 @@ export class GeoDataEditorComponent implements OnInit {
     this.parseGeoJson();
   }
 
-  public data: GeoDataset = new GeoDataset();
+  public data: CoordinateData = new CoordinateData();
   public problems: string;
 
   constructor(
-    private dataService: GeoDataAPIService,
-    private msgService: GeoDataMessageBusService,
+    private dataService: CoordinateDataAPIService,
+    private msgService: CoordinateDataMessageBusService,
     private falibrary: FaIconLibrary) {
       falibrary.addIcons(faUpload, faTrash, faPlusSquare); }
 
   ngOnInit() {
-    this.msgService.subscribeGeoDatasetSelected().pipe(delay(500),debounceTime(500)).subscribe(x => {
+    this.msgService.subscribeCoordinateDatasetSelected().pipe(delay(500),debounceTime(500)).subscribe(x => {
       this.data = x;
       this._rawText = JSON.stringify(x);
       this.editorAutoFormat();
@@ -49,7 +49,7 @@ export class GeoDataEditorComponent implements OnInit {
       this.initNewDataset();
 
       try {
-        let parsedData = <GeoDataset>(
+        let parsedData = <CoordinateData>(
           JSON.parse(this.rawText)
         );
 
@@ -114,12 +114,10 @@ export class GeoDataEditorComponent implements OnInit {
   }
 
   private initNewDataset() {
-    this.data = new GeoDataset();
-    this.data.Description = "Un-Named Feature";
+    this.data = new CoordinateData();
+    this.data.Description = "";
     this.data.ID = Guid.newGuid();
   }
-
-
 
   private editorAutoFormat() {
     console.log('monico editor:', this.monacoEditor)

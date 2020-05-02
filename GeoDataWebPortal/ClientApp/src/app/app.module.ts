@@ -10,7 +10,7 @@ import { GeoDataManagerComponent } from './components/geo-data-manager/geo-data-
 import { GeoDataSelectorComponent } from './components/geo-data-selector/geo-data-selector.component';
 import { GmapViewComponent } from './components/gmap-view/gmap-view.component';
 import { MainViewComponent } from './components/main-view/main-view.component';
-import { GeoDataMessageBusService } from './services/geo-data-message-bus.service';
+import { CoordinateDataMessageBusService } from './services/coordinate-data-message-bus.service';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { FormsModule } from '@angular/forms';
 import { GeoDataEditorComponent } from './components/geo-data-editor/geo-data-editor.component';
@@ -45,7 +45,7 @@ import { DataSettingsComponent } from './components/data-settings/data-settings.
     NgbModule,
     FontAwesomeModule
   ],
-  providers: [GeoDataMessageBusService],
+  providers: [CoordinateDataMessageBusService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

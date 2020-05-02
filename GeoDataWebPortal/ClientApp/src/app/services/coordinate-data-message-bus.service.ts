@@ -1,32 +1,32 @@
 import { Injectable } from "@angular/core";
 import { Subject, Observable, BehaviorSubject } from "rxjs";
 import { filter, debounceTime } from "rxjs/operators";
-import { GeoDataset } from "../models/geo-dataset";
+import { CoordinateData } from '../models/coordinate-data';
 
 @Injectable({
   providedIn: "root"
 })
-export class GeoDataMessageBusService {
+export class CoordinateDataMessageBusService {
   private msgSubject: BehaviorSubject<MessageData>;
-  private geoDatasetSelectedSubject: BehaviorSubject<GeoDataset>;
+  private coordinateDataSelectedSubject: BehaviorSubject<CoordinateData>;
 
   constructor() {
     this.msgSubject = new BehaviorSubject<MessageData>(new MessageData());
-    this.geoDatasetSelectedSubject = new BehaviorSubject<GeoDataset>(new GeoDataset());
+    this.coordinateDataSelectedSubject = new BehaviorSubject<CoordinateData>(new CoordinateData());
   }
 
-  public subscribeGeoDatasetSelected(): Observable<GeoDataset> {
-    return this.geoDatasetSelectedSubject;
+  public subscribeCoordinateDatasetSelected(): Observable<CoordinateData> {
+    return this.coordinateDataSelectedSubject;
   }
 
   public subscribeGeneral(type: MessageType): Observable<MessageData> {
     return this.msgSubject.pipe(filter(x => x.messageType === type), debounceTime(500));
   }
 
-  public publishGeoDatasetSelected(data: GeoDataset) {
-    console.log('geodataset published:');
+  public publishCoordinateDatasetSelected(data: CoordinateData) {
+    console.log('CoordinateData published:');
     console.log(data);
-    this.geoDatasetSelectedSubject.next(data);
+    this.coordinateDataSelectedSubject.next(data);
   }
 
   public publishGeneral(type: MessageType, data: any) {

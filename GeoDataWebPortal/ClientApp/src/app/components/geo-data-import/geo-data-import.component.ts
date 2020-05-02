@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { GeoDataAPIService } from 'src/app/services/geo-data-api.service';
 import { map, catchError, flatMap, mergeMap, concatMap } from 'rxjs/operators';
 import { HttpEventType, HttpErrorResponse } from '@angular/common/http';
 import { of, Observable, from, Subject, queueScheduler, asyncScheduler } from 'rxjs';
-import { GeoDataMessageBusService, MessageType } from 'src/app/services/geo-data-message-bus.service';
+import { CoordinateDataMessageBusService, MessageType } from 'src/app/services/coordinate-data-message-bus.service';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faUpload, faFile, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { GpxImportDataService } from 'src/app/services/gpx-import-data.service';
 
 interface FileData {
   name: string;
@@ -32,8 +32,8 @@ export class GeoDataImportComponent implements OnInit {
   private monacoEditor: any;
 
   constructor(
-    private dataService: GeoDataAPIService,
-    private msgService: GeoDataMessageBusService, private falibrary: FaIconLibrary) {
+    private dataService: GpxImportDataService,
+    private msgService: CoordinateDataMessageBusService, private falibrary: FaIconLibrary) {
     falibrary.addIcons(faUpload, faFile, faTrash);
   }
 

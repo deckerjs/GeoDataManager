@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SettingsService } from 'src/app/portal-settings/settings.service';
-import { GeoDataMessageBusService } from 'src/app/services/geo-data-message-bus.service';
+import { CoordinateDataMessageBusService } from 'src/app/services/coordinate-data-message-bus.service';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faTrash, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { ConfigurationSettings } from 'src/app/services/configuration-settings.service';
@@ -25,7 +25,7 @@ export class DataSettingsComponent implements OnInit {
   constructor(
     private settingsService: SettingsService,
     private dataService: UserSettingsAPIService,
-    private msgService: GeoDataMessageBusService,
+    private msgService: CoordinateDataMessageBusService,
     private falibrary: FaIconLibrary) {
     falibrary.addIcons(faTrash, faPlusSquare);
   }

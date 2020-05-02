@@ -24,11 +24,11 @@
             <!-- also, set data summary size limit the same as the map, and scroll when ovr -->
             <div class="card-title my-1">
                 <span class="text-primary mr-1">Description:</span>
-                <span class="card-text">{{data.Description}}</span>
+                <span class="card-text">{{data?.Description}}</span>
             </div>
             <div class="card-title my-1">
                 <span class="text-primary mr-1">ID:</span>
-                <span class="card-text">{{data.ID}}</span>
+                <span class="card-text">{{data?.ID}}</span>
             </div>
 
         </div>
@@ -38,17 +38,19 @@
         <div class="card-body">
 
             <div class="card-title my-1">
-                <span class="text-primary mr-1">Type:</span>
-                <span class="card-text">{{data?.Data?.type}}</span>
+                <span class="text-primary mr-1">Point Collections:</span>
+                <span class="card-text">{{data?.Data?.length}}</span>
             </div>
-            <div class="card-title my-1">
-                <span class="text-primary mr-1">Features Count:</span>
-                <span class="card-text">{{data?.Data?.features?.length}}</span>
+
+            <div *ngFor="let pc of data?.Data" class="card-title my-1">
+                <span class="text-primary mr-1">Point collection {{pc.ID}} Coordinates Count:</span>
+                <span class="card-text">{{pc.Coordinates?.length}}</span>
             </div>
-            <div class="card-title my-1">
+
+            <!-- <div class="card-title my-1">
                 <span class="text-primary mr-1">Properties:</span>
                 <span class="card-text"></span>
-            </div>
+            </div> -->
 
         </div>
 

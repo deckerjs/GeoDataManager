@@ -1,13 +1,14 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { GeoDataset } from "../../models/geo-dataset";
 import { geojsonHelperFunctions } from "../../utilities/geojson-helper-functions";
-import { GeoDataMessageBusService } from "../../services/geo-data-message-bus.service";
+import { CoordinateDataMessageBusService } from "../../services/coordinate-data-message-bus.service";
 import * as mapboxgl from 'mapbox-gl';
 import { FeatureCollection, LineString } from 'geojson';
 import { AreaBounds } from 'src/app/models/area-bounds';
 import { LatLngPoint } from 'src/app/models/lat-lng-point';
 import { SettingsService } from 'src/app/portal-settings/settings.service';
 import { take, delay } from 'rxjs/operators';
+import { GeoDataAPIService } from 'src/app/services/geo-data-api.service';
 
 const outdoorsv9: string = 'outdoors-v9';
 const outdoorsv11: string = 'outdoors-v11';
@@ -30,8 +31,9 @@ export class GmapViewComponent implements OnInit {
   private lat: number;
   private lng: number;
 
-  constructor(private msgService: GeoDataMessageBusService,
-    private settingsService: SettingsService) {
+  constructor(private msgService: CoordinateDataMessageBusService,
+    private settingsService: SettingsService,
+    private dataService: GeoDataAPIService) {
     settingsService.getSettings().pipe(take(1)).subscribe({
       next: config => {
         mapboxgl.accessToken = config.MapboxToken;
@@ -40,16 +42,23 @@ export class GmapViewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.msgService.subscribeGeoDatasetSelected().pipe(delay(100)).subscribe(x => {
+    this.msgService.subscribeCoordinateDatasetSelected().pipe(delay(100)).subscribe(x => {
       console.log('incoming map data sub:', x)
       if (x.Data != null) {
-        this.mapData = x;
-        this.buildMap();
-        this.map.flyTo({
-          center: [this.lng, this.lat]
-        });
-      }
 
+        this.dataService.Get(x.ID).subscribe({
+          next: geoData => {
+            
+            this.mapData = geoData;
+            this.buildMap();
+            this.map.flyTo({
+              center: [this.lng, this.lat]
+            });
+
+          }
+        });
+
+      }
     });
   }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { GeoDataAPIService } from 'src/app/services/geo-data-api.service';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faMap, faHeartbeat } from '@fortawesome/free-solid-svg-icons';
+import { HealthCheckAPIService } from 'src/app/services/api-health-check.service';
 
 @Component({
   selector: "app-main-view",
@@ -14,7 +14,7 @@ export class MainViewComponent implements OnInit {
 
   public apiHealthy: boolean = false;
 
-  constructor(private dataService: GeoDataAPIService, private falibrary: FaIconLibrary) {
+  constructor(private dataService: HealthCheckAPIService, private falibrary: FaIconLibrary) {
     falibrary.addIcons(faMap, faHeartbeat);
   }
 

@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  GeoDataMessageBusService,
+  CoordinateDataMessageBusService,
   MessageType
-} from '../../services/geo-data-message-bus.service';
-import { GeoDataset } from '../../models/geo-dataset';
-import { GeoDataAPIService } from 'src/app/services/geo-data-api.service';
+} from '../../services/coordinate-data-message-bus.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faSync, faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -13,6 +11,8 @@ import { UserSettingsAPIService } from 'src/app/services/user-settings-api.servi
 import { stringify } from 'querystring';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { CoordinateDataAPIService } from 'src/app/services/coordinate-data-api.service';
+import { CoordinateData } from 'src/app/models/coordinate-data';
 
 @Component({
   selector: 'app-geo-data-selector',
@@ -20,8 +20,8 @@ import { tap } from 'rxjs/operators';
   styleUrls: ['./geo-data-selector.component.scss']
 })
 export class GeoDataSelectorComponent implements OnInit {
-  public datasetCollection: Array<GeoDataset>;
-  public selectedDataset: GeoDataset;
+  public datasetCollection: Array<CoordinateData>;
+  public selectedDataset: CoordinateData;
   public userList: AppUser[] = [];
   public showFilter: boolean = false;
   public filterShowShared: boolean = false;
@@ -29,8 +29,8 @@ export class GeoDataSelectorComponent implements OnInit {
   public currentUserId: string;
 
   constructor(
-    private apiDataService: GeoDataAPIService,
-    private msgService: GeoDataMessageBusService,
+    private apiDataService: CoordinateDataAPIService,
+    private msgService: CoordinateDataMessageBusService,
     private authService: AuthService,
     private userDataService: UserSettingsAPIService,
     private falibrary: FaIconLibrary
@@ -112,7 +112,7 @@ export class GeoDataSelectorComponent implements OnInit {
     ));
   }
 
-  private appendViewData(x: GeoDataset[], isShared:boolean) {
+  private appendViewData(x: CoordinateData[], isShared:boolean) {
     x.forEach(ds => {
       ds['isShared'] = isShared;
       ds['userName'] = this.getUserNameFromId(ds.UserID);
@@ -123,9 +123,9 @@ export class GeoDataSelectorComponent implements OnInit {
     return this.userDataService.getUserNameFromId(id, this.userList);
   }
 
-  public selectDataset(item: GeoDataset) {
+  public selectDataset(item: CoordinateData) {
     this.selectedDataset = item;
-    this.msgService.publishGeoDatasetSelected(item);
+    this.msgService.publishCoordinateDatasetSelected(item);
   }
 
   public reload(): void {

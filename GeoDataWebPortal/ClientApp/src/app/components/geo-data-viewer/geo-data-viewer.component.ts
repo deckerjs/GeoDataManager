@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { GeoDataset } from 'src/app/models/geo-dataset';
-import { GeoDataAPIService } from 'src/app/services/geo-data-api.service';
-import { GeoDataMessageBusService } from 'src/app/services/geo-data-message-bus.service';
+import { CoordinateDataMessageBusService } from 'src/app/services/coordinate-data-message-bus.service';
 import { debounceTime, delay } from 'rxjs/operators';
+import { CoordinateData } from 'src/app/models/coordinate-data';
 
 @Component({
   selector: 'app-geo-data-viewer',
@@ -11,23 +10,20 @@ import { debounceTime, delay } from 'rxjs/operators';
 })
 export class GeoDataViewerComponent implements OnInit {
 
-  public data: GeoDataset = new GeoDataset();
+  public data: CoordinateData = new CoordinateData();
   public mapHeight: string = '200px';
 
-  constructor(
-    private dataService: GeoDataAPIService,
-    private msgService: GeoDataMessageBusService
+  constructor(    
+    private msgService: CoordinateDataMessageBusService
   ) { 
     let midHeight = window.innerHeight - 300;
     this.mapHeight = `${midHeight}px`;
   }
 
   ngOnInit() {
-    this.msgService.subscribeGeoDatasetSelected().pipe(debounceTime(500)).subscribe(x => {
+    this.msgService.subscribeCoordinateDatasetSelected().pipe(debounceTime(500)).subscribe(x => {
       this.data = x;
     });
   }
-
-
 
 }
