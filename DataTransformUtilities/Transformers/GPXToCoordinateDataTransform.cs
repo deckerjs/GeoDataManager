@@ -54,7 +54,7 @@ namespace DataTransformUtilities.Transformers
 
             foreach (var coord in trk.trkseg.trkpt)
             {
-                coords.Add(new Coordinate(coord.lon, coord.lat, coord.ele, coord.time));
+                coords.Add(new Coordinate(coord.lat, coord.lon, coord.ele, coord.time));
             }
 
             var props = new Dictionary<string, string>();
