@@ -45,6 +45,7 @@
             <div *ngFor="let pc of data?.Data" class="card-title my-1">
                 <span class="text-primary mr-1">Point collection {{pc.ID}} Coordinates Count:</span>
                 <span class="card-text">{{pc.Coordinates?.length}}</span>
+                <app-gps-telemetry-chart [data]="pc.Coordinates"></app-gps-telemetry-chart>
             </div>
 
             <!-- <div class="card-title my-1">

@@ -77,7 +77,7 @@ namespace GeoStoreAPI.Repositories
         public CoordinateData GetSingle(string id, string userID)
         {
             var data = _dataAccess.Get(id);
-            if (data != null && data.UserID == userID)
+            if (data != null && data.UserID == userID || DataIsShared(userID, data))
             {
                 return data;
             }
@@ -140,6 +140,12 @@ namespace GeoStoreAPI.Repositories
 
                 _dataAccess.Update(id, data);
             }
+        }
+
+        private bool DataIsShared(string userID, CoordinateData data)
+        {
+            var grants = _dataPermissionRepository.GetAllGrantedToUser(userID, x => true);
+            return grants.Where(x => x.OwnerUserID == data.UserID).Any();
         }
 
     }

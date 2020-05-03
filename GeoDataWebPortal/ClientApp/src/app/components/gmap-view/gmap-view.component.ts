@@ -42,13 +42,12 @@ export class GmapViewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.msgService.subscribeCoordinateDatasetSelected().pipe(delay(100)).subscribe(x => {
+    this.msgService.subscribeCoordinateDatasetSelected().pipe(delay(150)).subscribe(x => {
       console.log('incoming map data sub:', x)
       if (x.Data != null) {
 
         this.dataService.Get(x.ID).subscribe({
           next: geoData => {
-            
             this.mapData = geoData;
             this.buildMap();
             this.map.flyTo({
@@ -81,8 +80,7 @@ export class GmapViewComponent implements OnInit {
   }
 
 
-  private buildMap() {
-
+  private buildMap() {    
     let areaBounds: AreaBounds = geojsonHelperFunctions.getBounds(this.mapData.Data);
     let center: LatLngPoint = geojsonHelperFunctions.getCenter(areaBounds);
 

@@ -20,6 +20,7 @@ import { GeoDataViewerComponent } from './components/geo-data-viewer/geo-data-vi
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DataSettingsComponent } from './components/data-settings/data-settings.component';
+import { GpsTelemetryChartComponent } from './components/gps-telemetry-chart/gps-telemetry-chart.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { DataSettingsComponent } from './components/data-settings/data-settings.
     GeoDataEditorComponent,
     AuthComponent,
     GeoDataViewerComponent,
-    DataSettingsComponent
+    DataSettingsComponent,
+    GpsTelemetryChartComponent
   ],
   imports: [
     BrowserModule,
@@ -44,6 +46,7 @@ import { DataSettingsComponent } from './components/data-settings/data-settings.
     HttpClientModule,
     NgbModule,
     FontAwesomeModule
+    
   ],
   providers: [CoordinateDataMessageBusService],
   bootstrap: [AppComponent]
