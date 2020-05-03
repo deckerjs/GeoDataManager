@@ -107,7 +107,7 @@ namespace GeoStoreAPI.Controllers
         /// </summary>
         /// <param name="coordinates">List of {lat,lon,ele,time}</param>
         /// <returns>New Coordinatedata id</returns>
-        [HttpPost("{id}/data/coordinates")]
+        [HttpPost("data/coordinates")]
         public ActionResult<string> PostCoordinatesToNewObject([FromBody] List<Coordinate> coordinates)
         {
             CoordinateData data = new CoordinateData();            

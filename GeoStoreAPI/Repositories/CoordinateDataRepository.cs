@@ -31,6 +31,14 @@ namespace GeoStoreAPI.Repositories
                 Data = incomingData.Data
             };
 
+            foreach (var pc in createData.Data)
+            {
+                if (string.IsNullOrEmpty(pc.ID))
+                {
+                    pc.ID = Guid.NewGuid().ToString();
+                }
+            }
+
             _dataAccess.Create(createData);
             return createData.ID;
         }
@@ -100,10 +108,9 @@ namespace GeoStoreAPI.Repositories
             var data = _dataAccess.Get(id);
             if (data != null && data.UserID == userID)
             {
-                int nextId = data.Data.Any() ? data.Data.Count() + 1 : 1;
                 var newPc = new PointCollection
                 {
-                    ID = nextId.ToString(),
+                    ID = Guid.NewGuid().ToString(),
                     Coordinates = coordinates.ToList()
                 };
                 data.Data.Add(newPc);
