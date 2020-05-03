@@ -74,11 +74,50 @@ namespace GeoStoreApi.Tests
             Assert.Pass();
         }
 
+        [Test]
+        public async Task GeoDataAppendCoordinatesTest()
+        {
+            var api = new CoordinateDataApiClient();
+            await api.Initialize(_clientSettings);
+
+            var newData = new CoordinateData()
+            {
+                Description = "test item 2",
+                Tags = new List<string> { "test tag 2", "test tag 3" },
+                Data = GetTestPointCollection()
+            };
+
+            var newId = await api.Post(newData);
+            Assert.IsFalse(string.IsNullOrEmpty(newId));
+            var existingData = await api.GetById(newId);
+            Assert.IsTrue(existingData != null && existingData.Data.Any());
+            
+            var existingPointCollection = existingData.Data.First();
+
+            int originalCoordCount = existingPointCollection.Coordinates.Count();
+
+            var coordsToAdd = GetTestPointCollection().First().Coordinates;
+            int addedCoordCount = coordsToAdd.Count();
+
+            await api.AppendCoordinatesTpPointCollection(newId, existingPointCollection.ID, coordsToAdd);
+
+            var updatedData = await api.GetById(newId);
+
+            Assert.AreEqual((originalCoordCount+addedCoordCount), updatedData.Data.Where(x => x.ID == existingPointCollection.ID).First().Coordinates.Count());
+
+            await api.Delete(newId);
+
+            var dataStillExists = await api.GetById(newId);
+
+            Assert.IsNull(dataStillExists);
+
+            Assert.Pass();
+        }
+
         private ApiClientSettings GetApiClientSettings(IConfiguration config)
         {
             return config.GetSection("ApiClientSettings").Get<ApiClientSettings>();
         }
-
 
         private List<PointCollection> GetTestPointCollection()
         {
