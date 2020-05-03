@@ -123,7 +123,7 @@ export class GeoDataSelectorComponent implements OnInit {
     return this.userDataService.getUserNameFromId(id, this.userList);
   }
 
-  public selectDataset(item: CoordinateData) {
+  public selectDataset(item: CoordinateData) {    
     this.selectedDataset = item;
     this.msgService.publishCoordinateDatasetSelected(item);
   }

@@ -80,8 +80,10 @@ export class GmapViewComponent implements OnInit {
   }
 
 
-  private buildMap() {    
-    let areaBounds: AreaBounds = geojsonHelperFunctions.getBounds(this.mapData.Data);
+  private buildMap() {
+    const featureCollection = this.mapData.Data;
+
+    let areaBounds: AreaBounds = geojsonHelperFunctions.getBounds(featureCollection);
     let center: LatLngPoint = geojsonHelperFunctions.getCenter(areaBounds);
 
     console.log('got bounds, center:', areaBounds, center)
@@ -108,7 +110,7 @@ export class GmapViewComponent implements OnInit {
       });
 
       this.source = this.map.getSource('stuff');
-      this.source.setData(this.mapData.Data);
+      this.source.setData(featureCollection);
 
       this.map.addLayer({
         id: 'somestuff',
@@ -124,7 +126,7 @@ export class GmapViewComponent implements OnInit {
         }
       });
 
-      const bounds = this.getBoundsFromFeatureCollection(this.mapData.Data);
+      const bounds = this.getBoundsFromFeatureCollection(featureCollection);
       this.map.fitBounds(bounds, {
         padding: 20
       });

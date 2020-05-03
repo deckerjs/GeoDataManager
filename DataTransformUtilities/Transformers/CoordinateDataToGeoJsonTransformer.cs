@@ -19,11 +19,11 @@ namespace DataTransformUtilities.Transformers
             var geoData = new GeoJsonData();
             string dataDescription = "";
 
-            geoData.UserID = "";
-            geoData.ID = Guid.NewGuid().ToString();
-            geoData.DateCreated = DateTime.Now;
-            geoData.Tags = new List<string> { "Transformed From GPX" };
-            geoData.DateModified = DateTime.Now;
+            geoData.UserID = coordinateData.UserID;
+            geoData.ID = coordinateData.ID;
+            geoData.DateCreated = coordinateData.DateCreated;
+            geoData.Tags = coordinateData.Tags;
+            geoData.DateModified = coordinateData.DateModified;
 
             var features = new List<Feature>();
 
