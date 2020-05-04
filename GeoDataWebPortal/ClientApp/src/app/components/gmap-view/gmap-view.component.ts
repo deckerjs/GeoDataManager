@@ -99,6 +99,12 @@ export class GmapViewComponent implements OnInit {
     });
 
     this.map.addControl(new mapboxgl.NavigationControl());
+    
+    var scale = new mapboxgl.ScaleControl({
+      maxWidth: 200,
+      unit: 'imperial'
+    });
+    this.map.addControl(scale);
 
     this.map.on('load', event => {
       this.map.addSource('stuff', {
@@ -130,6 +136,10 @@ export class GmapViewComponent implements OnInit {
       this.map.fitBounds(bounds, {
         padding: 20
       });
+
+
+
+
     });
   }
 
