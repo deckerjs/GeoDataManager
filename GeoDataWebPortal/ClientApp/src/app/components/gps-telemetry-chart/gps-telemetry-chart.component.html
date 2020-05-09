@@ -1,4 +1,11 @@
-
-    <div class="w-50 h-50">
-        <canvas id="chartCanvas">{{ chart }}</canvas>
-    </div>
+<div style="display: block;" class="w-100 h-50">
+    <canvas baseChart width="600" height="200"
+        [datasets]="lineChartData"
+        [labels]="lineChartLabels"
+        [options]="lineChartOptions"
+        [colors]="lineChartColors"
+        [legend]="lineChartLegend"
+        [chartType]="lineChartType"
+        [plugins]="lineChartPlugins">
+    </canvas>
+</div>

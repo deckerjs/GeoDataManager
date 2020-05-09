@@ -21,6 +21,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DataSettingsComponent } from './components/data-settings/data-settings.component';
 import { GpsTelemetryChartComponent } from './components/gps-telemetry-chart/gps-telemetry-chart.component';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -45,8 +46,8 @@ import { GpsTelemetryChartComponent } from './components/gps-telemetry-chart/gps
     MonacoEditorModule.forRoot(),
     HttpClientModule,
     NgbModule,
-    FontAwesomeModule
-    
+    FontAwesomeModule,
+    ChartsModule    
   ],
   providers: [CoordinateDataMessageBusService],
   bootstrap: [AppComponent]
