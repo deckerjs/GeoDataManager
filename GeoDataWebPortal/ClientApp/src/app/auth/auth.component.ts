@@ -40,12 +40,15 @@ export class AuthComponent implements OnInit, OnDestroy {
       }
     });
 
-    console.log("auth current user:", this.authService.currentUser )
     this.currentUserSub = this.authService.currentUser.subscribe({
       next: user => {
         this.currentUser = user;
       }
     });
+
+    this.authService.autoLogin().subscribe({next: result=> {
+      console.log("autologin result:", result);
+    }})
 
   }
 

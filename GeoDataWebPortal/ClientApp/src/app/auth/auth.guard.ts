@@ -19,16 +19,13 @@ export class AuthGuard implements CanLoad {
       take(1),
       switchMap(isAuthenticated => {        
         if (!isAuthenticated) {
-          //console.log("auto login attempt")
-          //return this.authService.autoLogin();
-          return of(false);
+          return this.authService.autoLogin();
         } else {
           return of(isAuthenticated);
         }
       }),
       tap(isAuthenticated => {
         if (!isAuthenticated) {
-          console.log("not authenticated, redirecting to login")
           this.router.navigateByUrl('/portal/auth');
         }
       })

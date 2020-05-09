@@ -79,8 +79,9 @@ export class GeoDataSelectorComponent implements OnInit {
       next: u => {
         this.apiDataService.GetAllOwned().subscribe({
           next: x => {
-            this.appendViewData(x, false);
-            this.datasetCollection.push(...x);
+            this.appendViewData(x, false);            
+            const sorted = x.sort((val1:any, val2:any)=> {return val1.DateCreated - val2.DateCreated});
+            this.datasetCollection.push(...sorted);
           }
         });
       }
@@ -96,7 +97,8 @@ export class GeoDataSelectorComponent implements OnInit {
           this.apiDataService.GetAllShared(apiFilter).subscribe({
             next: x => {
               this.appendViewData(x, true);
-              this.datasetCollection.push(...x);
+              const sorted = x.sort((val1:any, val2:any)=> {return val1.DateCreated - val2.DateCreated});
+              this.datasetCollection.push(...sorted);
             }
           });
         }
