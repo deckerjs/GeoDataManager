@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CoordinateDataMessageBusService } from 'src/app/services/coordinate-data-message-bus.service';
 import { debounceTime, delay } from 'rxjs/operators';
 import { CoordinateData } from 'src/app/models/coordinate-data';
+import { chartFieldSelection } from '../gps-telemetry-chart/gps-telemetry-chart.component';
 
-export class chartSelection {
-  dataObject: string;
-  dataFields: Array<string>;
+export class chartInstance {
+  id: string;
+  chartFields: Array<chartFieldSelection>
 }
 
 @Component({
@@ -18,12 +19,16 @@ export class GeoDataViewerComponent implements OnInit {
   public data: CoordinateData = new CoordinateData();
   public mapHeight: string = '200px';
 
-  public selectedChartFields: Array<chartSelection> = [];
-  public chartMetadataSelectOptions: chartSelection = new chartSelection();
-  public chartTelemetrySelectOptions: chartSelection = new chartSelection();
+  public selectedChartFields: Array<chartFieldSelection> = [];
+  public chartMetadataSelectOptions: chartFieldSelection = new chartFieldSelection();
+  public chartTelemetrySelectOptions: chartFieldSelection = new chartFieldSelection();
 
   public metadataFieldListSelect: Array<string> = [];
   public telemetryFieldListSelect: Array<string> = [];
+
+  public selectedCharts: Array<chartInstance> = [];
+
+  private readonly ChartPreferenceStorageKey = 'chartPref';
 
   constructor(
     private msgService: CoordinateDataMessageBusService
@@ -41,6 +46,29 @@ export class GeoDataViewerComponent implements OnInit {
       }
 
     });
+
+    const storedChartPref = this.getStoredChartPreference();
+    if (storedChartPref != null) {
+      this.selectedCharts = storedChartPref;
+    }
+  }
+
+  private storeChartPreference(charts: Array<chartInstance>) {
+    if (charts != null && charts.length > 0) {
+      const localChartPrefString = JSON.stringify(charts);
+      localStorage.setItem(this.ChartPreferenceStorageKey, localChartPrefString);
+    }
+  }
+
+  private getStoredChartPreference(): Array<chartInstance> {
+    let charts: Array<chartInstance>;
+    const localChartPrefString = localStorage.getItem(this.ChartPreferenceStorageKey);
+
+    if (localChartPrefString != null) {
+      charts = JSON.parse(localChartPrefString) as Array<chartInstance>;
+    }
+
+    return charts;
   }
 
   public selectMetaDataFld(fld: string) {
@@ -52,8 +80,29 @@ export class GeoDataViewerComponent implements OnInit {
   }
 
   public addSelectedField(dob: string, flds: string[]) {
-    this.selectedChartFields.push({ dataObject: dob, dataFields: flds });
-    console.log('added flds:', this.selectedChartFields)
+    if (dob != null && flds != null && flds.length > 0) {
+      this.selectedChartFields.push({ dataObject: dob, dataFields: flds });
+      this.metadataFieldListSelect = [];
+      this.telemetryFieldListSelect = [];
+      console.log('added flds:', this.selectedChartFields)
+    }
+  }
+
+  public addChart() {
+    if (this.selectedChartFields != null && this.selectedChartFields.length > 0) {
+      this.selectedCharts.push({ id: (this.selectedCharts.length + 1).toString(), chartFields: this.selectedChartFields });
+      this.selectedChartFields = [];
+      console.log('added chart:', this.selectedCharts)
+
+      this.storeChartPreference(this.selectedCharts);
+    }
+  }
+
+  public removeChart(id: string) {
+    if(this.selectedCharts!=null && this.selectedCharts.length>0){
+      this.selectedCharts = this.selectedCharts.filter(item => item.id !== id);
+      this.storeChartPreference(this.selectedCharts);
+    }
   }
 
   private setChartFields(data: CoordinateData) {

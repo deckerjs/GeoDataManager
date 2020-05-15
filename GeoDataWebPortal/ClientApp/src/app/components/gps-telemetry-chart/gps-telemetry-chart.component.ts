@@ -6,6 +6,11 @@ import { Color, Label } from 'ng2-charts';
 
 export interface fieldDataDictionary { [key: string]: [] }
 
+export class chartFieldSelection {
+  dataObject: string;
+  dataFields: Array<string>;
+}
+
 @Component({
   selector: 'app-gps-telemetry-chart',
   templateUrl: './gps-telemetry-chart.component.html',
@@ -13,35 +18,25 @@ export interface fieldDataDictionary { [key: string]: [] }
 })
 export class GpsTelemetryChartComponent implements OnInit {
 
-  public lineChartData: ChartDataSets[];
-  public lineChartLabels: Label[];
+  public lineChartData: ChartDataSets[] = [];
+  public lineChartLabels: Label[] = [];
   public lineChartOptions: (ChartOptions & { annotation: any });
-  public lineChartColors: Color[];
+  public lineChartColors: Color[] = [];
   public lineChartLegend: boolean;
   public lineChartType: string;
   public lineChartPlugins: [] = [];
 
-  private _dataObject: string;
-  get dataObject(): string {
-    return this._dataObject;
-  }
-  @Input()
-  set dataObject(dob: string) {
-    this._dataObject = dob;
-    if (dob != null && this.isFieldsReady() && this.isDataReady()) {
-      this.chartSetup(this.data, dob, this.dataFields);
-    }
-  }
 
-  private _dataFields: Array<string>;
-  get dataFields(): Array<string> {
+  private _dataFields: Array<chartFieldSelection>;
+  get dataFields(): Array<chartFieldSelection> {
     return this._dataFields;
   }
   @Input()
-  set dataFields(df: Array<string>) {
+  set dataFields(df: Array<chartFieldSelection>) {
+    console.log('setting datafields:', df)
     this._dataFields = df;
-    if (df != null && df.length > 0 && this.isDataReady() && this.isDataObjectReady()) {
-      this.chartSetup(this.data, this.dataObject, df);
+    if (df != null && df.length > 0 && this.isDataReady()) {
+      this.chartSetup(this.data, df);
     }
   }
 
@@ -52,8 +47,8 @@ export class GpsTelemetryChartComponent implements OnInit {
   @Input()
   set data(tdata: Array<Coordinate>) {
     this._data = tdata;
-    if (tdata != null && tdata.length > 0 && this.isFieldsReady() && this.isDataObjectReady()) {
-      this.chartSetup(tdata, this.dataObject, this.dataFields);
+    if (tdata != null && tdata.length > 0 && this.isFieldsReady()) {
+      this.chartSetup(tdata, this.dataFields);
     }
   }
 
@@ -68,12 +63,13 @@ export class GpsTelemetryChartComponent implements OnInit {
     return this.dataFields != null && this.dataFields.length > 0;
   }
 
-  private isDataObjectReady(): boolean {
-    return this.dataObject != null;
-  }
+  private chartSetup(tdata: Array<Coordinate>, dataFields: Array<chartFieldSelection>) {
+    console.log('chartSetup:', tdata, dataFields)
+    
+    dataFields.forEach(cf => {
+      this.lineChartData.push(...this.getDataSets(tdata, cf));      
+    });
 
-  private chartSetup(tdata: Array<Coordinate>, dataObject: string, dataFields: Array<string>) {
-    this.lineChartData = this.getDataSets(tdata, dataObject, dataFields);
     this.lineChartLabels = this.getDataTimeLabels(tdata);
 
     this.lineChartOptions = {
@@ -93,27 +89,30 @@ export class GpsTelemetryChartComponent implements OnInit {
     this.lineChartPlugins = [];
   }
 
-  private getDataSets(tdata: Array<Coordinate>, dataObject: string, dataFields: Array<string>): ChartDataSets[] {
-    console.log('getDataSets:', tdata, dataObject, dataFields)
-    let datas: ChartDataSets[] = dataFields.map(x => {
+  private getDataSets(tdata: Array<Coordinate>, dataFields: chartFieldSelection): ChartDataSets[] {
+    console.log('getDataSets:', tdata, dataFields)
+    
+    let datas: ChartDataSets[] = dataFields.dataFields.map(chartFld => {
       const fd = tdata.map(td => {
-        const dob = td[dataObject];
-        if (dob != null) {
-          return dob[x];
-        } else {
-          return null;
-        }
+        
+          const dob = td[dataFields.dataObject];
+          if (dob != null) {
+            return dob[chartFld];
+          } else{
+            return null;
+          }        
       });
 
       return {
-        label: x,
+        label: chartFld,
         data: fd,
         backgroundColor: 'rgba(0,0,255,1)',
         borderColor: 'black',
         fill: true
       }
-    })
 
+    })
+console.log('returning datas:', datas)
     return datas;
   }
 

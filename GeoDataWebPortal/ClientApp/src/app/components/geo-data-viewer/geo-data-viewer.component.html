@@ -45,7 +45,7 @@
             <div>
                 <table class="bg-light text-dark table table-sm mb-0">
                     <thead>
-                        <tr>
+                        <tr>                            
                             <td class="col-2">
                                 <div ngbDropdown class="d-inline-block">
                                     <button class="btn btn-primary" id="metadataFieldSelect" ngbDropdownToggle>Metadata
@@ -57,44 +57,66 @@
                                         </button>
                                     </div>
                                 </div>
-                                <span *ngFor="let fld of metadataFieldListSelect" class="mx-2">{{fld}}</span>
+                                <div *ngFor="let fld of metadataFieldListSelect" class="d-inline-block mx-2">{{fld}}</div>
                             </td>
                             <td class="col-2">
                                 <a (click)="addSelectedField(chartMetadataSelectOptions?.dataObject, metadataFieldListSelect)"
                                     class="btn btn-link text-info">Add</a>
                             </td>
-                            <td class="col-2"></td>
+                            
+                            <td class="col-2">
+                                <div ngbDropdown class="d-inline-block">
+                                    <button class="btn btn-primary" id="telemetrydataFieldSelect" ngbDropdownToggle>Telemetry
+                                        Fields</button>
+                                    <div ngbDropdownMenu aria-labelledby="telemetrydataFieldSelect">
+                                        <button *ngFor="let f of chartTelemetrySelectOptions?.dataFields" ngbDropdownItem
+                                            (click)="selectTelemetryDataFld(f)">
+                                            {{f}}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div *ngFor="let fld of telemetryFieldListSelect" class="d-inline-block mx-2">{{fld}}</div>
+                            </td>
+                            <td class="col-2">
+                                <a (click)="addSelectedField(chartTelemetrySelectOptions?.dataObject, telemetryFieldListSelect)"
+                                    class="btn btn-link text-info">Add</a>
+                            </td>
+
                             <td class="col-2"></td>
                             <td class="col-4"></td>
+                        </tr>
+
+                        <tr>                            
+                            <td class="col-2" colspan="4">
+                                <div *ngFor="let flds of selectedChartFields">
+                                    {{flds.dataObject}}:<span *ngFor="let fld of flds.dataFields" class="mx-1">{{fld}}</span>
+                                </div>
+                            </td>                        
+                        </tr>                        
+
+                        <tr>                            
+                            <td class="col-2" colspan="4">
+                                <a (click)="addChart()" class="btn btn-link text-info">Add Chart</a>
+                            </td>                        
                         </tr>
                     </thead>
                 </table>
             </div>
 
-
-
             <div *ngFor="let pc of data?.Data" class="card-title my-1">
                 <span class="text-primary mr-1">Point collection {{pc.ID}} Coordinates Count:</span>
                 <span class="card-text">{{pc.Coordinates?.length}}</span>
-
-                <app-gps-telemetry-chart [data]="pc.Coordinates" [dataObject]="'Metadata'" [dataFields]="['LTE']">
-                </app-gps-telemetry-chart>
-
-                <app-gps-telemetry-chart [data]="pc.Coordinates" [dataObject]="'Telemetry'"
-                    [dataFields]="['SignalToNoiseRatio', 'Hdop']"></app-gps-telemetry-chart>
-
-                <app-gps-telemetry-chart [data]="pc.Coordinates" [dataObject]="'Telemetry'" [dataFields]="['Hdop']">
-                </app-gps-telemetry-chart>
-
-                <app-gps-telemetry-chart [data]="pc.Coordinates" [dataObject]="'Telemetry'"
-                    [dataFields]="['FeetPerSecond']"></app-gps-telemetry-chart>
-
+                
+                <div *ngFor="let cht of selectedCharts">
+                    <app-gps-telemetry-chart  [data]="pc.Coordinates" [dataFields]="cht.chartFields">
+                    </app-gps-telemetry-chart>
+                    <a (click)="removeChart(cht.id)" class="btn btn-link text-info">Remove</a>
+                </div>
+                
+                
             </div>
 
-            <!-- <div class="card-title my-1">
-                <span class="text-primary mr-1">Properties:</span>
-                <span class="card-text"></span>
-            </div> -->
+ 
 
         </div>
 

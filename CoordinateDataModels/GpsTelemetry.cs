@@ -17,6 +17,6 @@ namespace CoordinateDataModels
         public double EastProjectionOfBaseLine { get; set; }
         public double NorthProjectionOfBaseLine { get; set; }
         public double UpProjectionOfBaseLine { get; set; }
-
+        //add LTE, RtkRatio, RtkAge, PDOP
     }
 }
