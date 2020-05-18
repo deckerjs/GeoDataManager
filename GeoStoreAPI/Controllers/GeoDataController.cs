@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using CoordinateDataModels;
 using DataTransformUtilities.Transformers;
@@ -34,10 +35,10 @@ namespace GeoStoreAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<GeoJsonData>> GetAll()
         {
-            Func<CoordinateData, bool> filter = _filterBuilder.GetFilter<CoordinateData>();
+            var filter = _filterBuilder.GetFilter<CoordinateData>();
 
-            var result = _dataRepository.GetAll(_userIdService.GetUserID(), filter).ToList();            
-             
+            var result = _dataRepository.GetAll(_userIdService.GetUserID(), filter).ToList();
+
             if (result != null) return GetGeoJsonFromCoordinateData(result);
             return null;
         }
@@ -47,7 +48,7 @@ namespace GeoStoreAPI.Controllers
         [Route("Shared")]
         public ActionResult<IEnumerable<GeoJsonData>> GetShared()
         {
-            Func<CoordinateData, bool> filter = _filterBuilder.GetFilter<CoordinateData>();
+            var filter = _filterBuilder.GetFilter<CoordinateData>();
             var result = _dataRepository.GetShared(_userIdService.GetUserID(), filter).ToList();
 
             if (result != null) return GetGeoJsonFromCoordinateData(result);
@@ -61,7 +62,7 @@ namespace GeoStoreAPI.Controllers
 
             if (result != null) return GetGeoJsonFromCoordinateData(result);
             return null;
-        }               
+        }
 
         private GeoJsonData GetGeoJsonFromCoordinateData(CoordinateData coordinateData)
         {

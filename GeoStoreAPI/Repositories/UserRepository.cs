@@ -7,6 +7,7 @@ using GeoStoreAPI.DataAccess;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
 using GeoStoreAPI.Services;
+using System.Linq.Expressions;
 
 namespace GeoStoreAPI.Repositories
 {
@@ -40,21 +41,24 @@ namespace GeoStoreAPI.Repositories
             return false;
         }
 
-        public IEnumerable<AppUser> GetAllUsers(Func<AppUser, bool> filter)
+        public IEnumerable<AppUser> GetAllUsers(IEnumerable<Expression<Func<AppUser, bool>>> filter)
         {
             return _dataAccess.GetAll(filter);
         }
 
         public AppUser GetUser(string subjectId)
         {
-            var users = _dataAccess.GetAll(x => x.ID == subjectId);
+            var filter = FilterExpressionUtilities.GetEqExpressionForProperty<AppUser>("ID", subjectId);
+            var users = _dataAccess.GetAll(new[] { filter });
             if(users!=null)return users.FirstOrDefault();
             return null;
         }
 
         public AppUser FindByUsername(string username)
         {
-            var users = _dataAccess.GetAll(x => x.UserName == username);
+            var filters = new List<Expression<Func<AppUser, bool>>>();
+            filters.Add(FilterExpressionUtilities.GetEqExpressionForProperty<AppUser>("UserName", username));
+            var users = _dataAccess.GetAll(filters);
             return users.FirstOrDefault();
         }
 

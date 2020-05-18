@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using GeoDataModels.Models;
 
 namespace GeoStoreAPI.DataAccess.FileDataAccess
@@ -24,7 +25,7 @@ namespace GeoStoreAPI.DataAccess.FileDataAccess
             _fileDataAccess.DeleteItem(DATA_GROUP, id);
         }
 
-        public IEnumerable<GeoJsonData> GetAll(Func<GeoJsonData, bool> filter)
+        public IEnumerable<GeoJsonData> GetAll(IEnumerable<Expression<Func<GeoJsonData, bool>>> filter)
         {
             return _fileDataAccess.GetAllItems(DATA_GROUP, filter);
         }

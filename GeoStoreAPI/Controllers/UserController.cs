@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using GeoStoreAPI.Models;
 using GeoStoreAPI.Repositories;
 using GeoStoreAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NLog.Filters;
 
 namespace GeoStoreAPI.Controllers
 {
@@ -60,8 +62,11 @@ namespace GeoStoreAPI.Controllers
         [HttpGet("userlist")]
         public ActionResult<List<AppUser>> GetUserList()
         {
+            var filters = new List<Expression<Func<AppUser, bool>>>();
+            filters.Add(FilterExpressionUtilities.GetEqExpressionForProperty<AppUser>("Disabled", false));
+            filters.Add(FilterExpressionUtilities.GetEqExpressionForProperty<AppUser>("Hidden", false));
             var users = _userRepository
-                .GetAllUsers(x => x.Disabled == false && x.Hidden == false)
+                .GetAllUsers(filters)
                 .Select(x => new AppUser { ID = x.ID, UserName = x.UserName })
                 .ToList();
 
@@ -82,9 +87,10 @@ namespace GeoStoreAPI.Controllers
         [HttpGet]
         public ActionResult<List<UserDataPermission>> GetDataPermissions()
         {
-            Func<UserDataPermission, bool> filter = x => true;
+            var filters = new List<Expression<Func<UserDataPermission, bool>>>();
+
             string userID = _userIdService.GetUserID();
-            var result = _dataPermissionRepository.GetAllForOwnerUser(userID, filter);
+            var result = _dataPermissionRepository.GetAllForOwnerUser(userID, filters);
             if (result != null)
             {
                 return result.ToList();
@@ -107,7 +113,7 @@ namespace GeoStoreAPI.Controllers
         public IActionResult UpdateDataPermission([FromBody] UserDataPermission dataPermission)
         {
             string userID = _userIdService.GetUserID();
-            _dataPermissionRepository.Update(dataPermission.ID,userID, dataPermission);
+            _dataPermissionRepository.Update(dataPermission.ID, userID, dataPermission);
             return Ok();
         }
 
@@ -126,9 +132,9 @@ namespace GeoStoreAPI.Controllers
         [HttpGet]
         public ActionResult<List<UserDataPermission>> GetDataPermissionsGranted()
         {
-            Func<UserDataPermission, bool> filter = x => true;
+            var filters = new List<Expression<Func<UserDataPermission, bool>>>();
             string userID = _userIdService.GetUserID();
-            var results = _dataPermissionRepository.GetAllGrantedToUser(userID, filter);
+            var results = _dataPermissionRepository.GetAllGrantedToUser(userID, filters);
             if (results != null)
             {
                 return results.ToList();

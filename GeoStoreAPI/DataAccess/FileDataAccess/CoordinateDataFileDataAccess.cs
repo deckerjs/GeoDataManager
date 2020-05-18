@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using CoordinateDataModels;
 using GeoDataModels.Models;
 
@@ -25,7 +26,7 @@ namespace GeoStoreAPI.DataAccess.FileDataAccess
             _fileDataAccess.DeleteItem(DATA_GROUP, id);
         }
 
-        public IEnumerable<CoordinateData> GetAll(Func<CoordinateData, bool> filter)
+        public IEnumerable<CoordinateData> GetAll(IEnumerable<Expression<Func<CoordinateData, bool>>> filter)
         {
             return _fileDataAccess.GetAllItems(DATA_GROUP, filter);
         }

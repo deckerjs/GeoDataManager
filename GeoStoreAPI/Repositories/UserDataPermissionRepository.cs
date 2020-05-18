@@ -1,8 +1,10 @@
 ﻿using GeoStoreAPI.DataAccess;
 using GeoStoreAPI.Models;
+using GeoStoreAPI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace GeoStoreAPI.Repositories
@@ -20,8 +22,12 @@ namespace GeoStoreAPI.Repositories
 
         public void Create(UserDataPermission data, string userID)
         {
-            var existing = GetAllGrantedToUser(data.AllowedUserID, x => x.OwnerUserID == userID);
-            if(existing==null || !existing.Any())
+            var filters = new List<Expression<Func<UserDataPermission, bool>>>();
+            filters.Add(FilterExpressionUtilities.GetEqExpressionForProperty<UserDataPermission>("OwnerUserID", userID));
+
+            var existing = GetAllGrantedToUser(data.AllowedUserID, filters);
+
+            if (existing == null || !existing.Any())
             {
                 data.OwnerUserID = userID;
                 data.ID = Guid.NewGuid().ToString();
@@ -49,18 +55,20 @@ namespace GeoStoreAPI.Repositories
             return null;
         }
 
-        public IEnumerable<UserDataPermission> GetAllGrantedToUser(string userID, Func<UserDataPermission, bool> filter )
-        {
-            Func<UserDataPermission, bool> userFilter = (x) => x.AllowedUserID == userID;
-            Func<UserDataPermission, bool> combinedFilter = (x) => filter(x) && userFilter(x);
-            return _dataAccess.GetAll(combinedFilter);
+        public IEnumerable<UserDataPermission> GetAllGrantedToUser(string userID, IEnumerable<Expression<Func<UserDataPermission, bool>>> filter)
+        {            
+            var filters = filter.ToList();
+            filters.Add(FilterExpressionUtilities.GetEqExpressionForProperty<UserDataPermission>("AllowedUserID", userID));
+
+            return _dataAccess.GetAll(filters);
         }
 
-        public IEnumerable<UserDataPermission> GetAllForOwnerUser(string userID, Func<UserDataPermission, bool> filter)
+        public IEnumerable<UserDataPermission> GetAllForOwnerUser(string userID, IEnumerable<Expression<Func<UserDataPermission, bool>>> filter)
         {
-            Func<UserDataPermission, bool> userFilter = (x) => x.OwnerUserID == userID;
-            Func<UserDataPermission, bool> combinedFilter = (x) => filter(x) && userFilter(x);
-            return _dataAccess.GetAll(combinedFilter);
+            var filters = filter.ToList();
+            filters.Add(FilterExpressionUtilities.GetEqExpressionForProperty<UserDataPermission>("OwnerUserID", userID));
+
+            return _dataAccess.GetAll(filters);
         }
 
         public void Update(string id, string userID, UserDataPermission data)

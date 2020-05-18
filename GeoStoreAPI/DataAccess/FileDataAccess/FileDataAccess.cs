@@ -3,13 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace GeoStoreAPI.DataAccess.FileDataAccess
 {
     public class FileDataAccess<T> : IFileDataAccess<T>
     {
-        public const string BASE_DIR = "data" ;
+        public const string BASE_DIR = "data";
         private readonly string _mainPath;
 
         public FileDataAccess(string mainPath)
@@ -56,12 +57,12 @@ namespace GeoStoreAPI.DataAccess.FileDataAccess
             }
         }
 
-        public IEnumerable<T> GetAllItems(string storageGroup, Func<T, bool> filter)
+        public IEnumerable<T> GetAllItems(string storageGroup, IEnumerable<Expression<Func<T, bool>>> filter)
         {
-            var files = GetAllFiles(storageGroup).Select(x => ReadItemFromFile(storageGroup, x)).Where(x=>x!=null).ToList();
+            var files = GetAllFiles(storageGroup).Select(x => ReadItemFromFile(storageGroup, x)).Where(x => x != null).ToList();
             if (files != null && files.Any())
             {
-                return files.Where(x => filter(x));
+                return files.Where(x => filter.All(y => y.Compile()(x) == true));
             }
             else return null;
         }
@@ -75,7 +76,7 @@ namespace GeoStoreAPI.DataAccess.FileDataAccess
         {
             WriteFile(storageGroup, name, item);
         }
-         
+
         private void WriteFile(string dir, string name, T item)
         {
             string dirPathString = Path.Combine(_mainPath, dir);
@@ -86,7 +87,7 @@ namespace GeoStoreAPI.DataAccess.FileDataAccess
             {
                 Directory.CreateDirectory(dirPathString);
             }
-            
+
             //existing files should be overwritten
             using (StreamWriter file = File.CreateText(filePathString))
             {

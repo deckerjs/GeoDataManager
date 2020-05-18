@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace GeoStoreAPI.DataAccess
@@ -11,7 +12,7 @@ namespace GeoStoreAPI.DataAccess
         void Create(UserDataPermission data);
         UserDataPermission Get(string id);
         void Delete(string id);
-        IEnumerable<UserDataPermission> GetAll(Func<UserDataPermission, bool> filter);
+        IEnumerable<UserDataPermission> GetAll(IEnumerable<Expression<Func<UserDataPermission, bool>>> filter);
         void Update(string id, UserDataPermission data);
     }
 }

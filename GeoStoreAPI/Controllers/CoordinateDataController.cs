@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using CoordinateDataModels;
 using GeoStoreAPI.Repositories;
@@ -36,8 +37,7 @@ namespace GeoStoreAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<CoordinateData>> GetAll()
         {
-            Func<CoordinateData, bool> filter = _filterBuilder.GetFilter<CoordinateData>();
-
+            var filter = _filterBuilder.GetFilter<CoordinateData>();
             var result = _dataRepository.GetAll(_userIdService.GetUserID(), filter);
             if (result != null) return result.ToList();
             return null;
@@ -53,7 +53,7 @@ namespace GeoStoreAPI.Controllers
         [Route("Shared")]
         public ActionResult<IEnumerable<CoordinateData>> GetShared()
         {
-            Func<CoordinateData, bool> filter = _filterBuilder.GetFilter<CoordinateData>();
+            var filter = _filterBuilder.GetFilter<CoordinateData>();
             return _dataRepository.GetShared(_userIdService.GetUserID(), filter).ToList();
         }
 
@@ -73,7 +73,7 @@ namespace GeoStoreAPI.Controllers
             else
             {
                 return NotFound();
-            }            
+            }
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace GeoStoreAPI.Controllers
         [HttpPost("data/coordinates")]
         public ActionResult<string> PostCoordinatesToNewObject([FromBody] List<Coordinate> coordinates)
         {
-            CoordinateData data = new CoordinateData();            
+            CoordinateData data = new CoordinateData();
             data.Data.Add(new PointCollection() { ID = "1", Coordinates = coordinates });
             var newId = _dataRepository.Create(data, _userIdService.GetUserID());
             return newId;
@@ -131,7 +131,7 @@ namespace GeoStoreAPI.Controllers
             if (data != null && data.Data.Any())
             {
                 var coords = data.Data.Where(x => x.ID == pcid).FirstOrDefault();
-                if(coords != null) return coords.Coordinates.ToList();
+                if (coords != null) return coords.Coordinates.ToList();
             }
 
             return NotFound();

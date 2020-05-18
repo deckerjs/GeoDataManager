@@ -4,6 +4,8 @@ using GeoStoreAPI.DataAccess;
 using GeoDataModels.Models;
 using System.Linq;
 using GeoStoreAPI.Models;
+using System.Linq.Expressions;
+using GeoStoreAPI.Services;
 
 namespace GeoStoreAPI.Repositories
 {
@@ -47,23 +49,25 @@ namespace GeoStoreAPI.Repositories
             }
         }
 
-        public IEnumerable<GeoJsonData> GetAll(string userID, Func<GeoJsonData, bool> filter)
+        public IEnumerable<GeoJsonData> GetAll(string userID, IEnumerable<Expression<Func<GeoJsonData, bool>>> filter)
         {
-            Func<GeoJsonData, bool> userFilter = (x) => x.UserID == userID;
-            Func<GeoJsonData, bool> combinedFilter = (x) => filter(x) && userFilter(x);
-            return _dataAccess.GetAll(combinedFilter);
+            Expression<Func<GeoJsonData, bool>> userFilter = FilterExpressionUtilities.GetEqExpressionForProperty<GeoJsonData>("UserID", userID);
+            var filters = filter.ToList();
+            filters.Add(userFilter);
+            return _dataAccess.GetAll(filters);
         }
 
-        public IEnumerable<GeoJsonData> GetShared(string userID, Func<GeoJsonData, bool> filter)
+        public IEnumerable<GeoJsonData> GetShared(string userID, IEnumerable<Expression<Func<GeoJsonData, bool>>> filter)
         {
             var data = new List<GeoJsonData>();
-            var grants = _dataPermissionRepository.GetAllGrantedToUser(userID, x => true);
-
+            var grants = _dataPermissionRepository.GetAllGrantedToUser(userID, null);
+                        
             foreach (var grant in grants)
             {
-                Func<GeoJsonData, bool> userFilter = (x) => x.UserID == grant.OwnerUserID;
-                Func<GeoJsonData, bool> combinedFilter = (x) => filter(x) && userFilter(x);
-                data.AddRange(_dataAccess.GetAll(combinedFilter));
+                Expression<Func<GeoJsonData, bool>> userFilter = FilterExpressionUtilities.GetEqExpressionForProperty<GeoJsonData>("UserID", grant.OwnerUserID);
+                var filters = filter.ToList();
+                filters.Add(userFilter);
+                data.AddRange(_dataAccess.GetAll(filters));
             }
 
             return data;
@@ -113,11 +117,11 @@ namespace GeoStoreAPI.Repositories
             if (existingMultiPoint != null)
             {
                 var geometry = (BAMCIS.GeoJSON.MultiPoint)existingMultiPoint.Geometry;
-                coordsCombined.AddRange(geometry.Coordinates.Select(x => new Position(x.Longitude, x.Latitude,x.Elevation)));                
+                coordsCombined.AddRange(geometry.Coordinates.Select(x => new Position(x.Longitude, x.Latitude, x.Elevation)));
             }
 
             coordsCombined.AddRange(GetPositionsFromCoordinates(incomingCoords));
-            
+
             var multiPoint = new MultiPoint(coordsCombined);
             var features = new List<Feature>();
             features.Add(new Feature(multiPoint));

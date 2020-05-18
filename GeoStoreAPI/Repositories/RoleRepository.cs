@@ -4,6 +4,8 @@ using System;
 using Microsoft.Extensions.Options;
 using GeoStoreAPI.Models;
 using GeoStoreAPI.DataAccess;
+using GeoStoreAPI.Services;
+using System.Linq.Expressions;
 
 namespace GeoStoreAPI.Repositories
 {
@@ -21,7 +23,10 @@ namespace GeoStoreAPI.Repositories
 
         public AppRole GetRole(string roleId)
         {
-            var roles = _dataAccess.GetAll(r => r.RoleID == roleId);
+            var filters = new List<Expression<Func<AppRole, bool>>>();
+            filters.Add(FilterExpressionUtilities.GetEqExpressionForProperty<AppRole>("RoleID", roleId));
+
+            var roles = _dataAccess.GetAll(filters);
             if(roles!=null) return roles.FirstOrDefault();
             return null;
         }

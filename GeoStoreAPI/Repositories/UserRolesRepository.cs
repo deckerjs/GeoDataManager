@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using GeoStoreAPI.DataAccess;
 using GeoStoreAPI.Models;
+using GeoStoreAPI.Services;
 using Microsoft.Extensions.Options;
 
 namespace GeoStoreAPI.Repositories
@@ -20,7 +23,11 @@ namespace GeoStoreAPI.Repositories
 
         public AppUserRoles GetUserRoles(string userID)
         {
-            var userRoles = _dataAccess.GetAll(r => r.UserID == userID);
+            var filters = new List<Expression<Func<AppUserRoles, bool>>>();
+            filters.Add(FilterExpressionUtilities.GetEqExpressionForProperty<AppUserRoles>("UserID", userID));
+
+
+            var userRoles = _dataAccess.GetAll(filters);
             if(userRoles!=null)return userRoles.FirstOrDefault();
             return null;
         }

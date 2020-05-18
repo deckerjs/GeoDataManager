@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using GeoStoreAPI.Models;
 using GeoStoreAPI.Repositories;
@@ -26,8 +27,8 @@ namespace GeoStoreAPI.Controllers
         [HttpGet]        
         public ActionResult<IEnumerable<AppUser>> Get()
         {
-            Func<AppUser, bool> filter = x=> true;
-            return _userRepository.GetAllUsers(filter).ToList();
+            var filters = new List<Expression<Func<AppUser, bool>>>();
+            return _userRepository.GetAllUsers(filters).ToList();
         }
 
         

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace GeoStoreAPI.DataAccess.FileDataAccess
@@ -40,10 +41,9 @@ namespace GeoStoreAPI.DataAccess.FileDataAccess
             return null;
         }
 
-        public IEnumerable<UserDataPermission> GetAll(Func<UserDataPermission, bool> filter)
-        {
-            Func<UserDataPermission, bool> combinedFilter = (x) => filter(x);
-            return _fileDataAccess.GetAllItems(USER_DATA_PERMISSION, combinedFilter);
+        public IEnumerable<UserDataPermission> GetAll(IEnumerable<Expression<Func<UserDataPermission, bool>>> filter)
+        {            
+            return _fileDataAccess.GetAllItems(USER_DATA_PERMISSION, filter);
         }
 
         public void Update(string id, UserDataPermission data)

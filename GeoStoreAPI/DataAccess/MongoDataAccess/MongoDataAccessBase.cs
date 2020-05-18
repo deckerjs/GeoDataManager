@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,17 +49,40 @@ namespace GeoStoreAPI.DataAccess.MongoDataAccess
             return GetCollection().Find(filter).FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll(Func<T, bool> funcFilter)
-        {
-            //todo: figure out how to give mongo a custom filter that works
-            //Expression<Func<T, bool>> theFilter = x=> funcFilter(x);
-            //Expression<Func<T, bool>> theFilter = Expression.Lambda<Func<T, bool>>(Expression.Equal(.Body, Expression.Constant(id)),.Parameters.First());
-            //var filter = Builders<T>.Filter.Where(theFilter);
 
-            //Temporary Hack
-            var filter = Builders<T>.Filter.Where(x=>true);
-            var tempResult = GetCollection().Find(filter).ToList();
-            return tempResult.Where(funcFilter).ToList();            
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="funcFilter">
+        /// Be careful not to pass in expressions that include lambdas that have code that mongo can't execute, like reflection
+        /// </param>
+        /// <returns></returns>
+        public IEnumerable<T> GetAll(IEnumerable<Expression<Func<T, bool>>> funcFilter)
+        {
+            FilterDefinition<T> fd = null;
+
+            if (funcFilter!=null && funcFilter.Any())
+            {
+                var filter = Builders<T>.Filter;
+
+                foreach (var item in funcFilter)
+                {
+                    if (fd == null)
+                    {
+                        fd = Builders<T>.Filter.Where(item);
+                    }
+                    else
+                    {
+                        fd = fd & Builders<T>.Filter.Where(item);
+                    }
+                }
+            }
+            else
+            {
+                fd = Builders<T>.Filter.Where(x=>true);
+            }
+
+            return GetCollection().Find(fd).ToList();
         }
 
         public void Update(string id, T dataItem)

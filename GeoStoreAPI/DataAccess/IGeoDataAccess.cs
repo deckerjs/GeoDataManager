@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using GeoDataModels.Models;
 
 namespace GeoStoreAPI.DataAccess
@@ -9,7 +10,7 @@ namespace GeoStoreAPI.DataAccess
         void Create(GeoJsonData geoData);
         GeoJsonData Get(string id);
         void Delete(string id);
-        IEnumerable<GeoJsonData> GetAll(Func<GeoJsonData, bool> filter);        
+        IEnumerable<GeoJsonData> GetAll(IEnumerable<Expression<Func<GeoJsonData, bool>>> filter);        
         void Update(string id, GeoJsonData geoData);
     }
 }

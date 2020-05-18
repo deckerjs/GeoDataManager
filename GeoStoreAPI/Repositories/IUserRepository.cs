@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using GeoStoreAPI.Models;
 
 namespace GeoStoreAPI.Repositories
@@ -8,7 +9,7 @@ namespace GeoStoreAPI.Repositories
     {
         bool ValidateCredentials(string username, string password);
 
-        IEnumerable<AppUser> GetAllUsers(Func<AppUser, bool> filter);
+        IEnumerable<AppUser> GetAllUsers(IEnumerable<Expression<Func<AppUser, bool>>> filter);
 
         AppUser GetUser(string userID);
 

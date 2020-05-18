@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using GeoStoreAPI.Models;
 
 namespace GeoStoreAPI.DataAccess.FileDataAccess
@@ -38,10 +39,9 @@ namespace GeoStoreAPI.DataAccess.FileDataAccess
             return null;
         }
 
-        public IEnumerable<AppRole> GetAll(Func<AppRole, bool> filter)
-        {            
-            Func<AppRole, bool>  combinedFilter = (x) => filter(x);
-            return _fileDataAccess.GetAllItems(ROLE_DATA, combinedFilter);
+        public IEnumerable<AppRole> GetAll(IEnumerable<Expression<Func<AppRole, bool>>> filter)
+        {   
+            return _fileDataAccess.GetAllItems(ROLE_DATA, filter);
         }
 
         public AppRole Getsingle(string id)
