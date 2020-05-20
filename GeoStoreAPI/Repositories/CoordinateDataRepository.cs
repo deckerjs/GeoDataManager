@@ -63,6 +63,14 @@ namespace GeoStoreAPI.Repositories
             return _dataAccess.GetAll(filters);
         }
 
+        public IEnumerable<CoordinateDataInfo> GetSummary(string userID, IEnumerable<Expression<Func<CoordinateDataInfo, bool>>> filter)
+        {
+            Expression<Func<CoordinateDataInfo, bool>> userFilter = FilterExpressionUtilities.GetEqExpressionForProperty<CoordinateDataInfo>("UserID", userID);
+            var filters = filter.ToList();
+            filters.Add(userFilter);
+            return _dataAccess.GetSummary(filters);
+        }
+
         public IEnumerable<CoordinateData> GetShared(string userID, IEnumerable<Expression<Func<CoordinateData, bool>>> filter)
         {
             var data = new List<CoordinateData>();
@@ -152,6 +160,7 @@ namespace GeoStoreAPI.Repositories
             var grants = _dataPermissionRepository.GetAllGrantedToUser(userID, new List<Expression<Func<UserDataPermission, bool>>>());
             return grants.Where(x => x.OwnerUserID == data.UserID).Any();
         }
+
 
     }
 }

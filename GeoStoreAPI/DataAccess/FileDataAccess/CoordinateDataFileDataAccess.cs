@@ -40,5 +40,10 @@ namespace GeoStoreAPI.DataAccess.FileDataAccess
         {
             _fileDataAccess.SaveItem(DATA_GROUP, id, geoData);
         }
+
+        public IEnumerable<CoordinateDataInfo> GetSummary(IEnumerable<Expression<Func<CoordinateDataInfo, bool>>> filter)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

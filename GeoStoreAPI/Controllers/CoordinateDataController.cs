@@ -44,6 +44,19 @@ namespace GeoStoreAPI.Controllers
         }
 
         /// <summary>
+        /// Get lightweight version of coordinatedata
+        /// </summary>
+        /// <returns>List of CoordinateDataInfo</returns>
+        [HttpGet]
+        public ActionResult<IEnumerable<CoordinateDataInfo>> GetSummary()
+        {
+            var filter = _filterBuilder.GetFilter<CoordinateDataInfo>();
+            var result = _dataRepository.GetSummary(_userIdService.GetUserID(), filter);
+            if (result != null) return result.ToList();
+            return null;
+        }
+
+        /// <summary>
         /// Gets all CoordinateData items shared to current user
         /// Basic (experimental) querystring property filter available
         /// ex: ?UserID='ABC123'

@@ -25,7 +25,7 @@ namespace GeoStoreAPI.DataAccess.MongoDataAccess
 
         public void Create(T dataItem)
         {
-            GetCollection().InsertOne(dataItem);
+            GetCollection<T>().InsertOne(dataItem);
         }
 
         public void Delete(string id)
@@ -33,7 +33,7 @@ namespace GeoStoreAPI.DataAccess.MongoDataAccess
             try
             {
                 var filter = Builders<T>.Filter.Eq(KeyIdName, id);
-                var result = GetCollection().DeleteOne(filter);
+                var result = GetCollection<T>().DeleteOne(filter);
                 _logger.LogInformation($"Mongo DataAccess Delete Id:{id}, count:{result.DeletedCount} ");
             }
             catch (Exception ex)
@@ -46,7 +46,7 @@ namespace GeoStoreAPI.DataAccess.MongoDataAccess
         public T Get(string id)
         {
             var filter = Builders<T>.Filter.Eq(KeyIdName, id);
-            return GetCollection().Find(filter).FirstOrDefault();
+            return GetCollection<T>().Find(filter).FirstOrDefault();
         }
 
 
@@ -59,42 +59,52 @@ namespace GeoStoreAPI.DataAccess.MongoDataAccess
         /// <returns></returns>
         public IEnumerable<T> GetAll(IEnumerable<Expression<Func<T, bool>>> funcFilter)
         {
-            FilterDefinition<T> fd = null;
+            FilterDefinition<T> fd = GetFilterFromExpression(funcFilter);
+            return GetCollection<T>().Find(fd).ToList();
+        }
 
-            if (funcFilter!=null && funcFilter.Any())
+
+        public void Update(string id, T dataItem)
+        {
+            var filter = Builders<T>.Filter.Eq(KeyIdName, id);
+            GetCollection<T>().ReplaceOne(filter, dataItem);
+        }
+
+        public static FilterDefinition<CT> GetFilterFromExpression<CT>(IEnumerable<Expression<Func<CT, bool>>> funcFilter)
+        {
+            FilterDefinition<CT> fd = null;
+
+            if (funcFilter != null && funcFilter.Any())
             {
-                var filter = Builders<T>.Filter;
+                var filter = Builders<CT>.Filter;
 
                 foreach (var item in funcFilter)
                 {
                     if (fd == null)
                     {
-                        fd = Builders<T>.Filter.Where(item);
+                        fd = Builders<CT>.Filter.Where(item);
                     }
                     else
                     {
-                        fd = fd & Builders<T>.Filter.Where(item);
+                        fd &= Builders<CT>.Filter.Where(item);
                     }
                 }
             }
             else
             {
-                fd = Builders<T>.Filter.Where(x=>true);
+                fd = Builders<CT>.Filter.Where(x => true);
             }
 
-            return GetCollection().Find(fd).ToList();
+            return fd;
         }
 
-        public void Update(string id, T dataItem)
+
+        public IMongoCollection<CT> GetCollection<CT>()
         {
-            var filter = Builders<T>.Filter.Eq(KeyIdName, id);
-            GetCollection().ReplaceOne(filter, dataItem);
+            return _dataContext.GetMongoCollection<CT>(CollectionName);
         }
 
-        private IMongoCollection<T> GetCollection()
-        {
-            return _dataContext.GetMongoCollection<T>(CollectionName);
-        }
+
     }
 
 }

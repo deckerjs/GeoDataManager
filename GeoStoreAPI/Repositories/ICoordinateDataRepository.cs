@@ -11,6 +11,7 @@ namespace GeoStoreAPI.Repositories
     public interface ICoordinateDataRepository
     {
         IEnumerable<CoordinateData> GetAll(string userID, IEnumerable<Expression<Func<CoordinateData, bool>>> filter);
+        IEnumerable<CoordinateDataInfo> GetSummary(string userID, IEnumerable<Expression<Func<CoordinateDataInfo, bool>>> filter);
         IEnumerable<CoordinateData> GetShared(string userID, IEnumerable<Expression<Func<CoordinateData, bool>>> filter);
         CoordinateData GetSingle(string id, string userID);
         string Create(CoordinateData geoData, string userID);
