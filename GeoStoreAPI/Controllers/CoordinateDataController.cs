@@ -47,10 +47,10 @@ namespace GeoStoreAPI.Controllers
         /// Get lightweight version of coordinatedata
         /// </summary>
         /// <returns>List of CoordinateDataInfo</returns>
-        [HttpGet]
-        public ActionResult<IEnumerable<CoordinateDataInfo>> GetSummary()
+        [HttpGet("summary")]
+        public ActionResult<IEnumerable<CoordinateDataSummary>> GetSummary()
         {
-            var filter = _filterBuilder.GetFilter<CoordinateDataInfo>();
+            var filter = _filterBuilder.GetFilter<CoordinateDataSummary>();
             var result = _dataRepository.GetSummary(_userIdService.GetUserID(), filter);
             if (result != null) return result.ToList();
             return null;

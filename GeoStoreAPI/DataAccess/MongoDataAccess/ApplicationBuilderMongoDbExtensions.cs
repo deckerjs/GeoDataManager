@@ -28,6 +28,14 @@ namespace GeoStoreAPI.Extensions
                     cm.SetIgnoreExtraElements(true);
                 });
             }
+            if (!BsonClassMap.IsClassMapRegistered(typeof(CoordinateDataSummary)))
+            {
+                BsonClassMap.RegisterClassMap<CoordinateDataSummary>(cm =>
+                {
+                    cm.AutoMap();
+                    cm.SetIgnoreExtraElements(true);
+                });
+            }
             if (!BsonClassMap.IsClassMapRegistered(typeof(AppRole)))
             {
                 BsonClassMap.RegisterClassMap<AppRole>(cm =>

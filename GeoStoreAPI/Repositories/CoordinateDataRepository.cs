@@ -63,9 +63,9 @@ namespace GeoStoreAPI.Repositories
             return _dataAccess.GetAll(filters);
         }
 
-        public IEnumerable<CoordinateDataInfo> GetSummary(string userID, IEnumerable<Expression<Func<CoordinateDataInfo, bool>>> filter)
+        public IEnumerable<CoordinateDataSummary> GetSummary(string userID, IEnumerable<Expression<Func<CoordinateDataSummary, bool>>> filter)
         {
-            Expression<Func<CoordinateDataInfo, bool>> userFilter = FilterExpressionUtilities.GetEqExpressionForProperty<CoordinateDataInfo>("UserID", userID);
+            Expression<Func<CoordinateDataSummary, bool>> userFilter = FilterExpressionUtilities.GetEqExpressionForProperty<CoordinateDataSummary>("UserID", userID);
             var filters = filter.ToList();
             filters.Add(userFilter);
             return _dataAccess.GetSummary(filters);
