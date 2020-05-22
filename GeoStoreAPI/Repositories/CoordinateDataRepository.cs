@@ -56,18 +56,16 @@ namespace GeoStoreAPI.Repositories
         }
 
         public IEnumerable<CoordinateData> GetAll(string userID, IEnumerable<Expression<Func<CoordinateData, bool>>> filter)
-        {
-            Expression<Func<CoordinateData, bool>> userFilter = FilterExpressionUtilities.GetEqExpressionForProperty<CoordinateData>("UserID", userID);
+        {            
             var filters = filter.ToList();
-            filters.Add(userFilter);
+            filters.Add(GetUserFilter<CoordinateData>(userID));
             return _dataAccess.GetAll(filters);
         }
 
         public IEnumerable<CoordinateDataSummary> GetSummary(string userID, IEnumerable<Expression<Func<CoordinateDataSummary, bool>>> filter)
-        {
-            Expression<Func<CoordinateDataSummary, bool>> userFilter = FilterExpressionUtilities.GetEqExpressionForProperty<CoordinateDataSummary>("UserID", userID);
+        {            
             var filters = filter.ToList();
-            filters.Add(userFilter);
+            filters.Add(GetUserFilter<CoordinateDataSummary>(userID));
             return _dataAccess.GetSummary(filters);
         }
 
@@ -77,11 +75,25 @@ namespace GeoStoreAPI.Repositories
             var grants = _dataPermissionRepository.GetAllGrantedToUser(userID, new List<Expression<Func<UserDataPermission, bool>>>());
 
             foreach (var grant in grants)
-            {
-                Expression<Func<CoordinateData, bool>> userFilter = FilterExpressionUtilities.GetEqExpressionForProperty<CoordinateData>("UserID", grant.OwnerUserID);
+            {                
                 var filters = filter.ToList();
-                filters.Add(userFilter);
+                filters.Add(GetUserFilter<CoordinateData>(grant.OwnerUserID));
                 data.AddRange(_dataAccess.GetAll(filters));
+            }
+
+            return data;
+        }
+
+        public IEnumerable<CoordinateDataSummary> GetSummaryShared(string userID, IEnumerable<Expression<Func<CoordinateDataSummary, bool>>> filter)
+        {
+            var data = new List<CoordinateDataSummary>();
+            var grants = _dataPermissionRepository.GetAllGrantedToUser(userID, new List<Expression<Func<UserDataPermission, bool>>>());
+
+            foreach (var grant in grants)
+            {
+                var filters = filter.ToList();
+                filters.Add(GetUserFilter<CoordinateDataSummary>(grant.OwnerUserID));
+                data.AddRange(_dataAccess.GetSummary(filters));
             }
 
             return data;
@@ -159,6 +171,12 @@ namespace GeoStoreAPI.Repositories
         {
             var grants = _dataPermissionRepository.GetAllGrantedToUser(userID, new List<Expression<Func<UserDataPermission, bool>>>());
             return grants.Where(x => x.OwnerUserID == data.UserID).Any();
+        }
+
+
+        private static Expression<Func<T, bool>> GetUserFilter<T>(string userID)
+        {
+            return FilterExpressionUtilities.GetEqExpressionForProperty<T>("UserID", userID);
         }
 
 

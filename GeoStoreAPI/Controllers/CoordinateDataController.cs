@@ -63,11 +63,22 @@ namespace GeoStoreAPI.Controllers
         /// </summary>
         /// <returns>List of CoordinateData</returns>
         [HttpGet]
-        [Route("Shared")]
+        [Route("shared")]
         public ActionResult<IEnumerable<CoordinateData>> GetShared()
         {
             var filter = _filterBuilder.GetFilter<CoordinateData>();
-            return _dataRepository.GetShared(_userIdService.GetUserID(), filter).ToList();
+            var result = _dataRepository.GetShared(_userIdService.GetUserID(), filter);
+            if (result != null) return result.ToList();
+            return null;
+        }
+
+        [HttpGet("summary/shared")]
+        public ActionResult<IEnumerable<CoordinateDataSummary>> GetSummaryShared()
+        {
+            var filter = _filterBuilder.GetFilter<CoordinateDataSummary>();
+            var result = _dataRepository.GetSummaryShared(_userIdService.GetUserID(), filter);
+            if (result != null) return result.ToList();
+            return null;
         }
 
         /// <summary>

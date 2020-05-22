@@ -1,4 +1,4 @@
-export class CoordinateData {
+export class CoordinateData implements CoordinateDataInfo{
     ID: string;
     UserID: string;
     Description: string;
@@ -38,4 +38,18 @@ export interface GpsTelemetry {
 
 export interface KeyValuePair {
     [key: string]: string;
+}
+
+export interface CoordinateDataSummary extends CoordinateDataInfo{
+    DataItemCount:number;
+    SummaryData:KeyValuePair;
+}
+
+export interface CoordinateDataInfo{
+    ID: string;
+    UserID: string;
+    Description: string;
+    DateModified: Date;
+    DateCreated: Date;
+    Tags: Array<string>;
 }

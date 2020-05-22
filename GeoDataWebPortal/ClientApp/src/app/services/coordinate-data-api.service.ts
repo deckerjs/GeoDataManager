@@ -5,7 +5,7 @@ import { SettingsService } from '../portal-settings/settings.service';
 import { AuthService } from '../auth/auth.service';
 import { switchMap } from 'rxjs/operators';
 import { ConfigurationSettings } from '../portal-settings/models/urlsettings';
-import { CoordinateData } from '../models/coordinate-data';
+import { CoordinateData, CoordinateDataSummary } from '../models/coordinate-data';
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +15,8 @@ export class CoordinateDataAPIService {
 
     private readonly API_ENDPOINT: string = 'api/CoordinateData';
     private readonly API_ENDPOINT_SHARED: string = 'api/CoordinateData/shared';
+    private readonly API_SUMMARY_ENDPOINT: string = 'api/CoordinateData/summary';
+    private readonly API_SUMMARY_ENDPOINT_SHARED: string = 'api/CoordinateData/summary/shared';
         
     constructor(
         private http: HttpClient,
@@ -36,19 +38,27 @@ export class CoordinateDataAPIService {
     public GetAllOwned(filter?: Map<string, string>): Observable<Array<CoordinateData>> {
         return this.GetAll(this.API_ENDPOINT, filter);
     }
-
+    
+    public GetAllOwnedSummary(filter?: Map<string, string>): Observable<Array<CoordinateDataSummary>> {
+        return this.GetAll(this.API_SUMMARY_ENDPOINT, filter);
+    }
+    
     public GetAllShared(filter?: Map<string, string>): Observable<Array<CoordinateData>> {
         return this.GetAll(this.API_ENDPOINT_SHARED, filter);
     }
 
-    public GetAll(apiUrl: string, filter?: Map<string, string>): Observable<Array<CoordinateData>> {
+    public GetAllSharedSummary(filter?: Map<string, string>): Observable<Array<CoordinateDataSummary>> {
+        return this.GetAll(this.API_SUMMARY_ENDPOINT_SHARED, filter);
+    }
+
+    public GetAll<T>(apiUrl: string, filter?: Map<string, string>): Observable<Array<T>> {
         return this.getSettingsObservable().pipe(
             switchMap(settings => {
                 return this.getHttpHeaders().pipe(
                     switchMap(httpHeaders => {
                         const url = this.getFullURL(settings, apiUrl);
                         const httpPrms = this.getFilterQueryStringPrms(filter);
-                        return this.http.get<Array<CoordinateData>>(url, { headers: httpHeaders, params: httpPrms });
+                        return this.http.get<Array<T>>(url, { headers: httpHeaders, params: httpPrms });
                     }));
             })
         );

@@ -9,10 +9,10 @@ import { faSync, faChevronDown, faChevronRight } from '@fortawesome/free-solid-s
 import { AppUser } from 'src/app/models/app-user';
 import { UserSettingsAPIService } from 'src/app/services/user-settings-api.service';
 import { stringify } from 'querystring';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, pipe } from 'rxjs';
+import { tap, take } from 'rxjs/operators';
 import { CoordinateDataAPIService } from 'src/app/services/coordinate-data-api.service';
-import { CoordinateData } from 'src/app/models/coordinate-data';
+import { CoordinateData, CoordinateDataSummary } from 'src/app/models/coordinate-data';
 
 @Component({
   selector: 'app-geo-data-selector',
@@ -20,8 +20,8 @@ import { CoordinateData } from 'src/app/models/coordinate-data';
   styleUrls: ['./geo-data-selector.component.scss']
 })
 export class GeoDataSelectorComponent implements OnInit {
-  public datasetCollection: Array<CoordinateData>;
-  public selectedDataset: CoordinateData;
+  public datasetCollection: Array<CoordinateDataSummary>;
+  public selectedDataset: CoordinateDataSummary;
   public userList: AppUser[] = [];
   public showFilter: boolean = false;
   public filterShowShared: boolean = false;
@@ -77,7 +77,7 @@ export class GeoDataSelectorComponent implements OnInit {
 
     this.refreshUserData().subscribe({
       next: u => {
-        this.apiDataService.GetAllOwned().subscribe({
+        this.apiDataService.GetAllOwnedSummary().subscribe({
           next: x => {
             this.appendViewData(x, false);            
             const sorted = x.sort((val1:any, val2:any)=> {return val1.DateCreated - val2.DateCreated});
@@ -94,7 +94,7 @@ export class GeoDataSelectorComponent implements OnInit {
       }
       this.refreshUserData().subscribe({
         next: u => {
-          this.apiDataService.GetAllShared(apiFilter).subscribe({
+          this.apiDataService.GetAllSharedSummary(apiFilter).subscribe({
             next: x => {
               this.appendViewData(x, true);
               const sorted = x.sort((val1:any, val2:any)=> {return val1.DateCreated - val2.DateCreated});
@@ -114,7 +114,7 @@ export class GeoDataSelectorComponent implements OnInit {
     ));
   }
 
-  private appendViewData(x: CoordinateData[], isShared:boolean) {
+  private appendViewData(x: CoordinateDataSummary[], isShared:boolean) {
     x.forEach(ds => {
       ds['isShared'] = isShared;
       ds['userName'] = this.getUserNameFromId(ds.UserID);
@@ -125,9 +125,11 @@ export class GeoDataSelectorComponent implements OnInit {
     return this.userDataService.getUserNameFromId(id, this.userList);
   }
 
-  public selectDataset(item: CoordinateData) {    
+  public selectDataset(item: CoordinateDataSummary) {        
     this.selectedDataset = item;
-    this.msgService.publishCoordinateDatasetSelected(item);
+    this.apiDataService.Get(item.ID).pipe(take(1)).subscribe({next: dataset=>{
+      this.msgService.publishCoordinateDatasetSelected(dataset);
+    }})
   }
 
   public reload(): void {

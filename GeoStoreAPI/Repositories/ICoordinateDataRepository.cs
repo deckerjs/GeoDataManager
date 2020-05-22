@@ -13,6 +13,7 @@ namespace GeoStoreAPI.Repositories
         IEnumerable<CoordinateData> GetAll(string userID, IEnumerable<Expression<Func<CoordinateData, bool>>> filter);
         IEnumerable<CoordinateDataSummary> GetSummary(string userID, IEnumerable<Expression<Func<CoordinateDataSummary, bool>>> filter);
         IEnumerable<CoordinateData> GetShared(string userID, IEnumerable<Expression<Func<CoordinateData, bool>>> filter);
+        IEnumerable<CoordinateDataSummary> GetSummaryShared(string userID, IEnumerable<Expression<Func<CoordinateDataSummary, bool>>> filter);
         CoordinateData GetSingle(string id, string userID);
         string Create(CoordinateData geoData, string userID);
         void Update(string id, CoordinateData geoData, string userID);
