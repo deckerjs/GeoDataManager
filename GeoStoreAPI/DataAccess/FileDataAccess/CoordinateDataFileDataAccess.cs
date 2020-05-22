@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using CoordinateDataModels;
 using GeoDataModels.Models;
@@ -41,9 +42,20 @@ namespace GeoStoreAPI.DataAccess.FileDataAccess
             _fileDataAccess.SaveItem(DATA_GROUP, id, geoData);
         }
 
-        public IEnumerable<CoordinateDataSummary> GetSummary(IEnumerable<Expression<Func<CoordinateDataSummary, bool>>> filter)
+        public IEnumerable<CoordinateDataSummary> GetSummary(IEnumerable<Expression<Func<CoordinateData, bool>>> filter)
         {
-            throw new NotImplementedException();
+            var data = _fileDataAccess.GetAllItems(DATA_GROUP, new List<Expression<Func<CoordinateData, bool>>>());
+            return data.Where(y => filter.All(z => z.Compile()(y) == true)).Select(x=> new CoordinateDataSummary() 
+            { 
+                DataItemCount = x.Data.Count,
+                DateCreated = x.DateCreated,
+                DateModified = x.DateModified,
+                Description = x.Description,
+                ID = x.ID,
+                Tags = x.Tags,
+                UserID = x.UserID
+            });           
+
         }
     }
 }

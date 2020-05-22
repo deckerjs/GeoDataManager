@@ -19,10 +19,24 @@ namespace GeoStoreAPI.DataAccess.MongoDataAccess
         public override string CollectionName { get; set; } = MongoSettings.CollectionNames.DATA_GROUP;
         public override string KeyIdName { get; set; } = nameof(CoordinateData.ID);
 
-        public IEnumerable<CoordinateDataSummary> GetSummary(IEnumerable<Expression<Func<CoordinateDataSummary, bool>>> filter)
+        public IEnumerable<CoordinateDataSummary> GetSummary(IEnumerable<Expression<Func<CoordinateData, bool>>> filter)
         {
-            FilterDefinition<CoordinateDataSummary> fd = GetFilterFromExpression<CoordinateDataSummary>(filter);
-            return GetCollection<CoordinateDataSummary>().Find(fd).ToList();
+            FilterDefinition<CoordinateData> fd = GetFilterFromExpression<CoordinateData>(filter);
+
+            var projection = Builders<CoordinateData>.Projection.Expression(x => new CoordinateDataSummary
+            {
+                DataItemCount = x.Data.SelectMany(x=>x.Coordinates).Count(),
+                DateCreated = x.DateCreated,
+                DateModified = x.DateModified,
+                Description = x.Description,
+                ID = x.ID,
+                Tags = x.Tags,
+                UserID = x.UserID                
+            });            
+
+            var result = GetCollection<CoordinateData>().Aggregate().Match(fd).Project(projection);
+
+            return result.ToList();
         }
     }
 

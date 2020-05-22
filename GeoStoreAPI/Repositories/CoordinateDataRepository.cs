@@ -62,10 +62,10 @@ namespace GeoStoreAPI.Repositories
             return _dataAccess.GetAll(filters);
         }
 
-        public IEnumerable<CoordinateDataSummary> GetSummary(string userID, IEnumerable<Expression<Func<CoordinateDataSummary, bool>>> filter)
+        public IEnumerable<CoordinateDataSummary> GetSummary(string userID, IEnumerable<Expression<Func<CoordinateData, bool>>> filter)
         {            
             var filters = filter.ToList();
-            filters.Add(GetUserFilter<CoordinateDataSummary>(userID));
+            filters.Add(GetUserFilter<CoordinateData>(userID));
             return _dataAccess.GetSummary(filters);
         }
 
@@ -84,7 +84,7 @@ namespace GeoStoreAPI.Repositories
             return data;
         }
 
-        public IEnumerable<CoordinateDataSummary> GetSummaryShared(string userID, IEnumerable<Expression<Func<CoordinateDataSummary, bool>>> filter)
+        public IEnumerable<CoordinateDataSummary> GetSummaryShared(string userID, IEnumerable<Expression<Func<CoordinateData, bool>>> filter)
         {
             var data = new List<CoordinateDataSummary>();
             var grants = _dataPermissionRepository.GetAllGrantedToUser(userID, new List<Expression<Func<UserDataPermission, bool>>>());
@@ -92,7 +92,7 @@ namespace GeoStoreAPI.Repositories
             foreach (var grant in grants)
             {
                 var filters = filter.ToList();
-                filters.Add(GetUserFilter<CoordinateDataSummary>(grant.OwnerUserID));
+                filters.Add(GetUserFilter<CoordinateData>(grant.OwnerUserID));
                 data.AddRange(_dataAccess.GetSummary(filters));
             }
 

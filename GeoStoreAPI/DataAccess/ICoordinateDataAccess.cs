@@ -13,7 +13,7 @@ namespace GeoStoreAPI.DataAccess
         CoordinateData Get(string id);
         void Delete(string id);
         IEnumerable<CoordinateData> GetAll(IEnumerable<Expression<Func<CoordinateData, bool>>> filter);
-        IEnumerable<CoordinateDataSummary> GetSummary(IEnumerable<Expression<Func<CoordinateDataSummary, bool>>> filter);
+        IEnumerable<CoordinateDataSummary> GetSummary(IEnumerable<Expression<Func<CoordinateData, bool>>> filter);
         void Update(string id, CoordinateData geoData);
     }
 }
