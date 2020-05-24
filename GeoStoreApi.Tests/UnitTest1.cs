@@ -124,6 +124,8 @@ namespace GeoStoreApi.Tests
             List<PointCollection> pointCollection = new List<PointCollection>();
 
             var props = new Dictionary<string, string>();
+            var telemetryData = new Dictionary<string, double>();
+
             props["Name"] = "prop 1 name";
 
             var coords = new List<Coordinate>(){
@@ -134,34 +136,34 @@ namespace GeoStoreApi.Tests
 
             coords.AddRange(new[]{
                  new Coordinate(-88.095398000000003, 42.918624000000001, 4940.6167, DateTime.Now,
-                 new GpsTelemetry()
+                 new Dictionary<string, double>()
                  {
-                     Quality=1,
-                     Heading=144.6,
-                     FeetPerSecond=33.92,
-                     SatellitesInView=13,
-                     SignalToNoiseRatio=50,
-                     Hdop=.7
+                     ["Quality"]=1,
+                     ["Heading"]=144.6,
+                     ["FeetPerSecond"]=33.92,
+                     ["SatellitesInView"]=13,
+                     ["SignalToNoiseRatio"]=50,
+                     ["Hdop"]=.7
                  }),
                  new Coordinate(-88.095395999999994, 42.918604000000002, 245.953, DateTime.Now,
-                 new GpsTelemetry()
+                 new Dictionary<string, double>()
                  {
-                     Quality=1,
-                     Heading=144.6,
-                     FeetPerSecond=33.92,
-                     SatellitesInView=13,
-                     SignalToNoiseRatio=50,
-                     Hdop=.7
+                     ["Quality"]=1,
+                     ["Heading"]=144.6,
+                     ["FeetPerSecond"]=33.92,
+                     ["SatellitesInView"]=13,
+                     ["SignalToNoiseRatio"]=50,
+                     ["Hdop"]=.7
                  }),
                  new Coordinate(-88.095110000000005, 42.918570000000003, 241.78899999999999, DateTime.Now,
-                 new GpsTelemetry()
+                 new Dictionary<string, double>()
                  {
-                     Quality=1,
-                     Heading=144.6,
-                     FeetPerSecond=33.92,
-                     SatellitesInView=13,
-                     SignalToNoiseRatio=50,
-                     Hdop=.7
+                     ["Quality"]=1,
+                     ["Heading"]=144.6,
+                     ["FeetPerSecond"]=33.92,
+                     ["SatellitesInView"]=13,
+                     ["SignalToNoiseRatio"]=50,
+                     ["Hdop"]=.7
                  })
              });
 

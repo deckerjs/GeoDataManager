@@ -7,14 +7,14 @@ namespace CoordinateDataModels
     {
         public Coordinate()
         {
-            Telemetry = new GpsTelemetry();
+            Telemetry = new Dictionary<string, double>();
         }
 
         public Coordinate(double latitude, double longitude, double altitude, DateTime? time) : this(latitude, longitude, altitude, time, null) {}
 
-        public Coordinate(double latitude, double longitude, double altitude, DateTime? time, GpsTelemetry telemetry)
+        public Coordinate(double latitude, double longitude, double altitude, DateTime? time, Dictionary<string, double> telemetry)
         {
-            Telemetry = new GpsTelemetry();
+            Telemetry = new Dictionary<string, double>();
             Latitude = latitude;
             Longitude = longitude;
             Altitude = altitude;
@@ -31,7 +31,7 @@ namespace CoordinateDataModels
         public double Altitude { get; set; }
         public DateTime? Time { get; set; }
 
-        public GpsTelemetry Telemetry { get; set; }
+        public Dictionary<string, double> Telemetry { get; set; }
         public Dictionary<string, string> Metadata { get; set; }
     }
 }

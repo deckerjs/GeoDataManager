@@ -22,18 +22,9 @@ export interface Coordinate {
     Telemetry: GpsTelemetry;
 }
 
+
 export interface GpsTelemetry {
-    Quality: number;
-    Heading: number;
-    FeetPerSecond: number;
-    SatellitesInView: number
-    SignalToNoiseRatio: number;
-    RtkAge: number;
-    RtkRatio: number;
-    Hdop: number;
-    EastProjectionOfBaseLine: number;
-    NorthProjectionOfBaseLine: number;
-    UpProjectionOfBaseLine: number;
+    [key: string]: number;
 }
 
 export interface KeyValuePair {
