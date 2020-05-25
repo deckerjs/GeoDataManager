@@ -31,6 +31,41 @@
                 <span class="card-text">{{data?.ID}}</span>
             </div>
 
+            <div class="card-title my-1" *ngFor="let pc of data?.Data">
+                <div (click)="selectedPointCollection=pc">                    
+                    <label *ngIf="pc?.ID === selectedPointCollection?.ID">Selected Point Collection</label>
+                    <div>Coordinates Count: {{pc?.Coordinates?.length}}</div>
+                </div>
+            </div>
+
+            <div>
+                <input id="slider" 
+                type="range" step="1" min="0" 
+                class="w-100 slider custom-range my-1"
+                [max]="selectedPointCollection?.Coordinates?.length"
+                [(ngModel)]="selectedPointIndex" />
+
+                <table class="bg-dark text-light table table-sm mb-0">
+                    <thead>
+                        <tr>
+                            <th>Index</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                            <th>Altitude</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td>{{selectedPointIndex}}</td>
+                        <td>{{selectedPointCollection?.Coordinates[selectedPointIndex]?.Latitude}}</td>
+                        <td>{{selectedPointCollection?.Coordinates[selectedPointIndex]?.Longitude}}</td>
+                        <td>{{selectedPointCollection?.Coordinates[selectedPointIndex]?.Altitude}}</td>
+                        <td>{{selectedPointCollection?.Coordinates[selectedPointIndex]?.Time|date:'longTime'}}</td>
+                    </tr>
+                </table>
+
+            </div>
+
         </div>
 
         <h5 class="card-header">Data summary</h5>
@@ -45,37 +80,21 @@
             <div>
                 <table class="bg-light text-dark table table-sm mb-0">
                     <thead>
-                        <tr>                            
-                            <!-- <td class="col-2">
-                                <div ngbDropdown class="d-inline-block">
-                                    <button class="btn btn-primary" id="metadataFieldSelect" ngbDropdownToggle>Metadata
-                                        Fields</button>
-                                    <div ngbDropdownMenu aria-labelledby="metadataFieldSelect">
-                                        <button *ngFor="let f of chartMetadataSelectOptions?.dataFields" ngbDropdownItem
-                                            (click)="selectMetaDataFld(f)">
-                                            {{f}}
-                                        </button>
-                                    </div>
-                                </div>
-                                <div *ngFor="let fld of metadataFieldListSelect" class="d-inline-block mx-2">{{fld}}</div>
-                            </td>
-                            <td class="col-2">
-                                <a (click)="addSelectedField(chartMetadataSelectOptions?.dataObject, metadataFieldListSelect)"
-                                    class="btn btn-link text-info">Add</a>
-                            </td> -->
-                            
+                        <tr>
                             <td class="col-2">
                                 <div ngbDropdown class="d-inline-block">
-                                    <button class="btn btn-primary" id="telemetrydataFieldSelect" ngbDropdownToggle>Telemetry
+                                    <button class="btn btn-primary" id="telemetrydataFieldSelect"
+                                        ngbDropdownToggle>Telemetry
                                         Fields</button>
                                     <div ngbDropdownMenu aria-labelledby="telemetrydataFieldSelect">
-                                        <button *ngFor="let f of chartTelemetrySelectOptions?.dataFields" ngbDropdownItem
-                                            (click)="selectTelemetryDataFld(f)">
+                                        <button *ngFor="let f of chartTelemetrySelectOptions?.dataFields"
+                                            ngbDropdownItem (click)="selectTelemetryDataFld(f)">
                                             {{f}}
                                         </button>
                                     </div>
                                 </div>
-                                <div *ngFor="let fld of telemetryFieldListSelect" class="d-inline-block mx-2">{{fld}}</div>
+                                <div *ngFor="let fld of telemetryFieldListSelect" class="d-inline-block mx-2">{{fld}}
+                                </div>
                             </td>
                             <td class="col-2">
                                 <a (click)="addSelectedField(chartTelemetrySelectOptions?.dataObject, telemetryFieldListSelect)"
@@ -86,18 +105,19 @@
                             <td class="col-4"></td>
                         </tr>
 
-                        <tr>                            
+                        <tr>
                             <td class="col-2" colspan="4">
                                 <div *ngFor="let flds of selectedChartFields">
-                                    {{flds.dataObject}}:<span *ngFor="let fld of flds.dataFields" class="mx-1">{{fld}}</span>
+                                    {{flds.dataObject}}:<span *ngFor="let fld of flds.dataFields"
+                                        class="mx-1">{{fld}}</span>
                                 </div>
-                            </td>                        
-                        </tr>                        
+                            </td>
+                        </tr>
 
-                        <tr>                            
+                        <tr>
                             <td class="col-2" colspan="4">
                                 <a (click)="addChart()" class="btn btn-link text-info">Add Chart</a>
-                            </td>                        
+                            </td>
                         </tr>
                     </thead>
                 </table>
@@ -106,17 +126,17 @@
             <div *ngFor="let pc of data?.Data" class="card-title my-1">
                 <span class="text-primary mr-1">Point collection {{pc.ID}} Coordinates Count:</span>
                 <span class="card-text">{{pc.Coordinates?.length}}</span>
-                
+
                 <div *ngFor="let cht of selectedCharts">
-                    <app-gps-telemetry-chart  [data]="pc.Coordinates" [dataFields]="cht.chartFields">
+                    <app-gps-telemetry-chart [data]="pc.Coordinates" [dataFields]="cht.chartFields">
                     </app-gps-telemetry-chart>
                     <a (click)="removeChart(cht.id)" class="btn btn-link text-info">Remove</a>
                 </div>
-                
-                
+
+
             </div>
 
- 
+
 
         </div>
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CoordinateDataMessageBusService } from 'src/app/services/coordinate-data-message-bus.service';
 import { debounceTime, delay } from 'rxjs/operators';
-import { CoordinateData } from 'src/app/models/coordinate-data';
+import { CoordinateData, Coordinate, PointCollection } from 'src/app/models/coordinate-data';
 import { chartFieldSelection } from '../gps-telemetry-chart/gps-telemetry-chart.component';
 
 export class chartInstance {
@@ -27,8 +27,12 @@ export class GeoDataViewerComponent implements OnInit {
   public telemetryFieldListSelect: Array<string> = [];
 
   public selectedCharts: Array<chartInstance> = [];
-
   private readonly ChartPreferenceStorageKey = 'chartPref';
+
+
+  public selectedPointCollection:PointCollection;
+  public selectedPointIndex:number=0;
+  public selectPoint:Coordinate;
 
   constructor(
     private msgService: CoordinateDataMessageBusService
@@ -40,9 +44,9 @@ export class GeoDataViewerComponent implements OnInit {
   ngOnInit() {
     this.msgService.subscribeCoordinateDatasetSelected().pipe(debounceTime(500)).subscribe(x => {
       this.data = x;
-
       if (x.Data) {
         this.setChartFields(x);
+        this.selectedPointCollection = x.Data[0];
       }
 
     });
