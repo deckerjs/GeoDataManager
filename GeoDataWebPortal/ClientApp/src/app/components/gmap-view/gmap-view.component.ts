@@ -9,6 +9,7 @@ import { LatLngPoint } from 'src/app/models/lat-lng-point';
 import { SettingsService } from 'src/app/portal-settings/settings.service';
 import { take, delay } from 'rxjs/operators';
 import { GeoDataAPIService } from 'src/app/services/geo-data-api.service';
+import { Coordinate } from 'src/app/models/coordinate-data';
 
 const outdoorsv9: string = 'outdoors-v9';
 const outdoorsv11: string = 'outdoors-v11';
@@ -31,6 +32,20 @@ export class GmapViewComponent implements OnInit {
   private lat: number;
   private lng: number;
 
+  // @Input() selectedPoint: Coordinate;
+
+  private _selectedPoint: Coordinate;
+  get selectedPoint(): Coordinate {
+    return this._selectedPoint;
+  }
+  @Input()
+  set selectedPoint(coord: Coordinate) {    
+    this._selectedPoint = coord;
+    if (coord != null) {
+      this.updateSelectedPointMarker();
+    }
+  }
+
   constructor(private msgService: CoordinateDataMessageBusService,
     private settingsService: SettingsService,
     private dataService: GeoDataAPIService) {
@@ -43,12 +58,12 @@ export class GmapViewComponent implements OnInit {
 
   ngOnInit() {
     this.msgService.subscribeCoordinateDatasetSelected().pipe(delay(150)).subscribe(x => {
-      console.log('incoming map data sub:', x)
+      
       if (x.Data != null) {
 
         this.dataService.Get(x.ID).subscribe({
           next: geoData => {
-            this.mapData = geoData;
+            this.mapData = geoData;      
             this.buildMap();
             this.map.flyTo({
               center: [this.lng, this.lat]
@@ -86,8 +101,6 @@ export class GmapViewComponent implements OnInit {
     let areaBounds: AreaBounds = geojsonHelperFunctions.getBounds(featureCollection);
     let center: LatLngPoint = geojsonHelperFunctions.getCenter(areaBounds);
 
-    console.log('got bounds, center:', areaBounds, center)
-
     this.lat = center.lat;
     this.lng = center.lng;
 
@@ -99,14 +112,20 @@ export class GmapViewComponent implements OnInit {
     });
 
     this.map.addControl(new mapboxgl.NavigationControl());
-    
+
     var scale = new mapboxgl.ScaleControl({
       maxWidth: 200,
       unit: 'imperial'
     });
     this.map.addControl(scale);
+        
+    this.map.on('load', event => {     
+      
+      this.map.addSource('point', {
+        type: 'geojson',
+        data: this.getPointFromCoord(this.selectedPoint)
+      });
 
-    this.map.on('load', event => {
       this.map.addSource('stuff', {
         type: 'geojson',
         data: {
@@ -115,9 +134,9 @@ export class GmapViewComponent implements OnInit {
         }
       });
 
-      this.source = this.map.getSource('stuff');
+      this.source = this.map.getSource('stuff');      
       this.source.setData(featureCollection);
-
+      
       this.map.addLayer({
         id: 'somestuff',
         source: 'stuff',
@@ -132,15 +151,39 @@ export class GmapViewComponent implements OnInit {
         }
       });
 
+      this.map.addLayer({
+        id: 'point',
+        source: 'point',
+        type: 'circle',
+        paint: {
+          'circle-radius': 5,
+          'circle-color': 'lime'
+        }
+      });
+
       const bounds = this.getBoundsFromFeatureCollection(featureCollection);
       this.map.fitBounds(bounds, {
         padding: 20
       });
 
-
-
-
     });
+  }
+
+  private updateSelectedPointMarker() {
+    if (this.selectedPoint != null) {      
+      this.map.getSource('point').setData(this.getPointFromCoord(this.selectedPoint));
+    }
+  }
+
+  private getPointFromCoord(coord: Coordinate) {
+    if (coord != null) {
+      return {
+        'type': 'Point',
+        'coordinates': [coord.Longitude, coord.Latitude]
+      };
+    }
+    return {'type': 'Point',
+    'coordinates': [100, 100]}
   }
 
   private getBoundsFromFeatureCollection(featureCollection: FeatureCollection): mapboxgl.LngLatBounds {

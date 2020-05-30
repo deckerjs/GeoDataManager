@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { CoordinateDataMessageBusService } from 'src/app/services/coordinate-data-message-bus.service';
 import { debounceTime, delay } from 'rxjs/operators';
 import { CoordinateData, Coordinate, PointCollection } from 'src/app/models/coordinate-data';
@@ -30,9 +30,21 @@ export class GeoDataViewerComponent implements OnInit {
   private readonly ChartPreferenceStorageKey = 'chartPref';
 
 
-  public selectedPointCollection:PointCollection;
-  public selectedPointIndex:number=0;
-  public selectPoint:Coordinate;
+  public selectedPointCollection: PointCollection;
+  
+  private _selectedPointIndex: number;
+  get selectedPointIndex(): number {
+    return this._selectedPointIndex;
+  }
+  @Input()
+  set selectedPointIndex(idx: number) {    
+    this._selectedPointIndex = idx;
+    if (idx != null && this.selectedPointCollection != null) {
+      this.selectPoint = this.selectedPointCollection.Coordinates[idx];      
+    }
+  }
+
+  public selectPoint: Coordinate;
 
   constructor(
     private msgService: CoordinateDataMessageBusService
@@ -46,6 +58,7 @@ export class GeoDataViewerComponent implements OnInit {
       this.data = x;
       if (x.Data) {
         this.setChartFields(x);
+        this.selectedPointIndex=0;
         this.selectedPointCollection = x.Data[0];
       }
 
@@ -87,8 +100,7 @@ export class GeoDataViewerComponent implements OnInit {
     if (dob != null && flds != null && flds.length > 0) {
       this.selectedChartFields.push({ dataObject: dob, dataFields: flds });
       this.metadataFieldListSelect = [];
-      this.telemetryFieldListSelect = [];
-      console.log('added flds:', this.selectedChartFields)
+      this.telemetryFieldListSelect = [];      
     }
   }
 
@@ -96,14 +108,13 @@ export class GeoDataViewerComponent implements OnInit {
     if (this.selectedChartFields != null && this.selectedChartFields.length > 0) {
       this.selectedCharts.push({ id: (this.selectedCharts.length + 1).toString(), chartFields: this.selectedChartFields });
       this.selectedChartFields = [];
-      console.log('added chart:', this.selectedCharts)
-
+      
       this.storeChartPreference(this.selectedCharts);
     }
   }
 
   public removeChart(id: string) {
-    if(this.selectedCharts!=null && this.selectedCharts.length>0){
+    if (this.selectedCharts != null && this.selectedCharts.length > 0) {
       this.selectedCharts = this.selectedCharts.filter(item => item.id !== id);
       this.storeChartPreference(this.selectedCharts);
     }
@@ -117,9 +128,7 @@ export class GeoDataViewerComponent implements OnInit {
 
     let metadataProps: string[] = [];
     let telemetryProps: string[] = [];
-
-    console.log('dataItem : ', dataItem)
-
+    
     this.chartMetadataSelectOptions.dataObject = 'Metadata';
     this.chartMetadataSelectOptions.dataFields = [];
     for (let prop1 in dataItem['Metadata']) {
@@ -132,8 +141,6 @@ export class GeoDataViewerComponent implements OnInit {
       this.chartTelemetrySelectOptions.dataFields.push(prop1);
     }
 
-    console.log('this.chartDataSelectOptions : ', this.chartMetadataSelectOptions)
-    console.log('this.chartDataSelectOptions : ', this.chartTelemetrySelectOptions)
   }
 
 }
