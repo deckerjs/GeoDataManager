@@ -51,35 +51,37 @@ namespace DataTransformUtilities.Transformers
         {
             List<Position> coords = new List<Position>();
             List<DateTime> coordTimes = new List<DateTime>();
-
-            foreach (var coord in trk.trkseg.trkpt)
-            {
-                coords.Add(new Position(coord.lon, coord.lat, coord.ele));
-                coordTimes.Add(coord.time);
-            }
-
-
-            BAMCIS.GeoJSON.Geometry geom1;
-            if (coords.Count > 1)
-            {
-                geom1 = new LineString(coords);
-            }
-            else
-            {
-                geom1 = new Point(coords.First());
-            }
-
-            var props = new Dictionary<string, object>();
-            props["Name"] = trk.name;
-            props["StartTime"] = coordTimes.First();
-            props["EndtTime"] = coordTimes.Last();
-            props["CoordinateTimes"] = coordTimes;
-
-            var feature1 = new Feature(geom1, props);
-
             var features = new List<Feature>();
-            features.Add(feature1);
 
+            foreach (var trkseg in trk.trkseg)
+            {
+                foreach (var coord in trkseg.trkpt)
+                {
+                    coords.Add(new Position(coord.lon, coord.lat, coord.ele));
+                    coordTimes.Add(coord.time);
+                }
+
+
+                BAMCIS.GeoJSON.Geometry geom1;
+                if (coords.Count > 1)
+                {
+                    geom1 = new LineString(coords);
+                }
+                else
+                {
+                    geom1 = new Point(coords.First());
+                }
+
+                var props = new Dictionary<string, object>();
+                props["Name"] = trk.name;
+                props["StartTime"] = coordTimes.First();
+                props["EndtTime"] = coordTimes.Last();
+                props["CoordinateTimes"] = coordTimes;
+
+                var feature1 = new Feature(geom1, props);
+                
+                features.Add(feature1);
+            }
             return features;
         }
 

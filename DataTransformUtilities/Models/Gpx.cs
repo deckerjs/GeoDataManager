@@ -39,7 +39,8 @@ namespace DataTransformUtilities.Models
     public class Trk
     {
         public string name {get;set;}
-        public Trkseg trkseg { get; set; }
+        [XmlElement("trkseg")]
+        public List<Trkseg> trkseg { get; set; }
     }
 
     [XmlRoot(ElementName = "wpt", Namespace = "http://www.topografix.com/GPX/1/1")]

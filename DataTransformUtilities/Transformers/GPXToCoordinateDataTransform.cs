@@ -50,33 +50,38 @@ namespace DataTransformUtilities.Transformers
         private List<PointCollection> GetPointCollectionFromTrk(Trk trk)
         {
             var pointCollections = new List<PointCollection>();
-            var coords = new List<Coordinate>();
 
-            foreach (var coord in trk.trkseg.trkpt)
+            foreach (var trkseg in trk.trkseg)
             {
-                coords.Add(new Coordinate(coord.lat, coord.lon, coord.ele, coord.time));
+                var coords = new List<Coordinate>();
+
+                foreach (var coord in trkseg.trkpt)
+                {
+                    coords.Add(new Coordinate(coord.lat, coord.lon, coord.ele, coord.time));
+                }
+
+                var props = new Dictionary<string, string>();
+                props["Name"] = trk.name;
+                props["StartTime"] = coords.First().Time.ToString();
+                props["EndtTime"] = coords.Last().Time.ToString();
+
+                var pointCollection = new PointCollection()
+                {
+                    Coordinates = coords,
+                    ID = Guid.NewGuid().ToString(),
+                    Metadata = props
+                };
+
+                pointCollections.Add(pointCollection);
             }
 
-            var props = new Dictionary<string, string>();
-            props["Name"] = trk.name;
-            props["StartTime"] = coords.First().Time.ToString();
-            props["EndtTime"] = coords.Last().Time.ToString();
-  
-            var pointCollection = new PointCollection()
-            {
-                Coordinates = coords,
-                ID = Guid.NewGuid().ToString(),
-                Metadata = props
-            };
-
-            pointCollections.Add(pointCollection);
 
             return pointCollections;
         }
 
         private List<PointCollection> GetWptFeatures(List<Wpt> wpts)
         {
-            var pointCollections = new List<PointCollection>();                        
+            var pointCollections = new List<PointCollection>();
             foreach (var wpt in wpts)
             {
                 var coords = new List<Coordinate>();
