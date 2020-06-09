@@ -50,10 +50,11 @@ namespace DataTransformUtilities.Transformers
         private List<PointCollection> GetPointCollectionFromTrk(Trk trk)
         {
             var pointCollections = new List<PointCollection>();
-
+            int segmentIndex = 0;
             foreach (var trkseg in trk.trkseg)
             {
                 var coords = new List<Coordinate>();
+                segmentIndex += 1;
 
                 foreach (var coord in trkseg.trkpt)
                 {
@@ -64,6 +65,8 @@ namespace DataTransformUtilities.Transformers
                 props["Name"] = trk.name;
                 props["StartTime"] = coords.First().Time.ToString();
                 props["EndtTime"] = coords.Last().Time.ToString();
+                props["Segment"] = segmentIndex.ToString();
+
 
                 var pointCollection = new PointCollection()
                 {

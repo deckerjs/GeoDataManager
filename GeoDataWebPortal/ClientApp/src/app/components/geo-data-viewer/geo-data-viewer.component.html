@@ -5,7 +5,7 @@
     <div class="card text-white bg-secondary h-100">
         <h5 class="card-header"></h5>
         <div class="card-body">
-            <app-gmap-view [mapData]="data" [mapHeight]="mapHeight" [selectedPoint]="selectPoint" ></app-gmap-view>
+            <app-gmap-view [mapData]="data" [mapHeight]="mapHeight" [selectedPoint]="selectPoint"></app-gmap-view>
         </div>
         <div class="card-footer">
 
@@ -20,6 +20,20 @@
         </div>
         <div class="card-body bg-default">
 
+            <div *ngIf="data?.Data?.length>1">
+                <label class="mx-1">Segment: </label>
+                <label class="mx-1">{{selectedSegmentIndex}} </label>
+                <div>
+                    <input id="slider" 
+                    type="range" 
+                    step="1" 
+                    min="0" 
+                    class="w-25 slider custom-range mx-1 my-1"
+                    [max]="data?.Data?.length-1" 
+                    [(ngModel)]="selectedSegmentIndex" />
+                </div>
+            </div>
+
             <!-- todo: create component, loop through list for this data-->
             <!-- also, set data summary size limit the same as the map, and scroll when ovr -->
             <div class="card-title my-1">
@@ -32,18 +46,15 @@
             </div>
 
             <div class="card-title my-1" *ngFor="let pc of data?.Data">
-                <div (click)="selectedPointCollection=pc">                    
+                <div (click)="selectedPointCollection=pc">
                     <label *ngIf="pc?.ID === selectedPointCollection?.ID">Selected Point Collection</label>
                     <div>Coordinates Count: {{pc?.Coordinates?.length}}</div>
                 </div>
             </div>
 
             <div>
-                <input id="slider" 
-                type="range" step="1" min="0" 
-                class="w-100 slider custom-range my-1"
-                [max]="selectedPointCollection?.Coordinates?.length"
-                [(ngModel)]="selectedPointIndex" />
+                <input id="slider" type="range" step="1" min="0" class="w-100 slider custom-range my-1"
+                    [max]="selectedPointCollection?.Coordinates?.length" [(ngModel)]="selectedPointIndex" />
 
                 <table class="bg-dark text-light table table-sm mb-0">
                     <thead>

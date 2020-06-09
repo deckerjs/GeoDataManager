@@ -32,15 +32,25 @@ export class GeoDataViewerComponent implements OnInit {
 
   public selectedPointCollection: PointCollection;
   
+  private _selectedSegmentIndex: number = 0;
+  get selectedSegmentIndex(): number {
+    return this._selectedSegmentIndex;
+  }
+  @Input()
+  set selectedSegmentIndex(idx: number) {
+    this._selectedSegmentIndex = idx;
+    this.selectedPointCollection = this.data.Data[idx];
+  }
+
   private _selectedPointIndex: number;
   get selectedPointIndex(): number {
     return this._selectedPointIndex;
   }
   @Input()
-  set selectedPointIndex(idx: number) {    
+  set selectedPointIndex(idx: number) {
     this._selectedPointIndex = idx;
     if (idx != null && this.selectedPointCollection != null) {
-      this.selectPoint = this.selectedPointCollection.Coordinates[idx];      
+      this.selectPoint = this.selectedPointCollection.Coordinates[idx];
     }
   }
 
@@ -58,8 +68,8 @@ export class GeoDataViewerComponent implements OnInit {
       this.data = x;
       if (x.Data) {
         this.setChartFields(x);
-        this.selectedPointIndex=0;
-        this.selectedPointCollection = x.Data[0];
+        this.selectedPointIndex = 0;
+        this.selectedPointCollection = x.Data[this.selectedSegmentIndex];
       }
 
     });
@@ -100,7 +110,7 @@ export class GeoDataViewerComponent implements OnInit {
     if (dob != null && flds != null && flds.length > 0) {
       this.selectedChartFields.push({ dataObject: dob, dataFields: flds });
       this.metadataFieldListSelect = [];
-      this.telemetryFieldListSelect = [];      
+      this.telemetryFieldListSelect = [];
     }
   }
 
@@ -108,7 +118,7 @@ export class GeoDataViewerComponent implements OnInit {
     if (this.selectedChartFields != null && this.selectedChartFields.length > 0) {
       this.selectedCharts.push({ id: (this.selectedCharts.length + 1).toString(), chartFields: this.selectedChartFields });
       this.selectedChartFields = [];
-      
+
       this.storeChartPreference(this.selectedCharts);
     }
   }
@@ -128,7 +138,7 @@ export class GeoDataViewerComponent implements OnInit {
 
     let metadataProps: string[] = [];
     let telemetryProps: string[] = [];
-    
+
     this.chartMetadataSelectOptions.dataObject = 'Metadata';
     this.chartMetadataSelectOptions.dataFields = [];
     for (let prop1 in dataItem['Metadata']) {
