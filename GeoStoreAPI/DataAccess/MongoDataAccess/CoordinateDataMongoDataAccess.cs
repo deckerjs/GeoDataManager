@@ -38,6 +38,26 @@ namespace GeoStoreAPI.DataAccess.MongoDataAccess
 
             return result.ToList();
         }
+
+        public bool IdBelongsToUser(string id, string userId)
+        {
+            var filter = Builders<CoordinateData>.Filter.Eq(KeyIdName, id) & Builders<CoordinateData>.Filter.Eq(KeyIdName, id);
+            return GetCollection<CoordinateData>().Find(filter).Project(x => x.ID).Any();
+        }
+
+        public void AppendToPointCollection(string id, string pcid, IEnumerable<CoordinateDataModels.Coordinate> coordinates)
+        {
+            var filter = Builders<CoordinateData>.Filter.Eq(KeyIdName, id);
+            filter = filter &  Builders<CoordinateData>.Filter.ElemMatch<PointCollection>(c=>c.Data, pc => pc.ID == pcid);
+            var cUpdate = Builders<CoordinateData>.Update.PushEach(f => f.Data[-1].Coordinates, coordinates);
+
+            GetCollection<CoordinateData>().FindOneAndUpdate(filter, cUpdate);
+
+        }
+
+
+
+
     }
 
 }

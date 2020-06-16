@@ -15,5 +15,7 @@ namespace GeoStoreAPI.DataAccess
         IEnumerable<CoordinateData> GetAll(IEnumerable<Expression<Func<CoordinateData, bool>>> filter);
         IEnumerable<CoordinateDataSummary> GetSummary(IEnumerable<Expression<Func<CoordinateData, bool>>> filter);
         void Update(string id, CoordinateData geoData);
+        bool IdBelongsToUser(string id, string userId);
+        void AppendToPointCollection(string id, string pcid, IEnumerable<Coordinate> coordinates);
     }
 }

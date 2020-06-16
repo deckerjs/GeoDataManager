@@ -57,5 +57,24 @@ namespace GeoStoreAPI.DataAccess.FileDataAccess
             });           
 
         }
+
+        public bool IdBelongsToUser(string id, string userId)
+        {
+            var filter = new List<Expression<Func<CoordinateData, bool>>>();
+            filter.Add(x => x.ID == id && x.UserID == userId);
+            return _fileDataAccess.GetAllItems(DATA_GROUP, filter).Any();
+        }
+
+        public void AppendToPointCollection(string id, string pcid, IEnumerable<CoordinateDataModels.Coordinate> coordinates)
+        {
+            var item = Get(id);
+            var pc = item.Data.Where(x => x.ID == pcid).FirstOrDefault();
+            if(pc != null)
+            {
+                pc.Coordinates.AddRange(coordinates);
+                Update(id, item);
+            }
+
+        }
     }
 }

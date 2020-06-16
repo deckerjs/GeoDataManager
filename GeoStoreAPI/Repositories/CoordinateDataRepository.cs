@@ -145,25 +145,9 @@ namespace GeoStoreAPI.Repositories
 
         public void AppendToPointCollection(string id, string pcid, IEnumerable<Coordinate> coordinates, string userID)
         {
-            var data = _dataAccess.Get(id);
-            if (data != null && data.UserID == userID)
+            if(_dataAccess.IdBelongsToUser(id, userID))
             {
-                var pc = data.Data.Where(x => x.ID == pcid).FirstOrDefault();
-                if (pc != null)
-                {
-                    pc.Coordinates.AddRange(coordinates);
-                }
-                else
-                {
-                    var newPc = new PointCollection()
-                    {
-                        ID = pcid,
-                        Coordinates = coordinates.ToList()
-                    };
-                    data.Data.Add(newPc);
-                }
-
-                _dataAccess.Update(id, data);
+                _dataAccess.AppendToPointCollection(id, pcid, coordinates);
             }
         }
 
