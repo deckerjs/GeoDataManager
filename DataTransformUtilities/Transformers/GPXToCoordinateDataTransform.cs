@@ -88,7 +88,7 @@ namespace DataTransformUtilities.Transformers
             foreach (var wpt in wpts)
             {
                 var coords = new List<Coordinate>();
-                coords.Add(new Coordinate(wpt.lon, wpt.lat, wpt.ele, null));
+                coords.Add(new Coordinate(wpt.lat, wpt.lon, wpt.ele, null));
 
                 var props = new Dictionary<string, string>();
                 props["Name"] = wpt.name;
