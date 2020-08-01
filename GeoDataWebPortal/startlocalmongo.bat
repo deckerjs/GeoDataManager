@@ -1,0 +1,1 @@
+docker-compose -f localmongo.yml up -d

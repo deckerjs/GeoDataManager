@@ -4,7 +4,8 @@ import { GeoDataManagerComponent } from './components/geo-data-manager/geo-data-
 
 const routes: Routes = [
   {path: '', redirectTo: '/data-manager', pathMatch: 'full' },
-  {path:'data-manager', component: GeoDataManagerComponent}
+  {path:'data-manager', component: GeoDataManagerComponent},
+  {path:'data-manager/:id', component: GeoDataManagerComponent}
 ];
 
 @NgModule({

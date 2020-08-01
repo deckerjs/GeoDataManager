@@ -3,6 +3,8 @@ import { CoordinateDataMessageBusService } from 'src/app/services/coordinate-dat
 import { debounceTime, delay } from 'rxjs/operators';
 import { CoordinateData, Coordinate, PointCollection } from 'src/app/models/coordinate-data';
 import { chartFieldSelection } from '../gps-telemetry-chart/gps-telemetry-chart.component';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faLink } from '@fortawesome/free-solid-svg-icons';
 
 export class chartInstance {
   id: string;
@@ -29,9 +31,8 @@ export class GeoDataViewerComponent implements OnInit {
   public selectedCharts: Array<chartInstance> = [];
   private readonly ChartPreferenceStorageKey = 'chartPref';
 
-
   public selectedPointCollection: PointCollection;
-  
+
   private _selectedSegmentIndex: number = 0;
   get selectedSegmentIndex(): number {
     return this._selectedSegmentIndex;
@@ -56,11 +57,13 @@ export class GeoDataViewerComponent implements OnInit {
 
   public selectPoint: Coordinate;
 
+  public linkUrl: string;
+
   constructor(
-    private msgService: CoordinateDataMessageBusService
-  ) {
+    private msgService: CoordinateDataMessageBusService, private falibrary: FaIconLibrary) {
     let midHeight = window.innerHeight - 300;
     this.mapHeight = `${midHeight}px`;
+    falibrary.addIcons(faLink);
   }
 
   ngOnInit() {
@@ -70,6 +73,20 @@ export class GeoDataViewerComponent implements OnInit {
         this.setChartFields(x);
         this.selectedPointIndex = 0;
         this.selectedPointCollection = x.Data[this.selectedSegmentIndex];
+
+        //console.log(location.href);      
+        //console.log(this.document.location.href); 
+        this.linkUrl = `${location.origin}${location.pathname}?id=${x.ID}`;
+
+        console.log("location.href:", location.href);
+        console.log("location.hash:", location.hash);
+        console.log("location.host:", location.host);
+        console.log("location.hostname:", location.hostname);
+        console.log("location.origin:", location.origin);
+        console.log("location.pathname:", location.pathname);
+        console.log("location.search:", location.search);
+
+
       }
 
     });
@@ -78,6 +95,12 @@ export class GeoDataViewerComponent implements OnInit {
     if (storedChartPref != null) {
       this.selectedCharts = storedChartPref;
     }
+  }
+
+  public copyLinkUrl(element: any):void {
+    element.select();
+    document.execCommand('copy');
+    element.setSelectRange(0,0);
   }
 
   private storeChartPreference(charts: Array<chartInstance>) {

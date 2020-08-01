@@ -15,8 +15,17 @@
     <!-- data card -->
     <div class="card bg-light h-100">
 
-        <div class="card-header">
-            <h5>Selected Dataset</h5>
+        <div class="card-header w-100">
+            <h5>Selected Dataset </h5>
+            <form *ngIf="linkUrl" class="text-info small form-inline w-100">
+                <button class="btn btn-link mx-1 my-1" (click)="copyLinkUrl(linkUrlText)">
+                    <fa-icon [icon]="['fas', 'link']" class="text-info" placement="top-left"
+                        ngbTooltip="Shareable Link"></fa-icon>
+                </button>
+                <div class="form-group w-95">
+                    <input #linkUrlText type="text" readonly class="form-control-plaintext text-info w-95" [value]="linkUrl">
+                </div>
+            </form>
         </div>
         <div class="card-body bg-default">
 
@@ -24,13 +33,8 @@
                 <label class="mx-1">Segment: </label>
                 <label class="mx-1">{{selectedSegmentIndex}} </label>
                 <div>
-                    <input id="slider" 
-                    type="range" 
-                    step="1" 
-                    min="0" 
-                    class="w-25 slider custom-range mx-1 my-1"
-                    [max]="data?.Data?.length-1" 
-                    [(ngModel)]="selectedSegmentIndex" />
+                    <input id="slider" type="range" step="1" min="0" class="w-25 slider custom-range mx-1 my-1"
+                        [max]="data?.Data?.length-1" [(ngModel)]="selectedSegmentIndex" />
                 </div>
             </div>
 
@@ -45,9 +49,9 @@
                 <span class="card-text">{{data?.ID}}</span>
             </div>
 
-            <div class="card-title my-1" *ngFor="let pc of data?.Data">
+            <div class="card-title my-1 h-50 divscroll" *ngFor="let pc of data?.Data">
                 <div (click)="selectedPointCollection=pc">
-                    <label *ngIf="pc?.ID === selectedPointCollection?.ID">Selected Point Collection</label>
+                    <label *ngIf="pc?.ID === selectedPointCollection?.ID">Selected</label>
                     <div>Coordinates Count: {{pc?.Coordinates?.length}}</div>
                 </div>
             </div>
