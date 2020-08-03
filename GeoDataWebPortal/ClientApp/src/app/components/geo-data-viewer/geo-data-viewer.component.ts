@@ -41,6 +41,7 @@ export class GeoDataViewerComponent implements OnInit {
   set selectedSegmentIndex(idx: number) {
     this._selectedSegmentIndex = idx;
     this.selectedPointCollection = this.data.Data[idx];
+    console.log("selected segment index change:", this.selectedPointCollection)
   }
 
   private _selectedPointIndex: number;
@@ -74,18 +75,16 @@ export class GeoDataViewerComponent implements OnInit {
         this.selectedPointIndex = 0;
         this.selectedPointCollection = x.Data[this.selectedSegmentIndex];
 
-        //console.log(location.href);      
-        //console.log(this.document.location.href); 
         this.linkUrl = `${location.origin}${location.pathname}?id=${x.ID}`;
-
-        console.log("location.href:", location.href);
-        console.log("location.hash:", location.hash);
-        console.log("location.host:", location.host);
-        console.log("location.hostname:", location.hostname);
-        console.log("location.origin:", location.origin);
-        console.log("location.pathname:", location.pathname);
-        console.log("location.search:", location.search);
-
+        
+        //console.log(this.document.location.href); 
+        // console.log("location.href:", location.href);
+        // console.log("location.hash:", location.hash);
+        // console.log("location.host:", location.host);
+        // console.log("location.hostname:", location.hostname);
+        // console.log("location.origin:", location.origin);
+        // console.log("location.pathname:", location.pathname);
+        // console.log("location.search:", location.search);
 
       }
 

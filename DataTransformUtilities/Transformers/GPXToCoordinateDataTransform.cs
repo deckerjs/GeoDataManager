@@ -66,7 +66,7 @@ namespace DataTransformUtilities.Transformers
                 props["StartTime"] = coords.First().Time.ToString();
                 props["EndtTime"] = coords.Last().Time.ToString();
                 props["Segment"] = segmentIndex.ToString();
-
+                props["Type"] = "trk";
 
                 var pointCollection = new PointCollection()
                 {
@@ -95,6 +95,7 @@ namespace DataTransformUtilities.Transformers
                 props["Cmt"] = wpt.cmt;
                 props["Desc"] = wpt.desc;
                 props["Sym"] = wpt.sym;
+                props["Type"] = "wpt";
 
                 var pointCollection = new PointCollection()
                 {

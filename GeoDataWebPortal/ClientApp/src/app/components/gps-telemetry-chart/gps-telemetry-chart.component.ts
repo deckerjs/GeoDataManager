@@ -33,7 +33,7 @@ export class GpsTelemetryChartComponent implements OnInit {
   }
   @Input()
   set dataFields(df: Array<chartFieldSelection>) {
-    console.log('setting datafields:', df)
+    // console.log('setting datafields:', df)
     this._dataFields = df;
     if (df != null && df.length > 0 && this.isDataReady()) {
       this.chartSetup(this.data, df);
@@ -64,7 +64,7 @@ export class GpsTelemetryChartComponent implements OnInit {
   }
 
   private chartSetup(tdata: Array<Coordinate>, dataFields: Array<chartFieldSelection>) {
-    console.log('chartSetup:', tdata, dataFields)
+    // console.log('chartSetup:', tdata, dataFields)
     
     dataFields.forEach(cf => {
       this.lineChartData.push(...this.getDataSets(tdata, cf));      
@@ -90,7 +90,7 @@ export class GpsTelemetryChartComponent implements OnInit {
   }
 
   private getDataSets(tdata: Array<Coordinate>, dataFields: chartFieldSelection): ChartDataSets[] {
-    console.log('getDataSets:', tdata, dataFields)
+    // console.log('getDataSets:', tdata, dataFields)
     
     let datas: ChartDataSets[] = dataFields.dataFields.map(chartFld => {
       const fd = tdata.map(td => {
@@ -112,7 +112,7 @@ export class GpsTelemetryChartComponent implements OnInit {
       }
 
     })
-console.log('returning datas:', datas)
+// console.log('returning datas:', datas)
     return datas;
   }
 

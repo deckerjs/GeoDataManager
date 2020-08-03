@@ -3,7 +3,7 @@ import { GeoDataset } from "../../models/geo-dataset";
 import { geojsonHelperFunctions } from "../../utilities/geojson-helper-functions";
 import { CoordinateDataMessageBusService } from "../../services/coordinate-data-message-bus.service";
 import * as mapboxgl from 'mapbox-gl';
-import { FeatureCollection, LineString } from 'geojson';
+import { FeatureCollection, LineString, Point } from 'geojson';
 import { AreaBounds } from 'src/app/models/area-bounds';
 import { LatLngPoint } from 'src/app/models/lat-lng-point';
 import { SettingsService } from 'src/app/portal-settings/settings.service';
@@ -39,7 +39,7 @@ export class GmapViewComponent implements OnInit {
     return this._selectedPoint;
   }
   @Input()
-  set selectedPoint(coord: Coordinate) {    
+  set selectedPoint(coord: Coordinate) {
     this._selectedPoint = coord;
     if (coord != null) {
       this.updateSelectedPointMarker();
@@ -58,12 +58,12 @@ export class GmapViewComponent implements OnInit {
 
   ngOnInit() {
     this.msgService.subscribeCoordinateDatasetSelected().pipe(delay(150)).subscribe(x => {
-      
+
       if (x.Data != null) {
 
         this.dataService.Get(x.ID).subscribe({
           next: geoData => {
-            this.mapData = geoData;      
+            this.mapData = geoData;
             this.buildMap();
             this.map.flyTo({
               center: [this.lng, this.lat]
@@ -118,9 +118,9 @@ export class GmapViewComponent implements OnInit {
       unit: 'imperial'
     });
     this.map.addControl(scale);
-        
-    this.map.on('load', event => {     
-      
+
+    this.map.on('load', event => {
+
       this.map.addSource('point', {
         type: 'geojson',
         data: this.getPointFromCoord(this.selectedPoint)
@@ -134,9 +134,9 @@ export class GmapViewComponent implements OnInit {
         }
       });
 
-      this.source = this.map.getSource('stuff');      
+      this.source = this.map.getSource('stuff');
       this.source.setData(featureCollection);
-      
+
       this.map.addLayer({
         id: 'somestuff',
         source: 'stuff',
@@ -148,7 +148,19 @@ export class GmapViewComponent implements OnInit {
         paint: {
           'line-color': '#888',
           'line-width': 4
-        }
+        },
+        'filter': ['==', '$type', 'LineString']
+      });
+
+      this.map.addLayer({
+        id: 'waypoint',
+        source: 'stuff',
+        type: 'circle',
+        paint: {
+          'circle-radius': 4,
+          'circle-color': 'blue'
+        },
+        'filter': ['==', '$type', 'Point']
       });
 
       this.map.addLayer({
@@ -170,7 +182,7 @@ export class GmapViewComponent implements OnInit {
   }
 
   private updateSelectedPointMarker() {
-    if (this.selectedPoint != null) {      
+    if (this.selectedPoint != null) {
       this.map.getSource('point').setData(this.getPointFromCoord(this.selectedPoint));
     }
   }
@@ -182,22 +194,35 @@ export class GmapViewComponent implements OnInit {
         'coordinates': [coord.Longitude, coord.Latitude]
       };
     }
-    return {'type': 'Point',
-    'coordinates': [100, 100]}
+    return {
+      'type': 'Point',
+      'coordinates': [100, 100]
+    }
   }
 
   private getBoundsFromFeatureCollection(featureCollection: FeatureCollection): mapboxgl.LngLatBounds {
     const bounds = new mapboxgl.LngLatBounds();
-
+    // console.log("getBoundsFromFeatureCollection featureCollection:", featureCollection)
     featureCollection.features.forEach(function (f) {
-      const fline = <LineString>f.geometry;
-      if (fline && fline.coordinates) {
-        let fbound = new mapboxgl.LngLatBounds();
-        fline.coordinates.forEach(c => {
-          fbound = new mapboxgl.LngLatBounds(c, c);
+
+      if (f.geometry.type === 'LineString') {
+        const fline = <LineString>f.geometry;
+        if (fline && fline.coordinates && fline.coordinates.length > 1) {
+          let fbound = new mapboxgl.LngLatBounds();
+          fline.coordinates.forEach(c => {
+            fbound = new mapboxgl.LngLatBounds(c, c);
+            bounds.extend(fbound);
+          });
+        }
+      } else if (f.geometry.type === 'Point') {
+        const fpoint = <Point>f.geometry;
+        if (fpoint && fpoint.coordinates && fpoint.coordinates.length > 1) {
+          let fbound = new mapboxgl.LngLatBounds();
+          fbound = new mapboxgl.LngLatBounds(fpoint.coordinates, fpoint.coordinates);
           bounds.extend(fbound);
-        });
+        }
       }
+
     });
 
     return bounds;

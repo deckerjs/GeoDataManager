@@ -15,28 +15,20 @@
     <!-- data card -->
     <div class="card bg-light h-100">
 
-        <div class="card-header w-100">
+        <div class="card-header">
             <h5>Selected Dataset </h5>
-            <form *ngIf="linkUrl" class="text-info small form-inline w-100">
-                <button class="btn btn-link mx-1 my-1" (click)="copyLinkUrl(linkUrlText)">
-                    <fa-icon [icon]="['fas', 'link']" class="text-info" placement="top-left"
-                        ngbTooltip="Shareable Link"></fa-icon>
+            <form *ngIf="linkUrl" class="text-info form-inline">
+                <button class="btn btn-link col-1 float-right" (click)="copyLinkUrl(linkUrlText)">
+                    <fa-icon [icon]="['fas', 'link']" class="text-info" placement="top-right"
+                        ngbTooltip="Copy link to clipboard"></fa-icon>
                 </button>
-                <div class="form-group w-95">
-                    <input #linkUrlText type="text" readonly class="form-control-plaintext text-info w-95" [value]="linkUrl">
+                <div class="form-group col-11 small">
+                    <input #linkUrlText type="text" readonly class="form-control-plaintext text-info w-95"
+                        [value]="linkUrl">
                 </div>
             </form>
         </div>
         <div class="card-body bg-default">
-
-            <div *ngIf="data?.Data?.length>1">
-                <label class="mx-1">Segment: </label>
-                <label class="mx-1">{{selectedSegmentIndex}} </label>
-                <div>
-                    <input id="slider" type="range" step="1" min="0" class="w-25 slider custom-range mx-1 my-1"
-                        [max]="data?.Data?.length-1" [(ngModel)]="selectedSegmentIndex" />
-                </div>
-            </div>
 
             <!-- todo: create component, loop through list for this data-->
             <!-- also, set data summary size limit the same as the map, and scroll when ovr -->
@@ -49,10 +41,22 @@
                 <span class="card-text">{{data?.ID}}</span>
             </div>
 
-            <div class="card-title my-1 h-50 divscroll" *ngFor="let pc of data?.Data">
-                <div (click)="selectedPointCollection=pc">
-                    <label *ngIf="pc?.ID === selectedPointCollection?.ID">Selected</label>
-                    <div>Coordinates Count: {{pc?.Coordinates?.length}}</div>
+            <div *ngIf="data?.Data?.length>1">
+                <label class="mx-1">Segment: </label>
+                <label class="mx-1">{{selectedSegmentIndex}} </label>
+                <div>
+                    <input id="slider" type="range" step="1" min="0" class="w-25 slider custom-range mx-1 my-1"
+                        [max]="data?.Data?.length-1" [(ngModel)]="selectedSegmentIndex" />
+                </div>
+            </div>
+
+            <div class="card-title my-1 h-50 divscroll" *ngIf="selectedPointCollection">
+                <div>
+                    <label>Selected</label>
+                    <div>Coordinates Count: {{selectedPointCollection?.Coordinates?.length}}</div>                    
+                    <div *ngFor="let metaProp of selectedPointCollection?.Metadata">
+                        <div>{{metaProp}}: </div>
+                    </div>
                 </div>
             </div>
 
