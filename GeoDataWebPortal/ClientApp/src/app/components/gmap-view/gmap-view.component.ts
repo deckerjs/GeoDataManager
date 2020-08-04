@@ -121,7 +121,7 @@ export class GmapViewComponent implements OnInit {
 
     this.map.on('load', event => {
 
-      this.map.addSource('point', {
+      this.map.addSource('selectedpointsrc', {
         type: 'geojson',
         data: this.getPointFromCoord(this.selectedPoint)
       });
@@ -165,7 +165,7 @@ export class GmapViewComponent implements OnInit {
 
       this.map.addLayer({
         id: 'point',
-        source: 'point',
+        source: 'selectedpointsrc',
         type: 'circle',
         paint: {
           'circle-radius': 5,
@@ -183,7 +183,9 @@ export class GmapViewComponent implements OnInit {
 
   private updateSelectedPointMarker() {
     if (this.selectedPoint != null) {
-      this.map.getSource('point').setData(this.getPointFromCoord(this.selectedPoint));
+      this.map.getSource('selectedpointsrc').setData(this.getPointFromCoord(this.selectedPoint));
+    } else {
+      console.log('updateSelectedPointMarker has null selectedPoint');
     }
   }
 
@@ -194,15 +196,15 @@ export class GmapViewComponent implements OnInit {
         'coordinates': [coord.Longitude, coord.Latitude]
       };
     }
+    console.log('null coord in getPointFromCoord');
     return {
       'type': 'Point',
-      'coordinates': [100, 100]
+      'coordinates': [0, 0]
     }
   }
 
   private getBoundsFromFeatureCollection(featureCollection: FeatureCollection): mapboxgl.LngLatBounds {
     const bounds = new mapboxgl.LngLatBounds();
-    // console.log("getBoundsFromFeatureCollection featureCollection:", featureCollection)
     featureCollection.features.forEach(function (f) {
 
       if (f.geometry.type === 'LineString') {

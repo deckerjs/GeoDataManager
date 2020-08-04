@@ -41,7 +41,7 @@ export class GeoDataViewerComponent implements OnInit {
   set selectedSegmentIndex(idx: number) {
     this._selectedSegmentIndex = idx;
     this.selectedPointCollection = this.data.Data[idx];
-    console.log("selected segment index change:", this.selectedPointCollection)
+    this.selectedPointIndex = 0;    
   }
 
   private _selectedPointIndex: number;
@@ -53,6 +53,8 @@ export class GeoDataViewerComponent implements OnInit {
     this._selectedPointIndex = idx;
     if (idx != null && this.selectedPointCollection != null) {
       this.selectPoint = this.selectedPointCollection.Coordinates[idx];
+    } else {
+      console.log('set selectedPointIndex null', idx, this.selectedPointCollection)
     }
   }
 
@@ -72,22 +74,10 @@ export class GeoDataViewerComponent implements OnInit {
       this.data = x;
       if (x.Data) {
         this.setChartFields(x);
-        this.selectedPointIndex = 0;
         this.selectedPointCollection = x.Data[this.selectedSegmentIndex];
-
+        this.selectedSegmentIndex = 0;
         this.linkUrl = `${location.origin}${location.pathname}?id=${x.ID}`;
-        
-        //console.log(this.document.location.href); 
-        // console.log("location.href:", location.href);
-        // console.log("location.hash:", location.hash);
-        // console.log("location.host:", location.host);
-        // console.log("location.hostname:", location.hostname);
-        // console.log("location.origin:", location.origin);
-        // console.log("location.pathname:", location.pathname);
-        // console.log("location.search:", location.search);
-
-      }
-
+        }
     });
 
     const storedChartPref = this.getStoredChartPreference();

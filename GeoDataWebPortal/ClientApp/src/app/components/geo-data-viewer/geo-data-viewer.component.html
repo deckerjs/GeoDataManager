@@ -53,9 +53,9 @@
             <div class="card-title my-1 h-50 divscroll" *ngIf="selectedPointCollection">
                 <div>
                     <label>Selected</label>
-                    <div>Coordinates Count: {{selectedPointCollection?.Coordinates?.length}}</div>                    
-                    <div *ngFor="let metaProp of selectedPointCollection?.Metadata">
-                        <div>{{metaProp}}: </div>
+                    <div>Coordinates Count: {{selectedPointCollection?.Coordinates?.length}}</div>
+                    <div *ngFor="let metaProp of selectedPointCollection?.Metadata | keyvalue">
+                        <div>{{metaProp.key}}:{{metaProp.value}} </div>
                     </div>
                 </div>
             </div>
@@ -143,19 +143,17 @@
             </div>
 
             <div *ngFor="let pc of data?.Data" class="card-title my-1">
-                <span class="text-primary mr-1">Point collection {{pc.ID}} Coordinates Count:</span>
-                <span class="card-text">{{pc.Coordinates?.length}}</span>
+                <div *ngIf="pc.Coordinates && pc.Coordinates.length > 1">
+                    <span class="text-primary mr-1">Point collection {{pc.ID}} Coordinates Count:</span>
+                    <span class="card-text">{{pc.Coordinates?.length}}</span>
 
-                <div *ngFor="let cht of selectedCharts">
-                    <app-gps-telemetry-chart [data]="pc.Coordinates" [dataFields]="cht.chartFields">
-                    </app-gps-telemetry-chart>
-                    <a (click)="removeChart(cht.id)" class="btn btn-link text-info">Remove</a>
+                    <div *ngFor="let cht of selectedCharts">
+                        <app-gps-telemetry-chart [data]="pc.Coordinates" [dataFields]="cht.chartFields">
+                        </app-gps-telemetry-chart>
+                        <a (click)="removeChart(cht.id)" class="btn btn-link text-info">Remove</a>
+                    </div>
                 </div>
-
-
             </div>
-
-
 
         </div>
 
