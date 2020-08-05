@@ -126,7 +126,7 @@ export class GmapViewComponent implements OnInit {
         data: this.getPointFromCoord(this.selectedPoint)
       });
 
-      this.map.addSource('stuff', {
+      this.map.addSource('geojsrc', {
         type: 'geojson',
         data: {
           type: 'FeatureCollection',
@@ -134,12 +134,12 @@ export class GmapViewComponent implements OnInit {
         }
       });
 
-      this.source = this.map.getSource('stuff');
+      this.source = this.map.getSource('geojsrc');
       this.source.setData(featureCollection);
 
       this.map.addLayer({
-        id: 'somestuff',
-        source: 'stuff',
+        id: 'tracklayer',
+        source: 'geojsrc',
         type: 'line',
         layout: {
           'line-join': 'round',
@@ -153,8 +153,8 @@ export class GmapViewComponent implements OnInit {
       });
 
       this.map.addLayer({
-        id: 'waypoint',
-        source: 'stuff',
+        id: 'waypointlayer',
+        source: 'geojsrc',
         type: 'circle',
         paint: {
           'circle-radius': 4,
@@ -164,13 +164,26 @@ export class GmapViewComponent implements OnInit {
       });
 
       this.map.addLayer({
-        id: 'point',
+        id: 'selectedpointlayer',
         source: 'selectedpointsrc',
         type: 'circle',
         paint: {
           'circle-radius': 5,
           'circle-color': 'lime'
         }
+      });
+
+      //get features under mouse click
+      this.map.on('click', (e) => {
+        // set bbox as 5px reactangle area around clicked point
+        var bbox = [
+          [e.point.x - 5, e.point.y - 5],
+          [e.point.x + 5, e.point.y + 5]
+        ];
+        var selectedFeatures = this.map.queryRenderedFeatures(bbox, {
+          layers: ['tracklayer','waypointlayer']
+        });
+        console.log("***** selected features:", selectedFeatures)
       });
 
       const bounds = this.getBoundsFromFeatureCollection(featureCollection);

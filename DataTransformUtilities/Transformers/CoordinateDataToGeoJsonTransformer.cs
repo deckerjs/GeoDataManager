@@ -67,6 +67,7 @@ namespace DataTransformUtilities.Transformers
 
                 var props = new Dictionary<string, object>();
 
+                props.Add("ID", pointCollection.ID);
                 foreach (var metaDataItem in pointCollection.Metadata)
                 {
                     props.Add(metaDataItem.Key, metaDataItem.Value);
