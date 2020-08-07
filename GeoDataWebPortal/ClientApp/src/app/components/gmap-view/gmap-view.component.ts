@@ -181,9 +181,25 @@ export class GmapViewComponent implements OnInit {
           [e.point.x + 5, e.point.y + 5]
         ];
         var selectedFeatures = this.map.queryRenderedFeatures(bbox, {
-          layers: ['tracklayer','waypointlayer']
+          layers: ['tracklayer', 'waypointlayer']
         });
-        console.log("***** selected features:", selectedFeatures)
+
+        if (selectedFeatures) {
+          this.featuresSelected(selectedFeatures);
+        }
+
+      });
+
+
+      this.map.on('mouseenter', 'waypointlayer', (e) => {
+        console.log("n mouse enter for waypoint layer:", e)
+        this.map.getCanvas().style.cursor = 'crosshair';
+
+      });
+
+      this.map.on('mouseleave', 'waypointlayer', () => {
+        console.log("n mouse leave for waypoint layer:", this.map.getCanvas().style.cursor)
+        this.map.getCanvas().style.cursor = '';
       });
 
       const bounds = this.getBoundsFromFeatureCollection(featureCollection);
@@ -198,7 +214,6 @@ export class GmapViewComponent implements OnInit {
     if (this.selectedPoint != null) {
       this.map.getSource('selectedpointsrc').setData(this.getPointFromCoord(this.selectedPoint));
     } else {
-      console.log('updateSelectedPointMarker has null selectedPoint');
     }
   }
 
@@ -209,7 +224,6 @@ export class GmapViewComponent implements OnInit {
         'coordinates': [coord.Longitude, coord.Latitude]
       };
     }
-    console.log('null coord in getPointFromCoord');
     return {
       'type': 'Point',
       'coordinates': [0, 0]
@@ -242,5 +256,15 @@ export class GmapViewComponent implements OnInit {
 
     return bounds;
   }
+
+  private featuresSelected(features: Array<any>) {
+    console.log("selected features:", features)
+    if (features && features.length > 0 && features[0].properties && features[0].properties['ID']) {
+      console.log(features[0].properties['ID'])
+      this.msgService.publishPointCollectionIDSelected(features[0].properties['ID']);
+    }
+  }
+
+
 
 }

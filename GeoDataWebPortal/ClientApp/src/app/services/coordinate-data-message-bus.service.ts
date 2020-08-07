@@ -9,14 +9,20 @@ import { CoordinateData } from '../models/coordinate-data';
 export class CoordinateDataMessageBusService {
   private msgSubject: BehaviorSubject<MessageData>;
   private coordinateDataSelectedSubject: BehaviorSubject<CoordinateData>;
+  private pointCollectionIDSelectedSubject: BehaviorSubject<string>;
 
   constructor() {
     this.msgSubject = new BehaviorSubject<MessageData>(new MessageData());
     this.coordinateDataSelectedSubject = new BehaviorSubject<CoordinateData>(new CoordinateData());
+    this.pointCollectionIDSelectedSubject = new BehaviorSubject<string>('');
   }
 
   public subscribeCoordinateDatasetSelected(): Observable<CoordinateData> {
     return this.coordinateDataSelectedSubject;
+  }
+  
+  public subscribePointCollectionIDSelected(): Observable<string> {
+    return this.pointCollectionIDSelectedSubject;
   }
 
   public subscribeGeneral(type: MessageType): Observable<MessageData> {
@@ -24,9 +30,13 @@ export class CoordinateDataMessageBusService {
   }
 
   public publishCoordinateDatasetSelected(data: CoordinateData) {
-    console.log('CoordinateData published:');
-    console.log(data);
+    console.log('CoordinateData published:', data);
     this.coordinateDataSelectedSubject.next(data);
+  }
+
+  public publishPointCollectionIDSelected(data: string) {
+    console.log('PointCollectionID published:', data);
+    this.pointCollectionIDSelectedSubject.next(data);
   }
 
   public publishGeneral(type: MessageType, data: any) {

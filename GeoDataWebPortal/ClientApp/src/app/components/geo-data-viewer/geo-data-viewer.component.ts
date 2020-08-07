@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { CoordinateDataMessageBusService } from 'src/app/services/coordinate-data-message-bus.service';
-import { debounceTime, delay } from 'rxjs/operators';
+import { debounceTime, delay, takeUntil } from 'rxjs/operators';
 import { CoordinateData, Coordinate, PointCollection } from 'src/app/models/coordinate-data';
 import { chartFieldSelection } from '../gps-telemetry-chart/gps-telemetry-chart.component';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
+import { Subject, Observable } from 'rxjs';
 
 export class chartInstance {
   id: string;
@@ -16,7 +17,7 @@ export class chartInstance {
   templateUrl: './geo-data-viewer.component.html',
   styleUrls: ['./geo-data-viewer.component.scss']
 })
-export class GeoDataViewerComponent implements OnInit {
+export class GeoDataViewerComponent implements OnInit, OnDestroy {
 
   public data: CoordinateData = new CoordinateData();
   public mapHeight: string = '200px';
@@ -32,6 +33,7 @@ export class GeoDataViewerComponent implements OnInit {
   private readonly ChartPreferenceStorageKey = 'chartPref';
 
   public selectedPointCollection: PointCollection;
+  public destroyed = new Subject<boolean>();
 
   private _selectedSegmentIndex: number = 0;
   get selectedSegmentIndex(): number {
@@ -41,7 +43,7 @@ export class GeoDataViewerComponent implements OnInit {
   set selectedSegmentIndex(idx: number) {
     this._selectedSegmentIndex = idx;
     this.selectedPointCollection = this.data.Data[idx];
-    this.selectedPointIndex = 0;    
+    this.selectedPointIndex = 0;
   }
 
   private _selectedPointIndex: number;
@@ -70,14 +72,25 @@ export class GeoDataViewerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.msgService.subscribeCoordinateDatasetSelected().pipe(debounceTime(500)).subscribe(x => {
-      this.data = x;
-      if (x.Data) {
-        this.setChartFields(x);
-        this.selectedPointCollection = x.Data[this.selectedSegmentIndex];
-        this.selectedSegmentIndex = 0;
-        this.linkUrl = `${location.origin}${location.pathname}?id=${x.ID}`;
+    this.msgService.subscribeCoordinateDatasetSelected().pipe(debounceTime(500), takeUntil(this.destroyed)).subscribe({
+      next: x => {
+        this.data = x;
+        if (x.Data) {
+          this.setChartFields(x);
+          this.selectedPointCollection = x.Data[this.selectedSegmentIndex];
+          this.selectedSegmentIndex = 0;
+          this.linkUrl = `${location.origin}${location.pathname}?id=${x.ID}`;
         }
+      }
+    });
+
+    this.msgService.subscribePointCollectionIDSelected().pipe(takeUntil(this.destroyed)).subscribe({
+      next: id => {
+        if (id && this.data && this.data.Data) {
+          const idx = this.data.Data.findIndex(x => x.ID === id);
+          this.selectedSegmentIndex = idx;
+        }
+      }
     });
 
     const storedChartPref = this.getStoredChartPreference();
@@ -86,10 +99,10 @@ export class GeoDataViewerComponent implements OnInit {
     }
   }
 
-  public copyLinkUrl(element: any):void {
+  public copyLinkUrl(element: any): void {
     element.select();
     document.execCommand('copy');
-    element.setSelectRange(0,0);
+    element.setSelectRange(0, 0);
   }
 
   private storeChartPreference(charts: Array<chartInstance>) {
@@ -163,6 +176,10 @@ export class GeoDataViewerComponent implements OnInit {
       this.chartTelemetrySelectOptions.dataFields.push(prop1);
     }
 
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed.next(true);
   }
 
 }
