@@ -187,20 +187,10 @@ export class GmapViewComponent implements OnInit {
         if (selectedFeatures) {
           this.featuresSelected(selectedFeatures);
         }
-
       });
 
-
-      this.map.on('mouseenter', 'waypointlayer', (e) => {
-        console.log("n mouse enter for waypoint layer:", e)
-        this.map.getCanvas().style.cursor = 'crosshair';
-
-      });
-
-      this.map.on('mouseleave', 'waypointlayer', () => {
-        console.log("n mouse leave for waypoint layer:", this.map.getCanvas().style.cursor)
-        this.map.getCanvas().style.cursor = '';
-      });
+      this.setUpEventsForLayer('waypointlayer');
+      this.setUpEventsForLayer('tracklayer');
 
       const bounds = this.getBoundsFromFeatureCollection(featureCollection);
       this.map.fitBounds(bounds, {
@@ -208,6 +198,24 @@ export class GmapViewComponent implements OnInit {
       });
 
     });
+  }
+
+  private setUpEventsForLayer(layer: string): void {
+
+    this.map.on('mouseenter', layer, (e) => {
+      this.map.getCanvas().style.cursor = 'crosshair';
+    });
+
+    this.map.on('mouseleave', layer, () => {
+      this.map.getCanvas().style.cursor = '';
+    });
+
+    this.map.on('click', layer, (e) => {
+      this.map.flyTo({
+        center: e.features[0].geometry.coordinates
+      });
+    });
+
   }
 
   private updateSelectedPointMarker() {
