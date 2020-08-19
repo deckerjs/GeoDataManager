@@ -10,10 +10,26 @@ using System.Text.RegularExpressions;
 
 namespace DataTransformUtilities.Transformers
 {
-    public static class ImageToCoordinateDataTransform
+    public class ImageToCoordinateDataTransform : IImageToCoordinateDataTransform
     {
 
-        public static PointCollection GetPointCollection(Stream imageStream)
+        public CoordinateData GetCoordinateData(Stream imageStream)
+        {
+            var coordinateData = new CoordinateData();
+            string dataDescription = "";
+
+            coordinateData.UserID = "";
+            coordinateData.ID = Guid.NewGuid().ToString();
+            coordinateData.DateCreated = DateTime.Now;
+            coordinateData.Tags = new List<string> { "Exif Data Source" };
+            coordinateData.DateModified = DateTime.Now;
+
+            coordinateData.Description = dataDescription;
+            coordinateData.Data = new List<PointCollection>() { GetPointCollection(imageStream) };
+            return coordinateData;
+        }
+
+        public PointCollection GetPointCollection(Stream imageStream)
         {
             var pc = new PointCollection();
 
@@ -67,7 +83,7 @@ namespace DataTransformUtilities.Transformers
                             telemetry.Add("GpsDOP", gpsDOP);
                         }
 
-                        if (lat!=null && lon != null)
+                        if (lat != null && lon != null)
                         {
                             pc.Coordinates.Add(new Coordinate(lat.GetValueOrDefault(), lon.GetValueOrDefault(), gpsAltitude, imgDate, telemetry));
                         }
@@ -79,7 +95,7 @@ namespace DataTransformUtilities.Transformers
             }
 
         }
-        private static DegMinSec GetDegMinSecFromImageProp(System.Drawing.Imaging.PropertyItem propertyItem)
+        private DegMinSec GetDegMinSecFromImageProp(System.Drawing.Imaging.PropertyItem propertyItem)
         {
             uint degN = BitConverter.ToUInt32(propertyItem.Value, 0);
             uint degD = BitConverter.ToUInt32(propertyItem.Value, 4);
@@ -97,7 +113,7 @@ namespace DataTransformUtilities.Transformers
             return degMinSec;
         }
 
-        private static double GetDoubleFromRational(byte[] rational)
+        private double GetDoubleFromRational(byte[] rational)
         {
             double result = 0;
             uint numerator = BitConverter.ToUInt32(rational, 0);
@@ -106,7 +122,7 @@ namespace DataTransformUtilities.Transformers
             return result;
         }
 
-        private static double? GetDoubleFromDegMinSec(DegMinSec degMinSec, bool isNegative)
+        private double? GetDoubleFromDegMinSec(DegMinSec degMinSec, bool isNegative)
         {
             var value = Math.Abs(degMinSec.Deg) + degMinSec.Min / 60.0d + degMinSec.Sec / 3600.0d;
             if (double.IsNaN(value))

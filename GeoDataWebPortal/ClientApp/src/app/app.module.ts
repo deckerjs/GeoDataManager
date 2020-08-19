@@ -22,6 +22,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DataSettingsComponent } from './components/data-settings/data-settings.component';
 import { GpsTelemetryChartComponent } from './components/gps-telemetry-chart/gps-telemetry-chart.component';
 import { ChartsModule } from 'ng2-charts';
+import { ImageDataImportComponent } from './components/image-data-import/image-data-import.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { ChartsModule } from 'ng2-charts';
     AuthComponent,
     GeoDataViewerComponent,
     DataSettingsComponent,
-    GpsTelemetryChartComponent
+    GpsTelemetryChartComponent,
+    ImageDataImportComponent
   ],
   imports: [
     BrowserModule,
