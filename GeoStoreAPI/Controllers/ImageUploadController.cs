@@ -1,6 +1,8 @@
 ﻿using DataTransformUtilities.Transformers;
+using GeoStoreAPI.Models;
 using GeoStoreAPI.Repositories;
 using GeoStoreAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace GeoStoreAPI.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
     public class ImageUploadController : ControllerBase
     {
         private readonly ICoordinateDataRepository _dataRepository;
@@ -26,18 +31,22 @@ namespace GeoStoreAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] byte[] imageByteArray)
+        public IActionResult Post([FromBody] ImageUpload imageUpload)
         {
-            if (imageByteArray != null)
+            if (imageUpload != null && imageUpload.ImageData != null)
             {
-                var data = _gpxTransform.GetCoordinateData(new MemoryStream(imageByteArray));
-                _dataRepository.Create(data, _userIdService.GetUserID());
-                //todo: return Created(url) for new object
-                return Ok();
+                var data = _gpxTransform.GetCoordinateData(new MemoryStream(imageUpload.ImageData));
+                if (data.Data.FirstOrDefault().Coordinates.Any())
+                {
+                    _dataRepository.Create(data, _userIdService.GetUserID());
+                    //todo: return Created(url) for new object
+                    return Ok();
+                }
+                return NoContent();
             }
             else
             {
-                return BadRequest("Not Created. Missing Gpx data");
+                return BadRequest("Not Created. Missing data");
             }
         }
 

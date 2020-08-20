@@ -8,11 +8,6 @@ import { faUpload, faFile, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { GpxImportDataService } from 'src/app/services/gpx-import-data.service';
 import { ImageImportDataService } from 'src/app/services/image-import-data.service';
 
-// enum FileType {
-//   GPX,
-//   Image
-// }
-
 const FILETYPE_GPX: string = 'gpx';
 const FILETYPE_JPG: string = 'jpg';
 
@@ -61,17 +56,15 @@ export class GeoDataImportComponent implements OnInit {
     fileDialog.onchange = () => {
       for (let index = 0; index < fileDialog.files.length; index++) {
 
-        const file = fileDialog.files[index];
-        // const fileInfo = this.getFileInfo(fileDialog.files[index]);
+        const file = fileDialog.files[index];        
         this.setImportType(file);
-        console.log("file selected: ", file)
-        
         this.importFiles.push({ fileInfo: file, inProgress: false, progress: 0 });
-
-        //check for GPX file type 
+        
         if (file.importType === FILETYPE_GPX) {
           this.readFileText(file);
         }
+
+        // todo: instead of text show image preview
         // if(file.type === FILETYPE_JPG){
         //   this.readFileText(file);
         // }
@@ -85,8 +78,7 @@ export class GeoDataImportComponent implements OnInit {
     if (file && file.name) {
       const ext = file.name.split('.').pop();
       if (ext) {
-        if(ext.toLowerCase() === FILETYPE_GPX){
-          
+        if(ext.toLowerCase() === FILETYPE_GPX){          
           file.importType = FILETYPE_GPX;
         }
         if(ext.toLowerCase() === FILETYPE_JPG){
@@ -100,17 +92,10 @@ export class GeoDataImportComponent implements OnInit {
     this.uploadFiles(this.importFiles);
   }
 
-  // public fileSelected(file: any): void {
-  //   this.selectedFile = file;
-  //   this.readFileText(file.data);
-  // }
-
   public removeFile(file: ImportFile): void {
     this.importFiles = this.importFiles.filter(item => item.fileInfo.name !== file.fileInfo.name);
   }
 
-
-  // conditional on file type being text
   private readFileText(file: FileInfo): void {
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
@@ -118,9 +103,7 @@ export class GeoDataImportComponent implements OnInit {
     }
     fileReader.readAsText(file);
   }
-
-
-  // conditional on file type, gpx
+  
   private readFileAsString(file: ImportFile): Observable<string> {
     let obs = Observable.create((observer: any) => {
       let fileReader = new FileReader();
@@ -132,35 +115,22 @@ export class GeoDataImportComponent implements OnInit {
     });
     return obs;
   }
-
-  // conditional on file type, bin
+  
   private readFileAsBlob(file: ImportFile): Observable<string> {
-    console.log('readFileAsBlob - file : ', file)
     let obs = Observable.create((observer: any) => {
       let fileReader = new FileReader();
       fileReader.onload = (e) => {
-        console.log('filereader.onload - e : ', e)
-        // const result = e.target.result;
         const readResult = fileReader.result.toString();
-        console.log('filereader - readresult : ', readResult)
         const b64str = btoa(readResult);
-        console.log('filereader - btoa : ', b64str)
-        
         observer.next(b64str);
         observer.complete();
       }
-
-      // fileReader.readAsText(file.data);
-      // fileReader.readAsDataURL(file.fileInfo);
       fileReader.readAsBinaryString(file.fileInfo);
-
     });
     return obs;
   }
 
-  //filter for file type here, one filter per observable
   private uploadFiles(files: ImportFile[]) {
-
     from(files.filter(x=>x.fileInfo.importType === FILETYPE_GPX), asyncScheduler).pipe(mergeMap(x => this.uploadGpxFile(x)))
       .subscribe(
         {
