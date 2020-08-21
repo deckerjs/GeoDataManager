@@ -50,7 +50,7 @@ namespace DataTransformUtilities.Transformers
 
                         string gpsLongitudeRef = BitConverter.ToChar(image.GetPropertyItem(3).Value, 0).ToString();
                         DegMinSec longitude = GetDegMinSecFromImageProp(image.GetPropertyItem(4));
-                        double? lon = GetDoubleFromDegMinSec(GetDegMinSecFromImageProp(image.GetPropertyItem(4)), gpsLatitudeRef.Equals("W", StringComparison.OrdinalIgnoreCase));
+                        double? lon = GetDoubleFromDegMinSec(GetDegMinSecFromImageProp(image.GetPropertyItem(4)), gpsLongitudeRef.Equals("W", StringComparison.OrdinalIgnoreCase));
 
                         string gpsAltitudeRef = "";// BitConverter.ToChar(image.GetPropertyItem(5).Value, 0).ToString();
                         double gpsAltitude = GetDoubleFromRational(image.GetPropertyItem(6).Value);
