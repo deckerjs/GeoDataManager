@@ -20,13 +20,25 @@ export class ImageImportDataService {
         private authService: AuthService) { }
 
 
-    public imageUpload(data: string): Observable<any> {
+    public imageUploadToNew(data: string): Observable<any> {
         return this.getSettingsObservable().pipe(
             switchMap(settings => {
                 return this.getHttpHeaders().pipe(
                     switchMap(httpHeaders => {
                         const url = this.getFullURL(settings, this.API_IMAGE_ENDPOINT);
-                        return this.http.post(url, {ImageData: data}, { headers: httpHeaders });
+                        return this.http.post(url, { ImageData: data }, { headers: httpHeaders });
+                    }));
+            })
+        );
+    }
+
+    public imageUploadToExisting(selectedImportId: string, data: string): Observable<any> {
+        return this.getSettingsObservable().pipe(
+            switchMap(settings => {
+                return this.getHttpHeaders().pipe(
+                    switchMap(httpHeaders => {
+                        const url = this.getFullURL(settings, this.API_IMAGE_ENDPOINT) + '/' + selectedImportId;
+                        return this.http.post(url, { ImageData: data }, { headers: httpHeaders });
                     }));
             })
         );
@@ -40,7 +52,6 @@ export class ImageImportDataService {
         return this.authService.token.pipe(switchMap(beartoken => {
             return of(new HttpHeaders({
                 'Content-Type': 'application/json; charset=utf-8',
-                // 'Content-Type': 'application/octet-stream; charset=utf-8',
                 'Authorization': 'Bearer ' + beartoken
             }));
         }));

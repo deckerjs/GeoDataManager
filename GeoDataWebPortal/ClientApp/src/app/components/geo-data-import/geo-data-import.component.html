@@ -34,6 +34,23 @@
         <fa-icon [icon]="['fas', 'upload']" class="mx-1"></fa-icon>
       </button>
     </div>
+    
+    <div class="card-title">
+      
+        <div ngbDropdown class="d-inline-block">
+            <button class="btn btn-primary" id="idSelect"
+                ngbDropdownToggle>Add to existing coordinate data</button>
+            <div ngbDropdownMenu aria-labelledby="idSelect">
+                <button *ngFor="let f of idSelectOptions"
+                    ngbDropdownItem (click)="selectId(f.id)">
+                    {{f.description}}
+                </button>
+            </div>
+            <span class="mx-2">{{this.selectedImportId}}</span>
+        </div>
+    
+    </div>
+
 
   </div>
 

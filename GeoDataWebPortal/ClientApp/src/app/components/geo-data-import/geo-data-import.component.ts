@@ -7,6 +7,7 @@ import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faUpload, faFile, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { GpxImportDataService } from 'src/app/services/gpx-import-data.service';
 import { ImageImportDataService } from 'src/app/services/image-import-data.service';
+import { CoordinateDataAPIService } from 'src/app/services/coordinate-data-api.service';
 
 const FILETYPE_GPX: string = 'gpx';
 const FILETYPE_JPG: string = 'jpg';
@@ -19,9 +20,14 @@ class ImportFile {
   constructor(info: FileInfo) {
     this.fileInfo = info;
   }
-  fileInfo: FileInfo;  
+  fileInfo: FileInfo;
   inProgress: boolean;
   progress: number;
+}
+
+interface idSelection {
+  id: string,
+  description: string
 }
 
 @Component({
@@ -31,19 +37,23 @@ class ImportFile {
 })
 export class GeoDataImportComponent implements OnInit {
 
-  public editorOptions = { theme: "vs-dark", language: "json" };
   private monacoEditor: any;
+  public editorOptions = { theme: "vs-dark", language: "json" };
+  public idSelectOptions: Array<idSelection> = [];
+  public selectedImportId: string;
 
   constructor(
     private gpxDataService: GpxImportDataService,
     private imageDataService: ImageImportDataService,
     private msgService: CoordinateDataMessageBusService,
+    private apiDataService: CoordinateDataAPIService,
     private falibrary: FaIconLibrary) {
     falibrary.addIcons(faUpload, faFile, faTrash);
   }
 
   ngOnInit() {
     this.editorAutoFormat();
+    this.refreshIdList();
   }
 
   @ViewChild("fileOpenDialog") fileOpenDialog: ElementRef;
@@ -56,10 +66,10 @@ export class GeoDataImportComponent implements OnInit {
     fileDialog.onchange = () => {
       for (let index = 0; index < fileDialog.files.length; index++) {
 
-        const file = fileDialog.files[index];        
+        const file = fileDialog.files[index];
         this.setImportType(file);
         this.importFiles.push({ fileInfo: file, inProgress: false, progress: 0 });
-        
+
         if (file.importType === FILETYPE_GPX) {
           this.readFileText(file);
         }
@@ -78,14 +88,29 @@ export class GeoDataImportComponent implements OnInit {
     if (file && file.name) {
       const ext = file.name.split('.').pop();
       if (ext) {
-        if(ext.toLowerCase() === FILETYPE_GPX){          
+        if (ext.toLowerCase() === FILETYPE_GPX) {
           file.importType = FILETYPE_GPX;
         }
-        if(ext.toLowerCase() === FILETYPE_JPG){
+        if (ext.toLowerCase() === FILETYPE_JPG) {
           file.importType = FILETYPE_JPG;
-        }        
+        }
       }
-    }    
+    }
+  }
+
+  private refreshIdList(): void {
+
+    this.apiDataService.GetAllOwnedSummary().subscribe({
+      next: x => {
+        this.idSelectOptions = x.map(x => <idSelection>{
+          id: x.ID, description: x.Description
+        });
+      }
+    });
+  }
+
+  public selectId(id: string): void {
+    this.selectedImportId = id;
   }
 
   public onUploadClick(): void {
@@ -103,7 +128,7 @@ export class GeoDataImportComponent implements OnInit {
     }
     fileReader.readAsText(file);
   }
-  
+
   private readFileAsString(file: ImportFile): Observable<string> {
     let obs = Observable.create((observer: any) => {
       let fileReader = new FileReader();
@@ -115,7 +140,7 @@ export class GeoDataImportComponent implements OnInit {
     });
     return obs;
   }
-  
+
   private readFileAsBlob(file: ImportFile): Observable<string> {
     let obs = Observable.create((observer: any) => {
       let fileReader = new FileReader();
@@ -131,7 +156,7 @@ export class GeoDataImportComponent implements OnInit {
   }
 
   private uploadFiles(files: ImportFile[]) {
-    from(files.filter(x=>x.fileInfo.importType === FILETYPE_GPX), asyncScheduler).pipe(mergeMap(x => this.uploadGpxFile(x)))
+    from(files.filter(x => x.fileInfo.importType === FILETYPE_GPX), asyncScheduler).pipe(mergeMap(x => this.uploadGpxFile(x)))
       .subscribe(
         {
           next:
@@ -140,7 +165,7 @@ export class GeoDataImportComponent implements OnInit {
             }
         });
 
-    from(files.filter(x=>x.fileInfo.importType === FILETYPE_JPG), asyncScheduler).pipe(mergeMap(x => this.uploadImageFile(x)))
+    from(files.filter(x => x.fileInfo.importType === FILETYPE_JPG), asyncScheduler).pipe(mergeMap(x => this.uploadImageFile(x)))
       .subscribe(
         {
           next:
@@ -166,8 +191,18 @@ export class GeoDataImportComponent implements OnInit {
   }
 
   private uploadImageFile(file: ImportFile): Observable<any> {
+
+
     return this.readFileAsBlob(file).pipe(flatMap((fileContent) => {
-      return this.imageDataService.imageUpload(fileContent)
+
+      let uploadMethod: Observable<any>;
+      if (this.selectedImportId) {
+        uploadMethod = this.imageDataService.imageUploadToExisting(this.selectedImportId, fileContent);
+      } else {
+        uploadMethod = this.imageDataService.imageUploadToNew(fileContent);
+      }
+
+      return uploadMethod
         .pipe(map(event => {
           this.handleUploadEvent(file, event);
         }),

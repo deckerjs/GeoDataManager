@@ -25,6 +25,7 @@ namespace GeoStoreAPI.DataAccess.MongoDataAccess
 
             var projection = Builders<CoordinateData>.Projection.Expression(x => new CoordinateDataSummary
             {
+                DataSegmentCount = x.Data.Count(),
                 DataItemCount = x.Data.SelectMany(x=>x.Coordinates).Count(),
                 DateCreated = x.DateCreated,
                 DateModified = x.DateModified,

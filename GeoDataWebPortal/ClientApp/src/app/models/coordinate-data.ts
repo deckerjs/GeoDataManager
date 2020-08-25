@@ -32,6 +32,7 @@ export interface KeyValuePair {
 }
 
 export interface CoordinateDataSummary extends CoordinateDataInfo{
+    DataSegmentCount:number;
     DataItemCount:number;
     SummaryData:KeyValuePair;
 }

@@ -19,23 +19,23 @@ namespace GeoStoreAPI.Controllers
     {
         private readonly ICoordinateDataRepository _dataRepository;
         private readonly IUserIdentificationService _userIdService;
-        private readonly IImageToCoordinateDataTransform _gpxTransform;
+        private readonly IImageToCoordinateDataTransform _imageToCoordTransform;
 
         public ImageUploadController(ICoordinateDataRepository dataRepository,
             IUserIdentificationService userIdService,
-            IImageToCoordinateDataTransform gpxTransform)
+            IImageToCoordinateDataTransform transform)
         {
             _dataRepository = dataRepository;
             _userIdService = userIdService;
-            _gpxTransform = gpxTransform;
+            _imageToCoordTransform = transform;
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] ImageUpload imageUpload)
+        public IActionResult Post([FromBody] ImageUpload imageUpload, [FromQuery] string coordinateDataId)
         {
             if (imageUpload != null && imageUpload.ImageData != null)
             {
-                var data = _gpxTransform.GetCoordinateData(new MemoryStream(imageUpload.ImageData));
+                var data = _imageToCoordTransform.GetCoordinateData(new MemoryStream(imageUpload.ImageData));
                 if (data.Data.FirstOrDefault().Coordinates.Any())
                 {
                     _dataRepository.Create(data, _userIdService.GetUserID());
@@ -49,6 +49,41 @@ namespace GeoStoreAPI.Controllers
                 return BadRequest("Not Created. Missing data");
             }
         }
+
+        [HttpPost("{coordinateDataId}")]
+        public IActionResult PostToExistingDataSet([FromBody] ImageUpload imageUpload, string coordinateDataId)
+        {
+            if (imageUpload != null && imageUpload.ImageData != null)
+            {
+                var user = _userIdService.GetUserID();
+                var coordinateData = _dataRepository.GetSingle(coordinateDataId, user);
+                if (coordinateData != null)
+                {
+                    var pointCollection = _imageToCoordTransform.GetPointCollection(new MemoryStream(imageUpload.ImageData));
+                    if (pointCollection.Coordinates.Any())
+                    {
+                        coordinateData.Data.Add(pointCollection);
+                        _dataRepository.Update(coordinateData.ID, coordinateData, user);
+                        return Ok();
+                    }
+                    else
+                    {
+                        return NoContent();
+                    }
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                return BadRequest("Not Created. Missing data");
+            }
+        }
+
+        //add option to add to exiting set
+        //add bulk load option
 
     }
 }

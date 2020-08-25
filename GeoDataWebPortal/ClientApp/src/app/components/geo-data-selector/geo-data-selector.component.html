@@ -64,7 +64,7 @@
               (Shared)
             </div>
           </div>
-          
+
           <div class="row">
             <div class="col-12 txtlimit">
               {{item.Description}}
@@ -73,12 +73,23 @@
 
           <div class="row">
             <div class="col-8">
-              <span class="text-primary">Coordinates: </span>
+              <span class="text-primary">Segments:</span>
             </div>
             <div class="col-4">
-              <div class="badge badge-info">
+              <span class="badge badge-info">
+                {{item?.DataSegmentCount}}
+              </span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-8">
+              <span class="text-primary">Coordinates:</span>
+            </div>
+            <div class="col-4">
+              <span class="badge badge-info">
                 {{item?.DataItemCount}}
-              </div>
+              </span>
             </div>
           </div>
 
