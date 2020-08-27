@@ -1,0 +1,51 @@
+<div class="container mx-0 px-1" (click)="onSelect()">
+
+    <div *ngIf="summaryData['isShared']==true" class="row">
+      <div class="col-12 text-info">
+        (Shared)
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 txtlimit">
+        {{summaryData.Description}}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-8">
+        <span class="text-primary">Segments:</span>
+      </div>
+      <div class="col-4">
+        <span class="badge badge-info">
+          {{summaryData?.DataSegmentCount}}
+        </span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-8">
+        <span class="text-primary">Coordinates:</span>
+      </div>
+      <div class="col-4">
+        <span class="badge badge-info">
+          {{summaryData?.DataItemCount}}
+        </span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 txtlimit">
+        <span class="text-primary">Created: </span>
+        <span>{{summaryData?.DateCreated|date}}</span>
+      </div>
+    </div>
+
+    <div *ngIf="summaryData['userName']" class="row">
+      <div class="col-12 txtlimit">
+        <span class="text-primary">User: </span>
+        <span>{{ summaryData['userName'] }}</span>
+      </div>
+    </div>
+
+  </div>

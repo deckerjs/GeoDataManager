@@ -3,24 +3,34 @@
   <div class="card text-white bg-secondary h-100 col-4">
     <h5 class="card-title">Import GPX or Jpg files</h5>
     <div class="card-title">
-      <button class="btn btn-primary my-1 mx-1 w-100 align-middle" (click)="onFileOpenDialogClick()">
+      <button class="btn btn-primary my-1 mx-1 w-100 align-middle"
+              (click)="onFileOpenDialogClick()">
         <span class="mx-1 align-middle">Select Files</span>
-        <fa-icon [icon]="['fas', 'file']" class="mx-1"></fa-icon>
+        <fa-icon [icon]="['fas', 'file']"
+                 class="mx-1"></fa-icon>
       </button>
-      <input type="file" #fileOpenDialog id="fileOpenDialog" name="fileOpenDialog" multiple="multiple" accept="GPX/*"
-        style="display:none;" />
+      <input type="file"
+             #fileOpenDialog
+             id="fileOpenDialog"
+             name="fileOpenDialog"
+             multiple="multiple"
+             accept="GPX/*"
+             style="display:none;" />
     </div>
 
     <div class="card-body bg-dark">
       <ul>
-        <li *ngFor="let file of importFiles" class="my-1">
+        <li *ngFor="let file of importFiles"
+            class="my-1">
 
           <div class="row align-middle bg-light text-dark py-1">
             <div class="col-8"><span class="text-primary ">{{file.fileInfo.name}} </span></div>
             <div class="col-3"><span class="text-info "> {{formatBytes(file.fileInfo.size)}} </span></div>
-            <div class="col-1 btn btn-link border-0 p-0 align-middle" (click)="removeFile(file)">
+            <div class="col-1 btn btn-link border-0 p-0 align-middle"
+                 (click)="removeFile(file)">
               <span class="text-danger">
-                <fa-icon [icon]="['fas', 'trash']" class=""></fa-icon>
+                <fa-icon [icon]="['fas', 'trash']"
+                         class=""></fa-icon>
               </span>
             </div>
           </div>
@@ -29,36 +39,48 @@
     </div>
 
     <div class="card-title">
-      <button class="btn btn-success my-1 mx-1 w-100 align-middle" (click)="onUploadClick()">
+      <button class="btn btn-success my-1 mx-1 w-100 align-middle"
+              (click)="onUploadClick()">
         <span class="mx-1 align-middle">Upload files</span>
-        <fa-icon [icon]="['fas', 'upload']" class="mx-1"></fa-icon>
+        <fa-icon [icon]="['fas', 'upload']"
+                 class="mx-1"></fa-icon>
       </button>
     </div>
-    
+
     <div class="card-title">
-      
-        <div ngbDropdown class="d-inline-block">
-            <button class="btn btn-primary" id="idSelect"
+
+      <div ngbDropdown
+           class="d-inline-block">
+        <button class="btn btn-primary"
+                id="idSelect"
                 ngbDropdownToggle>Add to existing coordinate data</button>
-            <div ngbDropdownMenu aria-labelledby="idSelect">
-                <button *ngFor="let f of idSelectOptions"
-                    ngbDropdownItem (click)="selectId(f.id)">
-                    {{f.description}}
-                </button>
-            </div>
-            <span class="mx-2">{{this.selectedImportId}}</span>
+        <div ngbDropdownMenu
+             aria-labelledby="idSelect">
+          <button *ngFor="let f of idSelectOptions"
+                  ngbDropdownItem
+                  (click)="selectId(f)">
+            {{f.Description}}
+          </button>
         </div>
-    
+        <!-- <span class="mx-2">{{this.selectedImportTarget}}</span> -->
+      </div>
     </div>
 
+    <div *ngIf="this.selectedImportTarget" class="card-body bg-light text-dark my-2">
+      <app-coordinate-data-summary-item [summaryData]="this.selectedImportTarget">
+      </app-coordinate-data-summary-item>
 
+    </div>
   </div>
+
 
   <div class="card text-white bg-secondary h-100 col-8">
     <div class="card-body">
 
-      <ngx-monaco-editor style="height: 600px;" [options]="editorOptions" [(ngModel)]="selectedFileContent"
-        (onInit)="onEditorInit($event)">
+      <ngx-monaco-editor style="height: 600px;"
+                         [options]="editorOptions"
+                         [(ngModel)]="selectedFileContent"
+                         (onInit)="onEditorInit($event)">
       </ngx-monaco-editor>
 
     </div>

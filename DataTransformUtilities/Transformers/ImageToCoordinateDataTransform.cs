@@ -88,7 +88,7 @@ namespace DataTransformUtilities.Transformers
                             pc.Coordinates.Add(new Coordinate(lat.GetValueOrDefault(), lon.GetValueOrDefault(), gpsAltitude, imgDate, telemetry));
                         }
                     }
-
+                    pc.ID = Guid.NewGuid().ToString();
                     return pc;
 
                 }

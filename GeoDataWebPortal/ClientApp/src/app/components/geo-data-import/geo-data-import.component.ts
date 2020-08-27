@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { map, catchError, flatMap, mergeMap, concatMap } from 'rxjs/operators';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { map, catchError, flatMap, mergeMap, concatMap, takeUntil, take } from 'rxjs/operators';
 import { HttpEventType, HttpErrorResponse } from '@angular/common/http';
 import { of, Observable, from, Subject, queueScheduler, asyncScheduler } from 'rxjs';
 import { CoordinateDataMessageBusService, MessageType } from 'src/app/services/coordinate-data-message-bus.service';
@@ -8,6 +8,8 @@ import { faUpload, faFile, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { GpxImportDataService } from 'src/app/services/gpx-import-data.service';
 import { ImageImportDataService } from 'src/app/services/image-import-data.service';
 import { CoordinateDataAPIService } from 'src/app/services/coordinate-data-api.service';
+import { CoordinateDataSummary } from 'src/app/models/coordinate-data';
+import { AuthService } from 'src/app/auth/auth.service';
 
 const FILETYPE_GPX: string = 'gpx';
 const FILETYPE_JPG: string = 'jpg';
@@ -25,35 +27,48 @@ class ImportFile {
   progress: number;
 }
 
-interface idSelection {
-  id: string,
-  description: string
-}
+// interface idSelection {
+//   id: string,
+//   description: string
+// }
 
 @Component({
   selector: 'app-geo-data-import',
   templateUrl: './geo-data-import.component.html',
   styleUrls: ['./geo-data-import.component.scss']
 })
-export class GeoDataImportComponent implements OnInit {
+export class GeoDataImportComponent implements OnInit, OnDestroy {
 
   private monacoEditor: any;
   public editorOptions = { theme: "vs-dark", language: "json" };
-  public idSelectOptions: Array<idSelection> = [];
-  public selectedImportId: string;
+  public idSelectOptions: Array<CoordinateDataSummary> = [];
+  public selectedImportTarget: CoordinateDataSummary;
+
+  private destroyed = new Subject();
 
   constructor(
     private gpxDataService: GpxImportDataService,
     private imageDataService: ImageImportDataService,
     private msgService: CoordinateDataMessageBusService,
     private apiDataService: CoordinateDataAPIService,
+    private authService: AuthService,
     private falibrary: FaIconLibrary) {
     falibrary.addIcons(faUpload, faFile, faTrash);
   }
 
   ngOnInit() {
     this.editorAutoFormat();
-    this.refreshIdList();
+    this.authService.userIsAuthenticated
+      .pipe(takeUntil(this.destroyed))
+      .subscribe({
+        next: x => {
+          if (x) {
+            this.refreshIdList();
+          } else {
+            this.idSelectOptions = [];
+          }
+        }
+      });
   }
 
   @ViewChild("fileOpenDialog") fileOpenDialog: ElementRef;
@@ -99,18 +114,15 @@ export class GeoDataImportComponent implements OnInit {
   }
 
   private refreshIdList(): void {
-
-    this.apiDataService.GetAllOwnedSummary().subscribe({
+    this.apiDataService.GetAllOwnedSummary().pipe(take(1)).subscribe({
       next: x => {
-        this.idSelectOptions = x.map(x => <idSelection>{
-          id: x.ID, description: x.Description
-        });
+        this.idSelectOptions = x;
       }
     });
   }
 
-  public selectId(id: string): void {
-    this.selectedImportId = id;
+  public selectId(data: CoordinateDataSummary): void {
+    this.selectedImportTarget = data;
   }
 
   public onUploadClick(): void {
@@ -192,12 +204,11 @@ export class GeoDataImportComponent implements OnInit {
 
   private uploadImageFile(file: ImportFile): Observable<any> {
 
-
     return this.readFileAsBlob(file).pipe(flatMap((fileContent) => {
 
       let uploadMethod: Observable<any>;
-      if (this.selectedImportId) {
-        uploadMethod = this.imageDataService.imageUploadToExisting(this.selectedImportId, fileContent);
+      if (this.selectedImportTarget) {
+        uploadMethod = this.imageDataService.imageUploadToExisting(this.selectedImportTarget.ID, fileContent);
       } else {
         uploadMethod = this.imageDataService.imageUploadToNew(fileContent);
       }
@@ -252,4 +263,8 @@ export class GeoDataImportComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    this.destroyed.next();
+    this.destroyed.complete();
+  }
 }

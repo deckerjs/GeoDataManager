@@ -23,6 +23,7 @@ import { DataSettingsComponent } from './components/data-settings/data-settings.
 import { GpsTelemetryChartComponent } from './components/gps-telemetry-chart/gps-telemetry-chart.component';
 import { ChartsModule } from 'ng2-charts';
 import { ImageDataImportComponent } from './components/image-data-import/image-data-import.component';
+import { CoordinateDataSummaryItemComponent } from './components/coordinate-data-summary-item/coordinate-data-summary-item.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { ImageDataImportComponent } from './components/image-data-import/image-d
     GeoDataViewerComponent,
     DataSettingsComponent,
     GpsTelemetryChartComponent,
-    ImageDataImportComponent
+    ImageDataImportComponent,
+    CoordinateDataSummaryItemComponent
   ],
   imports: [
     BrowserModule,
