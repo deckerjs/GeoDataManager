@@ -1,13 +1,16 @@
 ﻿using DataTransformUtilities.Transformers;
+using DnsClient.Internal;
 using GeoStoreAPI.Models;
 using GeoStoreAPI.Repositories;
 using GeoStoreAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GeoStoreAPI.Controllers
@@ -20,14 +23,18 @@ namespace GeoStoreAPI.Controllers
         private readonly ICoordinateDataRepository _dataRepository;
         private readonly IUserIdentificationService _userIdService;
         private readonly IImageToCoordinateDataTransform _imageToCoordTransform;
+        private readonly ILogger<ImageUploadController> _logger;
+        private static readonly SemaphoreSlim _updateLock = new SemaphoreSlim(1);
 
         public ImageUploadController(ICoordinateDataRepository dataRepository,
             IUserIdentificationService userIdService,
-            IImageToCoordinateDataTransform transform)
+            IImageToCoordinateDataTransform transform,
+            ILogger<ImageUploadController> logger)
         {
             _dataRepository = dataRepository;
             _userIdService = userIdService;
             _imageToCoordTransform = transform;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -50,31 +57,49 @@ namespace GeoStoreAPI.Controllers
             }
         }
 
+
+        // todo: deal with this situation better, without locking.
         [HttpPost("{coordinateDataId}")]
         public IActionResult PostToExistingDataSet([FromBody] ImageUpload imageUpload, string coordinateDataId)
         {
             if (imageUpload != null && imageUpload.ImageData != null)
             {
                 var user = _userIdService.GetUserID();
-                var coordinateData = _dataRepository.GetSingle(coordinateDataId, user);
-                if (coordinateData != null)
+
+                _updateLock.Wait();
+
+                try
                 {
-                    var pointCollection = _imageToCoordTransform.GetPointCollection(new MemoryStream(imageUpload.ImageData));
-                    if (pointCollection.Coordinates.Any())
+                    var coordinateData = _dataRepository.GetSingle(coordinateDataId, user);
+                    if (coordinateData != null)
                     {
-                        coordinateData.Data.Add(pointCollection);
-                        _dataRepository.Update(coordinateData.ID, coordinateData, user);
-                        return Ok();
+                        var pointCollection = _imageToCoordTransform.GetPointCollection(new MemoryStream(imageUpload.ImageData));
+                        if (pointCollection.Coordinates.Any())
+                        {
+                            coordinateData.Data.Add(pointCollection);
+                            _dataRepository.Update(coordinateData.ID, coordinateData, user);
+                            _updateLock.Release();
+                            return Ok();
+                        }
+                        else
+                        {
+                            _updateLock.Release();
+                            return NoContent();
+                        }
                     }
                     else
                     {
-                        return NoContent();
+                        _updateLock.Release();
+                        return NotFound();
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    return NotFound();
+                    _logger.LogError(ex.Message);
+                    _updateLock.Release();
+                    return StatusCode(500);
                 }
+
             }
             else
             {
