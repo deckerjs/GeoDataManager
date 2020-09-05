@@ -59,6 +59,7 @@ namespace GeoStoreAPI.Controllers
 
 
         // todo: deal with this situation better, without locking.
+        // this isn't following normal rest dogma, look into using something else to accomplish the same thing
         [HttpPost("{coordinateDataId}")]
         public IActionResult PostToExistingDataSet([FromBody] ImageUpload imageUpload, string coordinateDataId)
         {

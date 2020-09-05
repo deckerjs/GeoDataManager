@@ -18,6 +18,12 @@
     </ng-template>
   </ngb-tab>
 
+  <ngb-tab *ngIf="showDataCollect" title="Data Collect">
+    <ng-template ngbTabContent>
+      <app-geo-data-collect></app-geo-data-collect>
+    </ng-template>
+  </ngb-tab>
+
   <ngb-tab *ngIf="showSettings" title="Settings">
     <ng-template ngbTabContent>
       <app-data-settings></app-data-settings>

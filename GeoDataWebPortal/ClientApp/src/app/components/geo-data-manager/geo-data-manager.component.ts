@@ -14,6 +14,7 @@ export class GeoDataManagerComponent implements OnInit {
   public showEditor: boolean = true;
   public showViewer: boolean = true;
   public showImport: boolean = true;
+  public showDataCollect: boolean = true;
   public showSettings: boolean = true;
 
   constructor(

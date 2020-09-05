@@ -1,0 +1,71 @@
+<div class="card text-light bg-secondary h-100">
+
+    <h5 class="card-header">Location Data Collection</h5>
+    
+    <h5 class="card-header">Point List</h5>
+
+    <div class="card-body bg-dark">
+
+        <div class="card-title my-1">
+            <span class="text-white"><strong>Cuurent Location using browsers geolocation Test</strong></span>
+
+            <a (click)="startWatch()" class="btn btn-link text-info">Start watch Location</a>
+            <a (click)="stopWatch()" class="btn btn-link text-info">Stop watch Location</a>
+
+            <a (click)="addCurrentLocation()" class="btn btn-link text-info">Add  Current Location</a>
+        </div>
+
+        <table class="bg-light text-dark table table-sm mb-0">
+            <thead>
+                <tr >
+                    <td class="col-2">                        
+                    </td>
+                    <td class="col-2">                        
+                    </td>
+                    <td class="col-2"></td>
+                    <td class="col-2"></td>
+                    <td class="col-2"></td>
+                    <td class="col-2"></td>
+                </tr>
+            </thead>            
+        </table>
+
+        <table class="bg-light text-dark table table-sm mt-0">
+            <tr >
+                <th class="col-2" scope="col">longitude</th>
+                <th class="col-2" scope="col">latitude</th>
+                <th class="col-2" scope="col">altitude</th>
+                <th class="col-2" scope="col">accuracy</th>
+                <th class="col-2" scope="col">altitudeAccuracy</th>
+                <th class="col-2" scope="col">heading</th>
+            </tr>
+            <tr *ngFor="let point of this.locations">
+                <td>
+                    {{point?.coords.longitude}}
+                </td>
+                <td>
+                    {{point?.coords.latitude}}
+                </td>
+                <td>
+                    {{point?.coords.altitude}}                    
+                </td>
+                <td>
+                    {{point?.coords.accuracy}}
+                </td>
+                <td>
+                    {{point?.coords.altitudeAccuracy}}
+                </td>
+                <td>
+                    {{point?.coords.heading}}
+                </td>
+            </tr>
+            
+            <!-- <a (click)=" " class="btn btn-link text-warning">Remove</a> -->
+        </table>
+
+    </div>
+
+    <div class="card-footer">
+
+    </div>
+</div>
