@@ -7,6 +7,8 @@
 
   <ItemGroup>
     <EmbeddedResource Remove="App.xaml" />
+    <EmbeddedResource Remove="Views\NewItemPage.xaml" />
+    <EmbeddedResource Remove="Views\SettingItemsPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,7 +20,7 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Views\SettingItemsPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <Generator></Generator>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

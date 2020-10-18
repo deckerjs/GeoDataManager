@@ -10,7 +10,7 @@ using sensortest.Services;
 
 namespace sensortest.ViewModels
 {
-    public class BaseViewModel : INotifyPropertyChanged
+    public class BaseViewModel : INotifyPropertyChanged, IBaseViewModel
     {
         //public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
 

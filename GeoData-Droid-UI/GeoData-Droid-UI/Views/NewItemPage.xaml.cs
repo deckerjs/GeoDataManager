@@ -15,7 +15,7 @@ namespace sensortest.Views
 
         public NewItemPage()
         {
-            InitializeComponent();
+            //InitializeComponent();
             BindingContext = new NewItemViewModel();
         }
     }

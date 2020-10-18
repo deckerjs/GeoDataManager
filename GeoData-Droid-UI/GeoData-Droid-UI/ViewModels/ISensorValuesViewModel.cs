@@ -5,12 +5,13 @@ using Xamarin.Forms;
 
 namespace sensortest.ViewModels
 {
-    public interface ISensorValuesViewModel
+    public interface ISensorValuesViewModel: IBaseViewModel
     {
         Command AddItemCommand { get; }
         ObservableCollection<SensorValueItem> Items { get; }
         Command<SensorValueItem> ItemTapped { get; }
         Command LoadItemsCommand { get; }
+        Command OpenMapCommand { get; }
 
         Task InitializeAsync();
     }
