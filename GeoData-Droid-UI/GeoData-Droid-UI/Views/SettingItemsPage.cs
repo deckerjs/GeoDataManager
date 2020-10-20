@@ -44,39 +44,53 @@ namespace sensortest.Views
                     new Button {Text = "Open Map"}.BindCommand(nameof(_viewModel.OpenMapCommand)),
                     new CollectionView()
                     {
-                        ItemTemplate = GetItemTemplate()
+                        //ItemTemplate = GetItemTemplate()
+                        ItemTemplate = new DataTemplate(() =>
+                        {
+                            return new StackLayout
+                                {
+                                    Padding = 10,
+                                    Children =
+                                        {
+                                            new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=16}.Bind(Label.TextProperty, nameof(SensorValueItem.Name)),
+                                            new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=14}.Bind(Label.TextProperty, nameof(SensorValueItem.Value)),
+                                        }
+                                };
+                        })
                     }.Bind(CollectionView.ItemsSourceProperty, nameof(_viewModel.Items))
                 }
             };
             //doesnt like this, no error given
             //.Bind(RefreshView.IsRefreshingProperty, nameof(_viewModel.IsLoading),BindingMode.TwoWay);
-            
-            
+
+
             //var stackLayout = new StackLayout();
             //refreshView.Content = stackLayout;
             //stackLayout.Children.Add();
-                        
+
             return refreshView;
         }
 
-        private DataTemplate GetItemTemplate()
-        {
-            var stackLayout = new StackLayout
-            {
-                Padding = 10,
-                Children =
-                {
-                    new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=16}.Bind(Label.TextProperty, nameof(SensorValueItem.Name)),
-                    new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=14}.Bind(Label.TextProperty, nameof(SensorValueItem.Value)),
-                }
-            };
 
-            var template = new DataTemplate(() => {
-                return stackLayout;
-            });
-            
-            return template;
-        }
+        // using this didnt work well, 
+        //private DataTemplate GetItemTemplate()
+        //{            
+        //    var stackLayout = new StackLayout
+        //    {
+        //        Padding = 10,
+        //        Children =
+        //            {
+        //                new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=16}.Bind(Label.TextProperty, nameof(SensorValueItem.Name)),
+        //                new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=14}.Bind(Label.TextProperty, nameof(SensorValueItem.Value)),
+        //            }
+        //    };
+         
+        //    var template = new DataTemplate(() =>
+        //    {
+        //                return stackLayout;
+        //    });
+        //    return template;
+        //}
 
         protected override void OnAppearing()
         {

@@ -14,13 +14,24 @@ namespace sensortest.Services
             var items = new List<SensorValueItem>();
 
             items.Add(await GetLocationAsync());
-
-            //items.Add(new SensorValueItem { Name = "AAA", Value = "111" });
-            //items.Add(new SensorValueItem { Name = "BBB", Value = "222" });
-            //items.Add(new SensorValueItem { Name = "CCC", Value = "333" });
-            //items.Add(new SettingItem { Name = "DDD", Value = "444" });
+            items.AddRange(GetBatteryInfoAsync());
 
             return await Task.FromResult(items);
+        }
+
+        private IEnumerable<SensorValueItem> GetBatteryInfoAsync()
+        {
+            var state = Battery.State.ToString();
+            var level = Battery.ChargeLevel.ToString();
+            var source = Battery.PowerSource.ToString();
+
+            return new SensorValueItem[]
+            {
+                new SensorValueItem{ Name = "Battery State:", Value = state },
+                new SensorValueItem{ Name = "Battery Level:", Value = level },
+                new SensorValueItem{ Name = "Battery Source:", Value = source }
+            };
+
         }
 
         private async Task<SensorValueItem> GetLocationAsync()
@@ -44,7 +55,7 @@ namespace sensortest.Services
                 }
             }
             catch (FeatureNotSupportedException fnsEx)
-            {                
+            {
                 settingItem.Value = $"Handle not supported on device exception {fnsEx.Message}";
                 return settingItem;
             }
@@ -54,7 +65,7 @@ namespace sensortest.Services
                 return settingItem;
             }
             catch (PermissionException pEx)
-            {                
+            {
                 settingItem.Value = $"Handle permission exception {pEx.Message}";
                 return settingItem;
             }
@@ -66,8 +77,8 @@ namespace sensortest.Services
 
             return settingItem;
         }
-    
-    
-    
+
+
+
     }
 }
