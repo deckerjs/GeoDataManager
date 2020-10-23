@@ -10,38 +10,38 @@ namespace sensortest
 {
     public partial class AppShell : Xamarin.Forms.Shell
     {
+        private readonly MainPage _mainPage;
         private readonly SettingItemsPage _settingItemsPage;
 
-        public AppShell(SettingItemsPage settingItemsPage)
+        public AppShell(MainPage mainPage, SettingItemsPage settingItemsPage)
         {
-            //InitializeComponent();
-            //Routing.RegisterRoute(nameof(ItemDetailPage), typeof(ItemDetailPage));
-            //Routing.RegisterRoute(nameof(NewItemPage), typeof(NewItemPage));
+            _mainPage = mainPage;
             _settingItemsPage = settingItemsPage;
 
             Resources = GetResources();
             Title = "App Shell Title";
 
-            ShellSection shellSection1 = new ShellSection { Title = "Shell Section 1" };
-            shellSection1.Items.Add(new ShellContent() { Content = _settingItemsPage });
+            Items.Add(new ShellSection 
+            { 
+                Title = "Shell Section MainPage",
+                Items = 
+                    {
+                        new ShellContent() { Title="MainPage", Icon="tab_feed.png", Content = _mainPage }            
+                    }
+            });
 
-            Items.Add(shellSection1);
+            Items.Add(new ShellSection 
+            { 
+                Title = "Shell Section SensorItems",
+                Items = 
+                    {
+                        new ShellContent() { Title="SettingItemsPage", Icon="tab_feed.png", Content = _settingItemsPage }
+                    }
+            });
 
-            //var shellItem = new Xamarin.Forms.ShellItem();
+            //Routing.RegisterRoute(nameof(ItemDetailPage), typeof(ItemDetailPage));
+            //Routing.RegisterRoute(nameof(NewItemPage), typeof(NewItemPage));
 
-            //CurrentItem = new TabBar();
-            //{ 
-            //    Items = new []{ new Xamarin.Forms.ShellItem { Title="stuff" }  }
-            //}
-
-            //CurrentItem.Items.Add(new ShellContent
-            //{
-            //    Title = "stuff",
-            //    Icon = "tab_feed.png",
-            //    ContentTemplate = new DataTemplate(typeof(SettingItemsPage))
-            //});
-
-            //ShellContent 
         }
 
         public static ResourceDictionary GetResources()
@@ -58,11 +58,8 @@ namespace sensortest
                 (Shell.TabBarForegroundColorProperty, Color.BlanchedAlmond)
                 );
 
-            //rd.Add("BaseStyle", baseStyle);
-
             Style<TabBar> tabBar = new Style<TabBar>().BasedOn(baseStyle);
             Style<FlyoutItem> flyoutItem = new Style<FlyoutItem>().BasedOn(baseStyle);
-
 
             return new ResourceDictionary() { baseStyle, tabBar, flyoutItem };
         }

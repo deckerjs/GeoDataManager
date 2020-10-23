@@ -10,17 +10,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Markup;
-//using Xamarin.Forms;
-//using Xamarin.Forms.Xaml;
 
 namespace sensortest.Views
 {
     public partial class SettingItemsPage : ContentPage
     {
         private ISensorValuesViewModel _viewModel;
-        public SettingItemsPage()
-        {
-            _viewModel = App.Host.Services.GetRequiredService<ISensorValuesViewModel>();
+        public SettingItemsPage(ISensorValuesViewModel viewModel)
+        {            
+            //_viewModel = App.Host.Services.GetRequiredService<ISensorValuesViewModel>();
+            _viewModel = viewModel;
             BindingContext = _viewModel;
             Content = GetContent();
         }

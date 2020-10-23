@@ -44,12 +44,17 @@ namespace sensortest
             return XamarinHost.CreateDefaultBuilder<App>()
              .ConfigureServices((context, services) =>
              {
+                 // may actually want to pull from some views from di host as needed 
+                 // instead of all at start
+
                  services.AddScoped<AppShell>();
+                 services.AddScoped<MainPage>();
                  services.AddScoped<SettingItemsPage>();
 
+                 services.AddScoped<MainPageViewModel>();
                  services.AddScoped<ISensorValuesViewModel, SensorValuesViewModel>();
+                                  
                  services.AddScoped<ISensorValuesRepository, SensorValuesRepository>();
-                 services.AddScoped<Stuff>();
              });
         }
 

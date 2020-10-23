@@ -8,6 +8,7 @@
   <ItemGroup>
     <EmbeddedResource Remove="App.xaml" />
     <EmbeddedResource Remove="AppShell.xaml" />
+    <EmbeddedResource Remove="Views\LoginPage.xaml" />
     <EmbeddedResource Remove="Views\NewItemPage.xaml" />
     <EmbeddedResource Remove="Views\SettingItemsPage.xaml" />
   </ItemGroup>
@@ -24,6 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Views\LoginPage.xaml">
+      <Generator></Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\SettingItemsPage.xaml">
       <Generator></Generator>
     </EmbeddedResource>
