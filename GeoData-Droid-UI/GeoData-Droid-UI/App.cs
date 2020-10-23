@@ -45,6 +45,7 @@ namespace sensortest
              .ConfigureServices((context, services) =>
              {
                  services.AddScoped<AppShell>();
+                 services.AddScoped<SettingItemsPage>();
 
                  services.AddScoped<ISensorValuesViewModel, SensorValuesViewModel>();
                  services.AddScoped<ISensorValuesRepository, SensorValuesRepository>();

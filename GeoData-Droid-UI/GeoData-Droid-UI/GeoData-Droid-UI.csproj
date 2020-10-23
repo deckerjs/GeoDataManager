@@ -7,8 +7,13 @@
 
   <ItemGroup>
     <EmbeddedResource Remove="App.xaml" />
+    <EmbeddedResource Remove="AppShell.xaml" />
     <EmbeddedResource Remove="Views\NewItemPage.xaml" />
     <EmbeddedResource Remove="Views\SettingItemsPage.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Services\SensorValuesRepository.cs~RF558350c.TMP" />
   </ItemGroup>
 
   <ItemGroup>

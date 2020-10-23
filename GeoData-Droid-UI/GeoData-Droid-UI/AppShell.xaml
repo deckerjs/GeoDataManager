@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!--<?xml version="1.0" encoding="UTF-8"?>
 <Shell xmlns="http://xamarin.com/schemas/2014/forms" 
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:local="clr-namespace:sensortest.Views"
        Title="sensortest"
-       x:Class="sensortest.AppShell">
+       x:Class="sensortest.AppShell">-->
 
     <!--
         The overall app visual hierarchy is defined here, along with navigation.
@@ -11,7 +11,7 @@
         https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/shell/
     -->
 
-    <Shell.Resources>
+    <!--<Shell.Resources>
         <ResourceDictionary>
             <Style x:Key="BaseStyle" TargetType="Element">
                 <Setter Property="Shell.BackgroundColor" Value="Blue" />
@@ -27,13 +27,13 @@
             <Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}" />
             <Style TargetType="FlyoutItem" BasedOn="{StaticResource BaseStyle}" />
         </ResourceDictionary>
-    </Shell.Resources>
+    </Shell.Resources>-->
 
-    <TabBar>
+    <!--<TabBar>-->
         <!--<ShellContent Title="About" Icon="tab_about.png" Route="AboutPage" ContentTemplate="{DataTemplate local:AboutPage}" />
         <ShellContent Title="Browse" Icon="tab_feed.png" ContentTemplate="{DataTemplate local:ItemsPage}" />-->
-        <ShellContent Title="Stuff" Icon="tab_feed.png" ContentTemplate="{DataTemplate local:SettingItemsPage}" />
-    </TabBar>
+        <!--<ShellContent Title="Stuff" Icon="tab_feed.png" ContentTemplate="{DataTemplate local:SettingItemsPage}" />
+    </TabBar>-->
 
     <!--
         If you would like to navigate to this content you can do so by calling
@@ -42,4 +42,4 @@
     <!--<ShellContent Route="LoginPage" Shell.FlyoutBehavior="Disabled" ContentTemplate="{DataTemplate local:LoginPage}" />-->
 
 
-</Shell>
+<!--</Shell>-->
