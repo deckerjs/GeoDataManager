@@ -21,20 +21,31 @@ namespace sensortest
             Resources = GetResources();
             Title = "App Shell Title";
 
-            Items.Add(new ShellSection 
+            // corner menu thing
+            //Items.Add(new ShellSection 
+            //{ 
+            //    Title = "Shell Section MainPage",
+            //    Items = 
+            //        {
+            //            new ShellContent() { Title="MainPage", Icon="tab_feed.png", Content = _mainPage }            
+            //        }
+            //});
+            //Items.Add(new ShellSection 
+            //{ 
+            //    Title = "Shell Section SensorItems",
+            //    Items = 
+            //        {
+            //            new ShellContent() { Title="SettingItemsPage", Icon="tab_feed.png", Content = _settingItemsPage }
+            //        }
+            //});
+            
+            //bottom tab bar thing
+            Items.Add(new TabBar 
             { 
                 Title = "Shell Section MainPage",
                 Items = 
                     {
-                        new ShellContent() { Title="MainPage", Icon="tab_feed.png", Content = _mainPage }            
-                    }
-            });
-
-            Items.Add(new ShellSection 
-            { 
-                Title = "Shell Section SensorItems",
-                Items = 
-                    {
+                        new ShellContent() { Title="MainPage", Icon="tab_feed.png", Content = _mainPage },            
                         new ShellContent() { Title="SettingItemsPage", Icon="tab_feed.png", Content = _settingItemsPage }
                     }
             });

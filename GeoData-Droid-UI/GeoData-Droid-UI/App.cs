@@ -18,20 +18,9 @@ namespace sensortest
         public static IHost Host { get; private set; }
 
         public App()
-        {
-            //InitializeComponent();
-            Device.SetFlags(new string[] { "Markup_Experimental" });
-            DependencyService.Register<IDataStore<Item>, MockDataStore>();
-
-
-
-
+        {            
+            Device.SetFlags(new string[] { "Markup_Experimental" });            
             Resources = DefaultStyle();
-
-            //DependencyService.Register<ISettingsViewModel, SettingsViewModel>();
-            //DependencyService.Register<ISettingsRepository, SettingsRepository>();
-            //DependencyService.Register<Stuff>();
-            //MainPage = new AppShell();
         }
         
         public App(IHost host) : this()
@@ -47,13 +36,14 @@ namespace sensortest
                  // may actually want to pull from some views from di host as needed 
                  // instead of all at start
 
+                 //also may want to add each view,viewmodel,repo in its own method/extension
                  services.AddScoped<AppShell>();
                  services.AddScoped<MainPage>();
                  services.AddScoped<SettingItemsPage>();
 
                  services.AddScoped<MainPageViewModel>();
                  services.AddScoped<ISensorValuesViewModel, SensorValuesViewModel>();
-                                  
+                                 
                  services.AddScoped<ISensorValuesRepository, SensorValuesRepository>();
              });
         }
@@ -87,9 +77,6 @@ namespace sensortest
                 (Button.BorderColorProperty, Color.Green),
                 (Button.BorderWidthProperty, 2)
                 );
-
-
-
 
             return new ResourceDictionary() { contentPage, buttons };
         }

@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -76,5 +77,39 @@ namespace sensortest.ViewModels
                 // No map application available to open
             }
         }
+
+        public void ExampleSetupWebCommand()
+        {
+            Title = "About";
+            OpenWebCommand = new Command(async () => await Browser.OpenAsync("https://aka.ms/xamain-quickstart"));
+        }
+
+        public ICommand OpenWebCommand { get; set; }
+
+
+
+
     }
 }
+
+
+
+//navigation examples
+//        private async void OnAddItem(object obj)
+//        {
+//            await Shell.Current.GoToAsync(nameof(NewItemPage));
+//        }
+
+//        async void OnItemSelected(Item item)
+//        {
+//            if (item == null)
+//                return;
+
+//            // This will push the ItemDetailPage onto the navigation stack
+//            await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
+//        }
+//private async void OnCancel()
+//{
+//    // This will pop the current page off the navigation stack
+//    await Shell.Current.GoToAsync("..");
+//}
