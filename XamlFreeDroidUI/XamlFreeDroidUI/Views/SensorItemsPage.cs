@@ -13,24 +13,29 @@ using Xamarin.Forms.Markup;
 
 namespace XamlFreeDroidUI.Views
 {
-    public partial class SettingItemsPage : ContentPage
+    public partial class SensorItemsPage : ContentPage
     {
         private ISensorValuesViewModel _viewModel;
-        public SettingItemsPage(ISensorValuesViewModel viewModel)
-        {            
-            //_viewModel = App.Host.Services.GetRequiredService<ISensorValuesViewModel>();
-            _viewModel = viewModel;
+        public SensorItemsPage(ISensorValuesViewModel viewModel)
+        {
+            _viewModel = viewModel;            
             BindingContext = _viewModel;
+            Title = "Sensor Items";
             Content = GetContent();
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            Task viewModelInitTask = _viewModel.InitializeAsync();
+        }
+    
         private View GetContent()
         {
             var refreshView = new RefreshView().Content = new StackLayout
             {
                 Children =
-                {
-                    new Label {Text = "Sensor Items" , VerticalOptions=LayoutOptions.CenterAndExpand, HorizontalOptions=LayoutOptions.CenterAndExpand },
+                {                    
                     new Button {Text = "Reload"}.BindCommand(nameof(_viewModel.LoadItemsCommand)),
                     new Button {Text = "Open Map"}.BindCommand(nameof(_viewModel.OpenMapCommand)),
                     new CollectionView()
@@ -42,8 +47,12 @@ namespace XamlFreeDroidUI.Views
                                     Padding = 10,
                                     Children =
                                         {
-                                            new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=16}.Bind(Label.TextProperty, nameof(SensorValueItem.Name)),
-                                            new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=14}.Bind(Label.TextProperty, nameof(SensorValueItem.Value)),
+                                            new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=16}
+                                                .Bind(Label.TextProperty, nameof(SensorValueItem.Name))
+                                                .Style(DataItemTitleStyle),
+                                            new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=14}
+                                                .Bind(Label.TextProperty, nameof(SensorValueItem.Value))
+                                                .Style(DataItemValueStyle),
                                         }
                                 };
                         })
@@ -51,16 +60,21 @@ namespace XamlFreeDroidUI.Views
                 }
             };
 
-            //doesnt like this, no error given
-            //.Bind(RefreshView.IsRefreshingProperty, nameof(_viewModel.IsLoading),BindingMode.TwoWay);
-
             return refreshView;
         }
 
-        protected override void OnAppearing()
+        // explicit style overrides
+        public static Style<Label> DataItemTitleStyle => new Style<Label>(
+                (Label.TextColorProperty, "#249C47"),
+                (Label.FontAttributesProperty, FontAttributes.Bold));
+
+        public static Style<Label> DataItemValueStyle => new Style<Label>(
+            (Label.TextColorProperty, "#FFFFFF"));
+
+        // implicit style overrides
+        public static ResourceDictionary GetResources()
         {
-            base.OnAppearing();
-            Task viewModelInitTask = _viewModel.InitializeAsync();
+            return new ResourceDictionary() { };
         }
     }
 }

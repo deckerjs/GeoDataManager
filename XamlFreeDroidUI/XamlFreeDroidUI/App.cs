@@ -14,6 +14,9 @@ namespace XamlFreeDroidUI
 {
     public partial class App : Application
     {
+        private const string Primary_Text_Color = "#209DF7";
+        private const string Primary_Page_Background_Color = "#252526";
+        private const string Primary_Alt_Background_Color = "#333337";
 
         public static IHost Host { get; private set; }
 
@@ -33,13 +36,15 @@ namespace XamlFreeDroidUI
             return XamarinHost.CreateDefaultBuilder<App>()
              .ConfigureServices((context, services) =>
              {
-                 // may actually want to pull from some views from di host as needed 
-                 // instead of all at start
+                 // todo: 
+                 // may actually want to pull views from di host when shown
+                 // instead of all at start 
+                 // using something like App.Host.Services.GetRequiredService<something>
 
-                 //also may want to add each view,viewmodel,repo in its own method/extension
+                 // todo: also may want to add each view,viewmodel,repo in its own method/extension
                  services.AddScoped<AppShell>();
                  services.AddScoped<MainPage>();
-                 services.AddScoped<SettingItemsPage>();
+                 services.AddScoped<SensorItemsPage>();
 
                  services.AddScoped<MainPageViewModel>();
                  services.AddScoped<ISensorValuesViewModel, SensorValuesViewModel>();
@@ -67,18 +72,51 @@ namespace XamlFreeDroidUI
 
         public static ResourceDictionary DefaultStyle()
         {
-            Style<ContentPage> contentPage = new Style<ContentPage>(
-                (ContentPage.BackgroundColorProperty, Color.Black)
-                );
 
-            Style<Button> buttons = new Style<Button>(
-                (Button.BackgroundColorProperty, Color.Black),
-                (Button.TextColorProperty, Color.BlanchedAlmond),
-                (Button.BorderColorProperty, Color.Green),
+            Style<Element> baseStyle = new Style<Element>(
+             (Shell.BackgroundColorProperty, Color.Black),
+             (Shell.ForegroundColorProperty, Primary_Text_Color),
+             (Shell.TitleColorProperty, "#5695D8"),
+             (Shell.DisabledColorProperty, "#404040"),
+             (Shell.UnselectedColorProperty, "#2763DB"),
+             (Shell.TabBarBackgroundColorProperty, Color.Black),
+             (Shell.TabBarForegroundColorProperty, Primary_Text_Color)
+             );
+
+            Style<Shell> shell = new Style<Shell>().BasedOn(baseStyle);
+            Style<TabBar> tabBar = new Style<TabBar>().BasedOn(baseStyle);
+            Style<FlyoutItem> flyoutItem = new Style<FlyoutItem>().BasedOn(baseStyle);
+
+            Style<ContentPage> contentPage = new Style<ContentPage>(
+                (ContentPage.BackgroundColorProperty, Primary_Page_Background_Color)
+                ).ApplyToDerivedTypes(true);
+            
+
+            Style<Label> label = new Style<Label>(
+                (Label.BackgroundColorProperty, Primary_Page_Background_Color),
+                (Label.TextColorProperty, Primary_Text_Color));
+
+            Style<CollectionView> collectionView = new Style<CollectionView>(
+                (CollectionView.BackgroundColorProperty, Primary_Page_Background_Color));
+
+            Style<Button> button = new Style<Button>(
+                (Button.BackgroundColorProperty, Primary_Alt_Background_Color),
+                (Button.TextColorProperty, Primary_Text_Color),
+                (Button.BorderColorProperty, "#404040"),
                 (Button.BorderWidthProperty, 2)
                 );
-
-            return new ResourceDictionary() { contentPage, buttons };
+            
+            return new ResourceDictionary() 
+                { 
+                    baseStyle,
+                    shell,
+                    tabBar, 
+                    flyoutItem,
+                    contentPage, 
+                    collectionView, 
+                    label, 
+                    button 
+                };
         }
 
     }
