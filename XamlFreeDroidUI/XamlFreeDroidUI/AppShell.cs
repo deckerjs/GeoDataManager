@@ -12,12 +12,13 @@ namespace XamlFreeDroidUI
     {
         private readonly MainPage _mainPage;
         private readonly SensorItemsPage _settingItemsPage;
+        private readonly MapViewPage _mapViewPage;
 
-        public AppShell(MainPage mainPage, SensorItemsPage settingItemsPage)
+        public AppShell(MainPage mainPage, SensorItemsPage settingItemsPage, MapViewPage MapViewPage)
         {
             _mainPage = mainPage;
             _settingItemsPage = settingItemsPage;
-
+            _mapViewPage = MapViewPage;
             Resources = GetResources();
             Title = "App Shell Title";
             
@@ -28,7 +29,9 @@ namespace XamlFreeDroidUI
                 Items = 
                     {
                         new ShellContent() { Title="Main Page", Icon="tab_feed.png", Content = _mainPage },            
-                        new ShellContent() { Title="Sensor Items Page", Icon="tab_feed.png", Content = _settingItemsPage }
+                        new ShellContent() { Title="Sensor Items Page", Icon="tab_feed.png", Content = _settingItemsPage },
+                        new ShellContent() { Title="Map View Page", Icon="tab_feed.png", Content = _mapViewPage }
+
                     }
             });
 
