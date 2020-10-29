@@ -46,6 +46,7 @@ namespace XamlFreeDroidUI
                  services.AddScoped<MainPage>();
                  services.AddScoped<SensorItemsPage>();
                  services.AddScoped<MapViewPage>();
+                 services.AddScoped<OsmMapViewPage>();
 
                  services.AddScoped<MainPageViewModel>();
                  services.AddScoped<ISensorValuesViewModel, SensorValuesViewModel>();

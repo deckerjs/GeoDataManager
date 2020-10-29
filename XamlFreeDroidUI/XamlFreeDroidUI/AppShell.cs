@@ -13,12 +13,14 @@ namespace XamlFreeDroidUI
         private readonly MainPage _mainPage;
         private readonly SensorItemsPage _settingItemsPage;
         private readonly MapViewPage _mapViewPage;
+        private readonly OsmMapViewPage _osmMapViewPage;
 
-        public AppShell(MainPage mainPage, SensorItemsPage settingItemsPage, MapViewPage MapViewPage)
+        public AppShell(MainPage mainPage, SensorItemsPage settingItemsPage, MapViewPage mapViewPage, OsmMapViewPage osmMapViewPage)
         {
             _mainPage = mainPage;
             _settingItemsPage = settingItemsPage;
-            _mapViewPage = MapViewPage;
+            _mapViewPage = mapViewPage;
+            _osmMapViewPage = osmMapViewPage;
             Resources = GetResources();
             Title = "App Shell Title";
             
@@ -28,10 +30,10 @@ namespace XamlFreeDroidUI
                 Title = "Shell Section MainPage",
                 Items = 
                     {
-                        new ShellContent() { Title="Main Page", Icon="tab_feed.png", Content = _mainPage },            
-                        new ShellContent() { Title="Sensor Items Page", Icon="tab_feed.png", Content = _settingItemsPage },
-                        new ShellContent() { Title="Map View Page", Icon="tab_feed.png", Content = _mapViewPage }
-
+                        new ShellContent() { Title="Main", Icon="tab_feed.png", Content = _mainPage },            
+                        new ShellContent() { Title="Sensor Items", Icon="tab_feed.png", Content = _settingItemsPage },
+                        new ShellContent() { Title="Default Map", Icon="tab_feed.png", Content = _mapViewPage },
+                        new ShellContent() { Title="Osm Map", Icon="tab_feed.png", Content = _osmMapViewPage }
                     }
             });
 
