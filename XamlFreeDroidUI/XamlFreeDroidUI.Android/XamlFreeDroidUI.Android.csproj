@@ -108,7 +108,7 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties XamarinHotReloadDebuggerTimeoutExceptionGeoDataDroidUIAndroidHideInfoBar="True" />
+      <UserProperties XamarinHotReloadDebuggerTimeoutExceptionXamlFreeDroidUIAndroidHideInfoBar="True" XamarinHotReloadDebuggerTimeoutExceptionGeoDataDroidUIAndroidHideInfoBar="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
