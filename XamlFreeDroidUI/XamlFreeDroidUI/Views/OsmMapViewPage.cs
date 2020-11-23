@@ -107,7 +107,7 @@ namespace XamlFreeDroidUI.Views
             var fullpath = Path.Combine(basepath, file);
                         
             //var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"XamlFreeDroidUI.world.mbtiles");
-            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"XamlFreeDroidUI.co-test-3.mbtiles");
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"XamlFreeDroidUI.co-full-test-2.mbtiles");
 
 
             using (BinaryReader br = new BinaryReader(stream))

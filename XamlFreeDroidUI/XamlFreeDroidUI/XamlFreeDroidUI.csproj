@@ -10,12 +10,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="co-test-3.mbtiles" />
+    <None Remove="co-full-test-2.mbtiles" />
     <None Remove="world.mbtiles" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="co-test-3.mbtiles" />
+    <EmbeddedResource Include="co-full-test-2.mbtiles" />
     <EmbeddedResource Include="world.mbtiles">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>    
@@ -51,6 +51,7 @@
 
     <ItemGroup>
     <Folder Include="MbTiles\" />
+    <Folder Include="MapCreation\" />
   </ItemGroup>
 
   <ItemGroup>
