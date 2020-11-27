@@ -62,7 +62,7 @@ namespace XamlFreeDroidUI.Views
                     {
                         VerticalOptions = LayoutOptions.FillAndExpand,
                         HorizontalOptions=LayoutOptions.Fill,
-                        BackgroundColor = System.Drawing.Color.Gray,
+                        BackgroundColor = System.Drawing.Color.Black,
                         Map = map                        
                     }
                 }
@@ -99,20 +99,49 @@ namespace XamlFreeDroidUI.Views
         {
             var map = new Mapsui.Map();
 
+            //var file = "world.mbtiles";            
+            var baseLayerFile = "co-full-base-dark-1.mbtiles";
+            var trackLayerFile = "co-full-tracks-only-dark-1.mbtiles";
+            var roadLayerFile = "co-full-roads-only-dark-1.mbtiles";
+
+            var baseLayerFullPath = GetFullPath(baseLayerFile);
+            var trackLayerFullPath = GetFullPath(trackLayerFile);
+            var roadLayerFullPath = GetFullPath(roadLayerFile);
+
+            WriteStreamToFile(baseLayerFile);
+            WriteStreamToFile(trackLayerFile);
+            WriteStreamToFile(roadLayerFile);
+
+            if (File.Exists(baseLayerFullPath) && File.Exists(trackLayerFullPath))
+            {
+                map.Layers.Add(CreateMbTilesLayer(baseLayerFullPath, "base"));
+                map.Layers.Add(CreateMbTilesLayer(roadLayerFullPath, "roads"));
+                map.Layers.Add(CreateMbTilesLayer(trackLayerFullPath, "tracks"));
+            }
+            else
+            {
+                throw new Exception($"invalid file path: {baseLayerFullPath}");
+            }
+
+            return map;
+        }
+
+        private static string GetFullPath(string baseLayerfile)
+        {
             //todo: decide which location is better for an included basemap
             //Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            var basepath = @"." + Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            //var file = "world.mbtiles";
-            var file = "co-test.mbtiles";
-            var fullpath = Path.Combine(basepath, file);
-                        
-            //var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"XamlFreeDroidUI.world.mbtiles");
-            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(@"XamlFreeDroidUI.co-full-test-2.mbtiles");
+            var basepath = @"." + Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);            
+            return Path.Combine(basepath, baseLayerfile);
+        }
 
+        private static void WriteStreamToFile(string fileName)
+        {
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"XamlFreeDroidUI.{fileName}");
+            var fullPath = GetFullPath(fileName);
 
             using (BinaryReader br = new BinaryReader(stream))
             {
-                using (BinaryWriter bw = new BinaryWriter(new FileStream(fullpath, FileMode.Create)))
+                using (BinaryWriter bw = new BinaryWriter(new FileStream(fullPath, FileMode.Create)))
                 {
                     byte[] buffer = new byte[2048];
                     int len = 0;
@@ -122,18 +151,15 @@ namespace XamlFreeDroidUI.Views
                     }
                 }
             }
-
-            if (File.Exists(fullpath))
-            {
-                map.Layers.Add(CreateMbTilesLayer(fullpath, "regular"));
-            }
-            else
-            {
-                throw new Exception($"invalid file path: {fullpath}");
-            }               
-
-            return map;
         }
+
+        //private static ILayer GetBaseLayer()
+        //{
+        //    return new Layer()
+        //    {
+        //        Opacity = 100,
+        //    }
+        //}
 
         public static TileLayer CreateMbTilesLayer(string path, string name)
         {

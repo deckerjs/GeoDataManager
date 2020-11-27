@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using System.Linq;
 
 namespace XamlFreeDroidUI.ViewModels
 {
@@ -65,8 +66,14 @@ namespace XamlFreeDroidUI.ViewModels
 
         private async Task OpenMapAsync()
         {
-            var location = new Location(47.645160, -122.1306032);
-            var options = new MapLaunchOptions { Name = "Microsoft Building 25" };
+
+            var request = new GeolocationRequest(GeolocationAccuracy.Best);
+            var location = await Geolocation.GetLocationAsync(request);
+            var options = new MapLaunchOptions { Name = "Current Location" };
+
+            //var location = new Location(40.6360546, -105.4586101);
+            //var options = new MapLaunchOptions { Name = "Big Tree" };
+            //await Map.OpenAsync(location, options);
 
             try
             {
@@ -75,6 +82,7 @@ namespace XamlFreeDroidUI.ViewModels
             catch (Exception ex)
             {
                 // No map application available to open
+                Console.WriteLine($"Can't open map: {ex.Message}");
             }
         }
 

@@ -10,12 +10,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="co-full-base-dark-1.mbtiles" />
+    <None Remove="co-full-roads-only-dark-1.mbtiles" />
     <None Remove="co-full-test-2.mbtiles" />
+    <None Remove="co-full-tracks-only-dark-1.mbtiles" />
     <None Remove="world.mbtiles" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="co-full-base-dark-1.mbtiles" />
+    <EmbeddedResource Include="co-full-roads-only-dark-1.mbtiles" />
     <EmbeddedResource Include="co-full-test-2.mbtiles" />
+    <EmbeddedResource Include="co-full-tracks-only-dark-1.mbtiles" />
     <EmbeddedResource Include="world.mbtiles">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>    
