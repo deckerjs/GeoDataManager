@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <UserSecretsId>60a4b3d1-4802-4cf2-9462-c021bdd963d6</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -46,19 +47,15 @@
     <PackageReference Include="Xamarin.Forms.Maps" Version="4.8.0.1560" />
   </ItemGroup>
 
-  <ItemGroup>
-    <!--<PackageReference Include="SQLite-net" Version="1.6.292.0" />
-    <PackageReference Include="SQLitePCLRaw.batteries_green" Version="1.1.13.388" />
-    <PackageReference Include="SQLitePCLRaw.batteries_v2" Version="1.1.13.388" />
-    <PackageReference Include="SQLitePCLRaw.core" Version="1.1.13.388" />
-    <PackageReference Include="SQLitePCLRaw.provider.e_sqlite3" Version="1.1.13.388" />-->
-    
-  </ItemGroup>
-
     <ItemGroup>
     <Folder Include="MbTiles\" />
     <Folder Include="MapCreation\" />
   </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\CoordinateDataModels\GeoStoreApi.Abstractions.CoordinateDataModels.csproj" />
+      <ProjectReference Include="..\..\GeoStoreApi.Client\GeoStoreApi.Client.csproj" />
+    </ItemGroup>
 
   <ItemGroup>
     <Compile Update="AppShell.cs">

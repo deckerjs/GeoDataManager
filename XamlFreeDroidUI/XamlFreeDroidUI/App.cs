@@ -9,6 +9,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using Xamarin.Forms.Markup;
+using GeoStoreApi.Client;
+using Microsoft.Extensions.Configuration;
 
 namespace XamlFreeDroidUI
 {
@@ -52,6 +54,14 @@ namespace XamlFreeDroidUI
                  services.AddScoped<ISensorValuesViewModel, SensorValuesViewModel>();
                                  
                  services.AddScoped<ISensorValuesRepository, SensorValuesRepository>();
+
+                 //services.Configure<AppOptions>(Configuration.GetSection("AppOptions"));
+                 //services.AddScoped<AppOptions>(x => x.GetService<IOptions<AppOptions>>().Value);
+                 //services.Configure<MongoSettings>(configuration.GetSection("MongoSettings"));
+                 //services.AddScoped<MongoSettings>(x => x.GetService<IOptions<MongoSettings>>().Value);
+
+
+
              });
         }
 
@@ -121,5 +131,10 @@ namespace XamlFreeDroidUI
                 };
         }
 
+
+        private ApiClientSettings GetApiClientSettings(IConfiguration config)
+        {
+            return config.GetSection("ApiClientSettings").Get<ApiClientSettings>();
+        }
     }
 }
