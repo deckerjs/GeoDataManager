@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using Xamarin.Forms.Markup;
 using GeoStoreApi.Client;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using TrackDataDroid.Repositories;
 
 namespace TrackDataDroid
 {
@@ -19,6 +21,7 @@ namespace TrackDataDroid
         private const string Primary_Text_Color = "#209DF7";
         private const string Primary_Page_Background_Color = "#252526";
         private const string Primary_Alt_Background_Color = "#333337";
+        private readonly IConfiguration _configuration;
 
         public static IHost Host { get; private set; }
 
@@ -28,9 +31,11 @@ namespace TrackDataDroid
             Resources = DefaultStyle();
         }
         
-        public App(IHost host) : this()
+        public App(IHost host, IConfiguration configuration) : this()
         {
+            //IConfiguration configuration
             Host = host;
+            _configuration = configuration;
         }
 
         public static IHostBuilder BuildHost()
@@ -52,13 +57,26 @@ namespace TrackDataDroid
 
                  services.AddScoped<MainPageViewModel>();
                  services.AddScoped<ISensorValuesViewModel, SensorValuesViewModel>();
-                                 
                  services.AddScoped<ISensorValuesRepository, SensorValuesRepository>();
 
                  //services.Configure<AppOptions>(Configuration.GetSection("AppOptions"));
                  //services.AddScoped<AppOptions>(x => x.GetService<IOptions<AppOptions>>().Value);
-                 //services.Configure<MongoSettings>(configuration.GetSection("MongoSettings"));
-                 //services.AddScoped<MongoSettings>(x => x.GetService<IOptions<MongoSettings>>().Value);
+                 
+                 services.Configure<ApiClientSettings>(context.Configuration.GetSection("ApiClientSettings"));
+                 services.AddScoped<ApiClientSettings>(x =>
+                 {
+                     return Microsoft.Extensions.DependencyInjection
+                     .ServiceProviderServiceExtensions.GetService<IOptions<ApiClientSettings>>(x).Value;
+                     //return x.GetService<IOptions<ApiClientSettings>>().Value;
+                 });
+
+                 services.AddScoped<MapViewModel>();
+                 services.AddScoped<CoordinateDataRepository>();
+                 services.AddScoped<CoordinateDataSourceFactory>();
+                 services.AddScoped<CoordinateDataOnlineSource>();
+                 services.AddScoped<CoordinateDataOfflineSource>();
+
+                 services.AddScoped<CoordinateDataApiClient>();
 
 
 

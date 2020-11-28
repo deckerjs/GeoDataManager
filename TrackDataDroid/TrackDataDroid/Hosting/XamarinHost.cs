@@ -27,7 +27,7 @@ namespace Microsoft.Extensions.Hosting
                 var env = hostingContext.HostingEnvironment;
 
                 config.SetFileProvider(new EmbeddedFileProvider(typeof(TApplication).Assembly));
-                config.AddJsonFile("appsettings.json", true);
+                config.AddJsonFile("appsettings.json", false);
                 config.AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
             })
             .ConfigureLogging((hostingContext, logging) =>
