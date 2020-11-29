@@ -27,6 +27,10 @@ namespace TrackDataDroid.Repositories
         {
             return await _apiClient.GetSummary();
         }
+        public async Task<CoordinateData> GetCoordinateDataAsync(string id)
+        {
+            return await _apiClient.GetById(id);
+        }
 
     }
 }

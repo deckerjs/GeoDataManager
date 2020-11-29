@@ -20,7 +20,15 @@ namespace TrackDataDroid.Repositories
             //todo: inject something to do online/offline check
             var datasource = await _dataSourceFactory.GetOnlineDataSourceAsync();
             return await datasource.GetCoordinateDataSummaryAsync();
-
         }
+
+        public async Task<CoordinateData> GetTrackAsync(string id)
+        {
+            //todo: inject something to do online/offline check
+            var datasource = await _dataSourceFactory.GetOnlineDataSourceAsync();
+            return await datasource.GetCoordinateDataAsync(id);
+        }
+
+
     }
 }

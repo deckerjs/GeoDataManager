@@ -31,6 +31,7 @@ namespace GeoStoreApi.Client
         {
             _baseUrl = $"{apiClientsettings.BaseUrl}/{API_ENDPOINT}";
             await _client.Initialize(apiClientsettings);
+            await _summaryClient.Initialize(apiClientsettings);
             await _coordinatesClient.Initialize(apiClientsettings);
         }
 

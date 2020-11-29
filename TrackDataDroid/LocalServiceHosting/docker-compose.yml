@@ -1,0 +1,54 @@
+version: "3.4"
+
+services:
+  geodataapi:    
+    image: hallertau/geodataapi:${API_IMAGE_VERSION}
+    container_name: geodataapi
+    build:
+      context: .
+      dockerfile: GeoStoreAPI/Dockerfile
+    environment:
+    - AppOptions__GenerateDefaultUsers=${GENERATE_DEFAULT_USERS}
+    - GeoMgrClientSecret=${PORTAL_AUTH_CLIENT_SECRET}
+    - AuthURL=${API_AUTH_URL}
+    - IDSOptions__IssuerUri=${ISSUER_URI}
+    - MongoSettings__ConnectionString=mongodb://mongogeodatadb:27017
+    - MongoSettings__Database=geodata1
+    ports:
+    - ${API_PORT}:80
+    expose:
+    - 80
+    networks:
+    - geodatanet
+  geodataportal:    
+    image: hallertau/geodataportal:${API_IMAGE_VERSION}
+    container_name: geodataportal
+    build:
+      context: .
+      dockerfile: GeoDataWebPortal/Dockerfile
+    environment:
+    - ClientConfigurationSettings__AuthUrl=${PORTAL_AUTH_URL}
+    - ClientConfigurationSettings__AuthClientSecret=${PORTAL_AUTH_CLIENT_SECRET}
+    - ClientConfigurationSettings__GeoDataApiUrl=${API_URL}
+    - ClientConfigurationSettings__MapboxToken=${MAPBOX_TOKEN}
+    ports:
+    - ${PORTAL_PORT}:80
+    expose:
+    - 80
+    networks:
+    - geodatanet
+
+  mongogeodatadb:
+    image: mongo:latest
+    container_name: mongogeodatadb
+    expose:
+    - 27017
+    ports:
+    - 27017:27017
+    networks:
+    - geodatanet
+    volumes:
+    - ./data/db:/data/db
+    
+networks:
+  geodatanet:

@@ -10,5 +10,6 @@ namespace TrackDataDroid.Repositories
     {
         Task InitializeAsync();
         Task<IEnumerable<CoordinateDataSummary>> GetCoordinateDataSummaryAsync();
+        Task<CoordinateData> GetCoordinateDataAsync(string id);
     }
 }

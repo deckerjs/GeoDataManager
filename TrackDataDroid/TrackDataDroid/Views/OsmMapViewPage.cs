@@ -1,5 +1,7 @@
 ﻿using Xamarin.Forms;
 using TrackDataDroid.ViewModels;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace TrackDataDroid.Views
 {
@@ -11,8 +13,35 @@ namespace TrackDataDroid.Views
         {
             //Content = GetContent();
             _viewModel = viewModel;
-            Content = _viewModel.GetContentAsync().Result;
+            //Content = _viewModel.GetContentAsync().GetAwaiter().GetResult();
         }
+
+        protected override async void OnAppearing()
+        {
+            //TaskFactory _taskFactory = new
+            //TaskFactory(CancellationToken.None,
+            //            TaskCreationOptions.None,
+            //            TaskContinuationOptions.None,
+            //            TaskScheduler.Default);
+
+            //Content = _viewModel.GetContentAsync().GetAwaiter().GetResult();
+            //Content = _taskFactory.StartNew(_viewModel.GetContentAsync).Unwrap().GetAwaiter().GetResult();
+
+            //Task<View> getContentTask = _viewModel.GetContentAsync();
+
+            //getContentTask.ContinueWith()
+
+            //. ContinueWith(x =>
+            //{
+            //    Content = x.Result;
+            //});
+
+            Content = await _viewModel.GetContentAsync();
+
+            base.OnAppearing();
+        }
+
+
     }
 }
     //    private View GetContent()

@@ -43,7 +43,9 @@ namespace TrackDataDroid.ViewModels
             var map = GetCustomMap();
 
             var lineStringLayer = await CreateLineStringLayer(CreateLineStringStyle());
+            
             map.Layers.Add(lineStringLayer);
+
             map.Home = n => n.NavigateTo(lineStringLayer.Envelope.Centroid, 200);
 
             map.Widgets.Add(new Mapsui.Widgets.ScaleBar.ScaleBarWidget(map)
@@ -72,9 +74,33 @@ namespace TrackDataDroid.ViewModels
         public async Task<ILayer> CreateLineStringLayer(IStyle style = null)
         {
 
-            List<CoordinateDataSummary> trackSummary = (await _dataRepository.GetTracksSummaryAsync()).ToList();
+            var getResult = await _dataRepository.GetTracksSummaryAsync();
+            List<CoordinateDataSummary> trackSummary = getResult?.ToList();
 
+            if(trackSummary!=null && trackSummary.Count > 0)
+            {
+                var firstTrack = trackSummary.FirstOrDefault();
+                var coordData = await _dataRepository.GetTrackAsync(firstTrack.ID);
 
+                var trackPoints = coordData.Data.First().Coordinates.Select(x => SphericalMercator.FromLonLat(x.Longitude, x.Latitude));
+
+                //todo: style starting and ending points differently
+                var startingPoint = new Feature { Geometry = trackPoints.First() } ;
+                var endingPoint = new Feature { Geometry = trackPoints.Last() };
+                var trackLine = new Feature { Geometry = new LineString(trackPoints) };
+
+                var features = new[] { startingPoint, endingPoint, trackLine };
+                return new MemoryLayer
+                {
+                    //DataSource = new MemoryProvider(new Feature { Geometry = trackLine }),
+                    DataSource = new MemoryProvider(features),
+                    Name = "LineStringLayer",
+                    Style = style
+                };
+
+            }
+
+            //demo testing only, remove later
             var lineString = (LineString)Geometry.GeomFromText(WKTGr5);
             lineString = new LineString(lineString.Vertices.Select(v => SphericalMercator.FromLonLat(v.Y, v.X)));
 
@@ -84,6 +110,7 @@ namespace TrackDataDroid.ViewModels
                 Name = "LineStringLayer",
                 Style = style
             };
+
         }
 
         public static IStyle CreateLineStringStyle()
@@ -92,7 +119,7 @@ namespace TrackDataDroid.ViewModels
             {
                 Fill = null,
                 Outline = null,
-                Line = { Color = Mapsui.Styles.Color.Green, Width = 4 }
+                Line = { Color = Mapsui.Styles.Color.Yellow, Width = 4 }
             };
         }
 

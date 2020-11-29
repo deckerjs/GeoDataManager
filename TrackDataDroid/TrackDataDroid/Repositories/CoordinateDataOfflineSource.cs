@@ -22,5 +22,9 @@ namespace TrackDataDroid.Repositories
             throw new NotImplementedException();
         }
 
+        public Task<CoordinateData> GetCoordinateDataAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

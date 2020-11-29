@@ -15,6 +15,7 @@ namespace GeoStoreApi.Client
         private TokenResponse _lastTokenResponse;
         DateTime _tokenExpires;
         private int _minutesAheadOfExpireToRefresh = 5;
+        private bool _initialized; //todo: create [IsInitializedCheck] attribute
 
         public ApiClient(){}
 
@@ -22,10 +23,12 @@ namespace GeoStoreApi.Client
         {
             _apiClientsettings = apiClientsettings;
             await SetupHttpClient(apiClientsettings);
+            _initialized = true;
         }
                 
         public async Task<string> Post(string url, T body)
         {
+            IsInitializedCheck();
             await CheckTokenExpiration();
 
             string json = JsonSerializer.Serialize(body);
@@ -45,6 +48,7 @@ namespace GeoStoreApi.Client
 
         public async Task<string> PostCollection(string url, IEnumerable<T> body)
         {
+            IsInitializedCheck();
             await CheckTokenExpiration();
 
             string json = JsonSerializer.Serialize(body);
@@ -64,6 +68,7 @@ namespace GeoStoreApi.Client
 
         public async Task<T> Get(string url)
         {
+            IsInitializedCheck();
             await CheckTokenExpiration();
 
             var response = _client.GetAsync(url).Result;
@@ -87,6 +92,7 @@ namespace GeoStoreApi.Client
 
         public async Task<IEnumerable<T>> GetCollection(string url)
         {
+            IsInitializedCheck();
             await CheckTokenExpiration();
 
             var response = _client.GetAsync(url).Result;
@@ -106,6 +112,7 @@ namespace GeoStoreApi.Client
 
         public async Task Put(string url, T body)
         {
+            IsInitializedCheck();
             await CheckTokenExpiration();
 
             string json = JsonSerializer.Serialize(body);
@@ -121,6 +128,7 @@ namespace GeoStoreApi.Client
 
         public async Task Delete(string url)
         {
+            IsInitializedCheck();
             await CheckTokenExpiration();
 
             var response = await _client.DeleteAsync(url);
@@ -194,6 +202,14 @@ namespace GeoStoreApi.Client
         {
             Exception innerExpeption = new Exception(response.Content.ReadAsStringAsync().Result);
             throw new Exception(response.ReasonPhrase, innerExpeption);
+        }
+
+        private void IsInitializedCheck()
+        {
+            if (!_initialized)
+            {
+                throw new Exception("Call Initialize() before using ApiClient");
+            }
         }
     }
 
