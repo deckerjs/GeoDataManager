@@ -17,6 +17,7 @@ using TrackDataDroid.Repositories;
 using System.Collections.Generic;
 using CoordinateDataModels;
 using System.Threading.Tasks;
+using Mapsui.Utilities;
 
 namespace TrackDataDroid.ViewModels
 {
@@ -29,21 +30,15 @@ namespace TrackDataDroid.ViewModels
             _dataRepository = dataRepository;
         }
 
-        public async Task<View> GetContentAsync()
-        {
-            // for online osm map
-            //var map = new Map
-            //{
-            //    CRS = "EPSG:3857",
-            //    Transformation = new MinimalTransformation()
-            //};
-            //map.Layers.Add(OpenStreetMap.CreateTileLayer());
+        public Command LoadItemsCommand { get; }
 
-            // open custom raster mbtiles map file
+        public List<string> MapDataItems { get; }
+
+        public async Task<MapView> GetMapViewAsync()
+        {
             var map = GetCustomMap();
 
-            var lineStringLayer = await CreateLineStringLayer(CreateLineStringStyle());
-            
+            var lineStringLayer = await CreateLineStringLayer(CreateLineStringStyle());            
             map.Layers.Add(lineStringLayer);
 
             map.Home = n => n.NavigateTo(lineStringLayer.Envelope.Centroid, 200);
@@ -52,26 +47,22 @@ namespace TrackDataDroid.ViewModels
             {
                 TextAlignment = Alignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Bottom
+                VerticalAlignment = VerticalAlignment.Top
             });
 
-            var stackLayout = new StackLayout
+            return new MapView()
             {
-                Children =
-                {
-                new MapView()
-                    {
-                        VerticalOptions = LayoutOptions.FillAndExpand,
-                        HorizontalOptions=LayoutOptions.Fill,
-                        BackgroundColor = System.Drawing.Color.Black,
-                        Map = map
-                    }
-                }
+                VerticalOptions = LayoutOptions.FillAndExpand,
+                HorizontalOptions = LayoutOptions.Fill,
+                BackgroundColor = System.Drawing.Color.Black,
+                Map = map
             };
-            return stackLayout;
+
         }
 
-        public async Task<ILayer> CreateLineStringLayer(IStyle style = null)
+
+
+        private async Task<ILayer> CreateLineStringLayer(IStyle style = null)
         {
 
             var getResult = await _dataRepository.GetTracksSummaryAsync();
@@ -100,37 +91,24 @@ namespace TrackDataDroid.ViewModels
 
             }
 
-            //demo testing only, remove later
-            var lineString = (LineString)Geometry.GeomFromText(WKTGr5);
-            lineString = new LineString(lineString.Vertices.Select(v => SphericalMercator.FromLonLat(v.Y, v.X)));
-
-            return new MemoryLayer
-            {
-                DataSource = new MemoryProvider(new Feature { Geometry = lineString }),
-                Name = "LineStringLayer",
-                Style = style
-            };
-
+            return new Layer();
         }
 
-        public static IStyle CreateLineStringStyle()
+        private static IStyle CreateLineStringStyle()
         {
+            //todo: add configuration to pick line string style. (color,width)
             return new VectorStyle
             {
                 Fill = null,
                 Outline = null,
                 Line = { Color = Mapsui.Styles.Color.Yellow, Width = 4 }
             };
-        }
-
-        private const string WKTGr5 = "LINESTRING(40.939812306314707 -104.4140350073576, 40.770964482799172 -105.78512543812394, 40.884347157552838 -105.83570159040391, 40.804107449948788 -105.66309272311628)";
-        private readonly MapViewModel _viewModel;
-
+        }        
+        
         private static Mapsui.Map GetCustomMap()
         {
             var map = new Mapsui.Map();
-
-            //var file = "world.mbtiles";            
+            //todo: add configuration pick base map(s)
             var worldLayerFile = "world.mbtiles";
             var baseLayerFile = "co-full-base-dark-1.mbtiles";
             var trackLayerFile = "co-full-tracks-only-dark-1.mbtiles";
@@ -163,8 +141,7 @@ namespace TrackDataDroid.ViewModels
 
         private static string GetFullPath(string baseLayerfile)
         {
-            //todo: decide which location is better for an included basemap
-            //Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            //todo: look into sd card location for base maps
             var basepath = @"." + Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             return Path.Combine(basepath, baseLayerfile);
         }
@@ -188,13 +165,41 @@ namespace TrackDataDroid.ViewModels
             }
         }
 
-        public static TileLayer CreateMbTilesLayer(string path, string name)
+        private static TileLayer CreateMbTilesLayer(string path, string name)
         {
             var sqliteconn = new SQLiteConnectionString(path, false);
             var mbTilesTileSource = new MbTilesTileSource(sqliteconn);
             var mbTilesLayer = new TileLayer(mbTilesTileSource) { Name = name };
             return mbTilesLayer;
         }
+
+        //todo: add map choice options in configuration
+        private Map GetOnlineOSMMap()
+        {            
+            var map = new Map
+            {
+                CRS = "EPSG:3857",
+                Transformation = new MinimalTransformation()
+            };
+            map.Layers.Add(OpenStreetMap.CreateTileLayer());
+            return map;
+        }
+
+        //demo testing only, remove when done
+        public ILayer GetDemoLineStringLayer(IStyle style = null)
+        {
+            string WKTGr5 = "LINESTRING(40.939812306314707 -104.4140350073576, 40.770964482799172 -105.78512543812394, 40.884347157552838 -105.83570159040391, 40.804107449948788 -105.66309272311628)";
+        var lineString = (LineString)Geometry.GeomFromText(WKTGr5);
+            lineString = new LineString(lineString.Vertices.Select(v => SphericalMercator.FromLonLat(v.Y, v.X)));
+
+            return new MemoryLayer
+            {
+                DataSource = new MemoryProvider(new Feature { Geometry = lineString }),
+                Name = "LineStringLayer",
+                Style = style
+            };
+        }
+
     }
 
 
