@@ -3,6 +3,9 @@ using TrackDataDroid.ViewModels;
 using System.Threading.Tasks;
 using System.Threading;
 using Xamarin.Forms.Markup;
+using CoordinateDataModels;
+using Xamarin.Essentials;
+using System;
 
 namespace TrackDataDroid.Views
 {
@@ -13,7 +16,18 @@ namespace TrackDataDroid.Views
         public OsmMapViewPage(MapViewModel viewModel)
         {
             _viewModel = viewModel;
+            BindingContext = _viewModel;
         }
+
+        //todo: put these somewhere like a repo or service
+        public static Style<Label> DataItemTitleStyle => new Style<Label>(
+        (Label.TextColorProperty, "#249C47"),
+        (Label.FontAttributesProperty, FontAttributes.Bold));
+
+        public static Style<Label> DataItemValueStyle => new Style<Label>(
+            (Label.TextColorProperty, "#FFFFFF"));
+
+
 
         protected override async void OnAppearing()
         {            
@@ -25,45 +39,48 @@ namespace TrackDataDroid.Views
         {
             var stackLayout = new StackLayout
             {
+                //Orientation = StackOrientation.Horizontal,
                 Children =
                 {
-                await _viewModel.GetMapViewAsync()
+                    await GetMapControlPanel(),
+                    await _viewModel.GetMapViewAsync()
                 }
-            };
+            }.Bind(StackLayout.OrientationProperty, nameof(_viewModel.CurrentStackOrientation));
             return stackLayout;
         }
 
-        private View GetMapControlPanel()
+        private async Task<View> GetMapControlPanel()
         {
-            var stackLayout = new StackLayout
+            await _viewModel.LoadAvailableTracks();
+
+            var refreshView = new RefreshView().Content = new StackLayout
             {
                 Children =
                 {
-                new Button {Text = "Reload"}.BindCommand(nameof(_viewModel.LoadItemsCommand)),                    
-                    new CollectionView()
+                new Button {Text = "Reload"}.BindCommand(nameof(_viewModel.LoadTrackCommand)),                    
+                new CollectionView()
+                {
+                    ItemTemplate = new DataTemplate(() =>
                     {
-                        ItemTemplate = new DataTemplate(() =>
-                        {
-                            return new StackLayout
-                                {
-                                    Padding = 10,
-                                    Children =
-                                        {
-                                    new Label{Text="placeholder 1"},
-                                    new Label{Text="placeholder 2"},
-                                            //new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=16}
-                                            //    .Bind(Label.TextProperty, nameof(SensorValueItem.Name))
-                                            //    .Style(DataItemTitleStyle),
-                                            //new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=14}
-                                            //    .Bind(Label.TextProperty, nameof(SensorValueItem.Value))
-                                            //    .Style(DataItemValueStyle),
-                                        }
-                                };
-                        })
-                    }.Bind(CollectionView.ItemsSourceProperty, nameof(_viewModel.MapDataItems))
+                        return new StackLayout
+                            {
+                                HorizontalOptions = LayoutOptions.Start,
+                                VerticalOptions = LayoutOptions.Start,
+                                Padding = 1,
+                                Children =
+                                    {
+                                    new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=16, Text=nameof(CoordinateDataSummary.ID)}                                            
+                                        .Style(DataItemTitleStyle),
+                                    new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=14}
+                                        .Bind(Label.TextProperty, nameof(CoordinateDataSummary.ID))
+                                        .Style(DataItemValueStyle)
+                                    }
+                            };
+                    })
+                    }.Bind(CollectionView.ItemsSourceProperty, nameof(_viewModel.AvailableCoordinateData))
                 }
             };
-            return stackLayout;
+            return refreshView;
 
         }
 

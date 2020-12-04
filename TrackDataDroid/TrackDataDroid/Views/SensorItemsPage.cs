@@ -13,7 +13,7 @@ using Xamarin.Forms.Markup;
 
 namespace TrackDataDroid.Views
 {
-    public partial class SensorItemsPage : ContentPage
+    public class SensorItemsPage : ContentPage
     {
         private ISensorValuesViewModel _viewModel;
         public SensorItemsPage(ISensorValuesViewModel viewModel)

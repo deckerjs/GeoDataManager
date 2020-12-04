@@ -18,27 +18,81 @@ using System.Collections.Generic;
 using CoordinateDataModels;
 using System.Threading.Tasks;
 using Mapsui.Utilities;
+using Xamarin.Forms.Markup;
+using System.Collections.ObjectModel;
+using Xamarin.Essentials;
 
 namespace TrackDataDroid.ViewModels
 {
-    public class MapViewModel
+    public class MapViewModel: BaseViewModel
     {
         private readonly CoordinateDataRepository _dataRepository;
-
+        
         public MapViewModel(CoordinateDataRepository dataRepository)
         {
             _dataRepository = dataRepository;
+            AvailableCoordinateData = new ObservableCollection<CoordinateDataSummary>();
+            LoadAvailableTracksCommand = new Command(async () => await LoadAvailableTracks());
+
+            UpdateDisplayInfo();
+            DeviceDisplay.MainDisplayInfoChanged += OnMainDisplayInfoChanged;
         }
 
-        public Command LoadItemsCommand { get; }
+        public Command LoadAvailableTracksCommand { get; }
+        public Command<string> LoadTrackCommand { get; }
+        public ObservableCollection<CoordinateDataSummary> AvailableCoordinateData { get; private set; }
 
-        public List<string> MapDataItems { get; }
+        private DisplayInfo _currentDisplayInfo;        
+        public DisplayInfo CurrentDisplayInfo
+        {
+            get { return _currentDisplayInfo; }
+            set { SetProperty(ref _currentDisplayInfo, value); }
+        }
+
+        private StackOrientation _currentStackOrientation;
+        public StackOrientation CurrentStackOrientation
+        {
+            get { return _currentStackOrientation; }
+            set { SetProperty(ref _currentStackOrientation, value); }            
+        }
+
+        private void OnMainDisplayInfoChanged(object sender, DisplayInfoChangedEventArgs e)
+        {
+            UpdateDisplayInfo();
+        }
+
+        private void UpdateDisplayInfo()
+        {
+            CurrentDisplayInfo = DeviceDisplay.MainDisplayInfo;
+
+            //for some reason the DisplayOrientation apears to be the opposite of what is expected
+            if (CurrentDisplayInfo.Orientation == DisplayOrientation.Portrait)
+            {
+                CurrentStackOrientation = StackOrientation.Horizontal;
+            }
+            else
+            {
+                CurrentStackOrientation = StackOrientation.Vertical;
+            }
+        }
+
+        public async Task LoadAvailableTracks()
+        {
+            var items = await GetAvailableTracks();
+            foreach (var item in items)
+            {
+                AvailableCoordinateData.Add(item);
+            }            
+        }
 
         public async Task<MapView> GetMapViewAsync()
         {
             var map = GetCustomMap();
 
-            var lineStringLayer = await CreateLineStringLayer(CreateLineStringStyle());            
+            //load data for track summary list, use for binding to list control
+            //command can pick which track(s) to render
+
+            var lineStringLayer = await CreateLineStringLayer(GetLineStringStyle());            
             map.Layers.Add(lineStringLayer);
 
             map.Home = n => n.NavigateTo(lineStringLayer.Envelope.Centroid, 200);
@@ -53,14 +107,39 @@ namespace TrackDataDroid.ViewModels
             return new MapView()
             {
                 VerticalOptions = LayoutOptions.FillAndExpand,
-                HorizontalOptions = LayoutOptions.Fill,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = System.Drawing.Color.Black,
                 Map = map
             };
 
         }
 
+        private async Task<List<CoordinateDataSummary>> GetAvailableTracks()
+        {
+            var getResult = await _dataRepository.GetTracksSummaryAsync();
+            List<CoordinateDataSummary> trackSummary = getResult?.ToList();
+            return trackSummary;
+        }
 
+        private async Task<ILayer> GetTrackLayer(string trackId)
+        {
+            var coordData = await _dataRepository.GetTrackAsync(trackId);
+            var trackPoints = coordData.Data.First().Coordinates.Select(x => SphericalMercator.FromLonLat(x.Longitude, x.Latitude));
+
+            //todo: try to style starting and ending points differently
+            var startingPoint = new Feature { Geometry = trackPoints.First() };
+            var endingPoint = new Feature { Geometry = trackPoints.Last() };
+            var trackLine = new Feature { Geometry = new LineString(trackPoints) };
+
+            var features = new[] { startingPoint, endingPoint, trackLine };
+            return new MemoryLayer
+            {                
+                DataSource = new MemoryProvider(features),
+                Name = "LineStringLayer",
+                Style = GetLineStringStyle()
+            };
+
+        }
 
         private async Task<ILayer> CreateLineStringLayer(IStyle style = null)
         {
@@ -94,7 +173,7 @@ namespace TrackDataDroid.ViewModels
             return new Layer();
         }
 
-        private static IStyle CreateLineStringStyle()
+        private static IStyle GetLineStringStyle()
         {
             //todo: add configuration to pick line string style. (color,width)
             return new VectorStyle
@@ -174,9 +253,9 @@ namespace TrackDataDroid.ViewModels
         }
 
         //todo: add map choice options in configuration
-        private Map GetOnlineOSMMap()
+        private Mapsui.Map GetOnlineOSMMap()
         {            
-            var map = new Map
+            var map = new Mapsui.Map
             {
                 CRS = "EPSG:3857",
                 Transformation = new MinimalTransformation()
