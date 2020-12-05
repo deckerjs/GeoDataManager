@@ -57,7 +57,7 @@ namespace TrackDataDroid.Views
             {
                 Children =
                 {
-                new Button {Text = "Reload"}.BindCommand(nameof(_viewModel.LoadTrackCommand)),                    
+                new Button {Text = "Reload"}.BindCommand(nameof(_viewModel.LoadAvailableTracksCommand)),                    
                 new CollectionView()
                 {
                     ItemTemplate = new DataTemplate(() =>
@@ -73,13 +73,16 @@ namespace TrackDataDroid.Views
                                         .Style(DataItemTitleStyle),
                                     new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=14}
                                         .Bind(Label.TextProperty, nameof(CoordinateDataSummary.ID))
-                                        .Style(DataItemValueStyle)
+                                        .Style(DataItemValueStyle),
+                                    new Button {Text = "Load"}.BindCommand(nameof(_viewModel.LoadTrackCommand),_viewModel,nameof(CoordinateDataSummary.ID))
                                     }
                             };
                     })
                     }.Bind(CollectionView.ItemsSourceProperty, nameof(_viewModel.AvailableCoordinateData))
                 }
-            };
+            }
+            .Bind(StackLayout.HeightRequestProperty, nameof(_viewModel.Section2Height))
+            .Bind(StackLayout.WidthRequestProperty, nameof(_viewModel.Section2Width));
             return refreshView;
 
         }

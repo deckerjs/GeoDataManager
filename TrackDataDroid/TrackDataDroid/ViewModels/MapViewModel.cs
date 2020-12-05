@@ -27,20 +27,34 @@ namespace TrackDataDroid.ViewModels
     public class MapViewModel: BaseViewModel
     {
         private readonly CoordinateDataRepository _dataRepository;
-        
+        private bool _readyToLoadTracks = false;
+
         public MapViewModel(CoordinateDataRepository dataRepository)
         {
             _dataRepository = dataRepository;
             AvailableCoordinateData = new ObservableCollection<CoordinateDataSummary>();
-            LoadAvailableTracksCommand = new Command(async () => await LoadAvailableTracks());
+            LoadAvailableTracksCommand = new Command(async () => await LoadAvailableTracks(), CanLoadAvailableTracks());
+            LoadTrackCommand = new Command<string>(async (x) => await AddTrackLayerToMap(x),CanLoadTrack());
 
             UpdateDisplayInfo();
             DeviceDisplay.MainDisplayInfoChanged += OnMainDisplayInfoChanged;
         }
 
+        private Func<bool> CanLoadAvailableTracks()
+        {
+            return ()=> _readyToLoadTracks;
+        }
+
+        private Func<string, bool> CanLoadTrack()
+        {
+            return (x) => _readyToLoadTracks;
+        }
+
         public Command LoadAvailableTracksCommand { get; }
         public Command<string> LoadTrackCommand { get; }
         public ObservableCollection<CoordinateDataSummary> AvailableCoordinateData { get; private set; }
+
+        private Mapsui.Map _map;
 
         private DisplayInfo _currentDisplayInfo;        
         public DisplayInfo CurrentDisplayInfo
@@ -56,6 +70,34 @@ namespace TrackDataDroid.ViewModels
             set { SetProperty(ref _currentStackOrientation, value); }            
         }
 
+        private double _section1Width;
+        public double Section1Width
+        {
+            get { return _section1Width; }
+            set { SetProperty(ref _section1Width ,value); }
+        }
+        
+        private double _section1Height;
+        public double Section1Height
+        {
+            get { return _section1Height; }
+            set { SetProperty(ref _section1Height, value); }
+        }
+
+        private double _section2Width;
+        public double Section2Width
+        {
+            get { return _section2Width; }
+            set { SetProperty(ref _section2Width ,value); }
+        }
+        
+        private double _section2Height;
+        public double Section2Height
+        {
+            get { return _section2Height; }
+            set { SetProperty(ref _section2Height, value); }
+        }
+
         private void OnMainDisplayInfoChanged(object sender, DisplayInfoChangedEventArgs e)
         {
             UpdateDisplayInfo();
@@ -65,60 +107,98 @@ namespace TrackDataDroid.ViewModels
         {
             CurrentDisplayInfo = DeviceDisplay.MainDisplayInfo;
 
-            //for some reason the DisplayOrientation apears to be the opposite of what is expected
-            if (CurrentDisplayInfo.Orientation == DisplayOrientation.Portrait)
+            if (CurrentDisplayInfo.Width >= CurrentDisplayInfo.Height)
             {
                 CurrentStackOrientation = StackOrientation.Horizontal;
+                double threeQW = (CurrentDisplayInfo.Width / 4) * 3;
+                double oneQW = CurrentDisplayInfo.Width-threeQW;
+
+                Section1Height = CurrentDisplayInfo.Height;
+                Section1Width = threeQW;
+
+                Section2Height = CurrentDisplayInfo.Height;
+                Section2Width = oneQW;
             }
             else
             {
                 CurrentStackOrientation = StackOrientation.Vertical;
+                double threeQH = (CurrentDisplayInfo.Height / 4) * 3;
+                double oneQH = CurrentDisplayInfo.Height - threeQH;
+
+                Section1Height = threeQH;
+                Section1Width = CurrentDisplayInfo.Width;
+
+                Section2Height = oneQH;
+                Section2Width = CurrentDisplayInfo.Width; 
             }
         }
 
         public async Task LoadAvailableTracks()
         {
-            var items = await GetAvailableTracks();
-            foreach (var item in items)
+            if (_readyToLoadTracks)
             {
-                AvailableCoordinateData.Add(item);
-            }            
+                var items = await GetAvailableTracks();
+                foreach (var item in items)
+                {
+                    AvailableCoordinateData.Add(item);
+                }
+
+                if (items!=null && items.Any())
+                {
+                    await AddTrackLayerToMap(items.First().ID);
+                }
+            }
         }
 
         public async Task<MapView> GetMapViewAsync()
         {
-            var map = GetCustomMap();
+            _map = GetCustomMap();
 
             //load data for track summary list, use for binding to list control
             //command can pick which track(s) to render
 
-            var lineStringLayer = await CreateLineStringLayer(GetLineStringStyle());            
-            map.Layers.Add(lineStringLayer);
+            //var lineStringLayer = await CreateLineStringLayer(GetLineStringStyle());            
+            //map.Layers.Add(lineStringLayer);
+            //map.Home = n => n.NavigateTo(lineStringLayer.Envelope.Centroid, 200);
 
-            map.Home = n => n.NavigateTo(lineStringLayer.Envelope.Centroid, 200);
-
-            map.Widgets.Add(new Mapsui.Widgets.ScaleBar.ScaleBarWidget(map)
+            _map.Widgets.Add(new Mapsui.Widgets.ScaleBar.ScaleBarWidget(_map)
             {
                 TextAlignment = Alignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top
             });
 
+            _readyToLoadTracks = true;
+
             return new MapView()
             {
                 VerticalOptions = LayoutOptions.FillAndExpand,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = System.Drawing.Color.Black,
-                Map = map
-            };
+                Map = _map
+            }.Bind(StackLayout.HeightRequestProperty, nameof(Section1Height))
+            .Bind(StackLayout.WidthRequestProperty, nameof(Section1Width));
 
         }
 
         private async Task<List<CoordinateDataSummary>> GetAvailableTracks()
         {
+            if (!_readyToLoadTracks) return null;
+
             var getResult = await _dataRepository.GetTracksSummaryAsync();
             List<CoordinateDataSummary> trackSummary = getResult?.ToList();
             return trackSummary;
+        }
+
+        private async Task AddTrackLayerToMap(string trackId)
+        {
+            if (_readyToLoadTracks)
+            {
+                //var lineStringLayer = await CreateLineStringLayer(GetLineStringStyle());
+                var lineStringLayer = await GetTrackLayer(trackId);
+                _map.Layers.Add(lineStringLayer);
+                _map.Home = n => n.NavigateTo(lineStringLayer.Envelope.Centroid, 200);
+            }
         }
 
         private async Task<ILayer> GetTrackLayer(string trackId)
