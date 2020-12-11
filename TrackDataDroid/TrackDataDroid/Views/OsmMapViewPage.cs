@@ -32,6 +32,7 @@ namespace TrackDataDroid.Views
         protected override async void OnAppearing()
         {            
             Content = await GetPageContent();
+            await _viewModel.LoadAvailableTracks();
             base.OnAppearing();
         }
 
@@ -51,7 +52,6 @@ namespace TrackDataDroid.Views
 
         private async Task<View> GetMapControlPanel()
         {
-            await _viewModel.LoadAvailableTracks();
 
             var refreshView = new RefreshView().Content = new StackLayout
             {
@@ -64,17 +64,19 @@ namespace TrackDataDroid.Views
                     {
                         return new StackLayout
                             {
+                                Orientation = StackOrientation.Horizontal,
                                 HorizontalOptions = LayoutOptions.Start,
                                 VerticalOptions = LayoutOptions.Start,
                                 Padding = 1,
                                 Children =
                                     {
-                                    new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=16, Text=nameof(CoordinateDataSummary.ID)}                                            
-                                        .Style(DataItemTitleStyle),
-                                    new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=14}
-                                        .Bind(Label.TextProperty, nameof(CoordinateDataSummary.ID))
+                                    new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
+                                        .Bind(Label.TextProperty, $"CoordinateData.{nameof(CoordinateDataSummary.Description)}")
+                                        .Style(DataItemValueStyle),                                    
+                                    new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
+                                        .Bind(Label.TextProperty, $"CoordinateData.{nameof(CoordinateDataSummary.DataItemCount)}")
                                         .Style(DataItemValueStyle),
-                                    new Button {Text = "Load"}.BindCommand(nameof(_viewModel.LoadTrackCommand),_viewModel,nameof(CoordinateDataSummary.ID))
+                                    new Button {Text = "+", WidthRequest=15, HeightRequest=15, FontSize=14}.BindCommand(nameof(_viewModel.LoadTrackCommand),_viewModel,$"CoordinateData.{nameof(CoordinateDataSummary.ID)}")
                                     }
                             };
                     })

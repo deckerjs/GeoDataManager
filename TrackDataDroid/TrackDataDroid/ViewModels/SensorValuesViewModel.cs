@@ -36,6 +36,13 @@ namespace TrackDataDroid.ViewModels
             //_repository = DependencyService.Get<ISettingsRepository>();
         }
 
+        string title = string.Empty;
+        public string Title
+        {
+            get { return title; }
+            set { SetProperty(ref title, value); }
+        }
+
         public async Task InitializeAsync()
         {
             await LoadItemsAsync();

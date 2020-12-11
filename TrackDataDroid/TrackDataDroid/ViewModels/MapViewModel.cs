@@ -28,11 +28,13 @@ namespace TrackDataDroid.ViewModels
     {
         private readonly CoordinateDataRepository _dataRepository;
         private bool _readyToLoadTracks = false;
+        private Mapsui.Map _map;
+        private MapView _mapView;
 
         public MapViewModel(CoordinateDataRepository dataRepository)
         {
             _dataRepository = dataRepository;
-            AvailableCoordinateData = new ObservableCollection<CoordinateDataSummary>();
+            AvailableCoordinateData = new ObservableCollection<TrackSummaryViewModel>();
             LoadAvailableTracksCommand = new Command(async () => await LoadAvailableTracks(), CanLoadAvailableTracks());
             LoadTrackCommand = new Command<string>(async (x) => await AddTrackLayerToMap(x),CanLoadTrack());
 
@@ -52,10 +54,8 @@ namespace TrackDataDroid.ViewModels
 
         public Command LoadAvailableTracksCommand { get; }
         public Command<string> LoadTrackCommand { get; }
-        public ObservableCollection<CoordinateDataSummary> AvailableCoordinateData { get; private set; }
-
-        private Mapsui.Map _map;
-
+        public ObservableCollection<TrackSummaryViewModel> AvailableCoordinateData { get; private set; }
+        
         private DisplayInfo _currentDisplayInfo;        
         public DisplayInfo CurrentDisplayInfo
         {
@@ -135,6 +135,13 @@ namespace TrackDataDroid.ViewModels
 
         public async Task LoadAvailableTracks()
         {
+            //todo: add track date to summary instead of track import date
+            //todo: create viewmodel for track summary data
+            // include properties for
+            // bool: ShowOnMap/selected
+            // (once track is loaded) - track 
+
+
             if (_readyToLoadTracks)
             {
                 var items = await GetAvailableTracks();
@@ -145,7 +152,7 @@ namespace TrackDataDroid.ViewModels
 
                 if (items!=null && items.Any())
                 {
-                    await AddTrackLayerToMap(items.First().ID);
+                    await AddTrackLayerToMap(items.First().CoordinateData.ID);
                 }
             }
         }
@@ -161,8 +168,22 @@ namespace TrackDataDroid.ViewModels
             //map.Layers.Add(lineStringLayer);
             //map.Home = n => n.NavigateTo(lineStringLayer.Envelope.Centroid, 200);
 
+            var currentLocation = await GetCurrentLocation();
+            _map.Home = n => n.NavigateTo(SphericalMercator.FromLonLat(currentLocation.Y, currentLocation.X), 200);
+
+            _map.Widgets.Add(new Mapsui.Widgets.Zoom.ZoomInOutWidget()
+            {
+                Enabled = true,
+                BackColor = Mapsui.Styles.Color.Black,
+                TextColor = Mapsui.Styles.Color.Orange
+            });
+
             _map.Widgets.Add(new Mapsui.Widgets.ScaleBar.ScaleBarWidget(_map)
             {
+                StrokeWidth = 1,
+                TextColor = Mapsui.Styles.Color.Orange,
+                Halo = Mapsui.Styles.Color.Black,
+                Enabled = true,
                 TextAlignment = Alignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top
@@ -170,8 +191,12 @@ namespace TrackDataDroid.ViewModels
 
             _readyToLoadTracks = true;
 
-            return new MapView()
+            _mapView = new MapView()
             {
+                IsNorthingButtonVisible= true,
+                IsZoomButtonVisible=false,
+                IsMyLocationButtonVisible=true,
+                MyLocationEnabled =true,
                 VerticalOptions = LayoutOptions.FillAndExpand,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = System.Drawing.Color.Black,
@@ -179,25 +204,30 @@ namespace TrackDataDroid.ViewModels
             }.Bind(StackLayout.HeightRequestProperty, nameof(Section1Height))
             .Bind(StackLayout.WidthRequestProperty, nameof(Section1Width));
 
+            return _mapView;
         }
 
-        private async Task<List<CoordinateDataSummary>> GetAvailableTracks()
+        private async Task<List<TrackSummaryViewModel>> GetAvailableTracks()
         {
             if (!_readyToLoadTracks) return null;
 
             var getResult = await _dataRepository.GetTracksSummaryAsync();
-            List<CoordinateDataSummary> trackSummary = getResult?.ToList();
+
+            List<TrackSummaryViewModel> trackSummary = getResult?.Select(x=> new TrackSummaryViewModel()
+            { 
+                CoordinateData = x,
+                ShowOnMap = false                
+            }).ToList();
             return trackSummary;
         }
 
         private async Task AddTrackLayerToMap(string trackId)
         {
-            if (_readyToLoadTracks)
+            if (_readyToLoadTracks && ! string.IsNullOrEmpty(trackId))
             {
-                //var lineStringLayer = await CreateLineStringLayer(GetLineStringStyle());
                 var lineStringLayer = await GetTrackLayer(trackId);
-                _map.Layers.Add(lineStringLayer);
-                _map.Home = n => n.NavigateTo(lineStringLayer.Envelope.Centroid, 200);
+                _map.Layers.Add(lineStringLayer);                
+                _mapView.Navigator.NavigateTo(lineStringLayer.Envelope.Centroid, 100);
             }
         }
 
@@ -266,7 +296,12 @@ namespace TrackDataDroid.ViewModels
         
         private static Mapsui.Map GetCustomMap()
         {
-            var map = new Mapsui.Map();
+            var map = new Mapsui.Map()
+            {
+                CRS = "EPSG:3857",
+                Transformation = new MinimalTransformation()
+            };
+
             //todo: add configuration pick base map(s)
             var worldLayerFile = "world.mbtiles";
             var baseLayerFile = "co-full-base-dark-1.mbtiles";
@@ -331,6 +366,17 @@ namespace TrackDataDroid.ViewModels
             var mbTilesLayer = new TileLayer(mbTilesTileSource) { Name = name };
             return mbTilesLayer;
         }
+
+
+        private async Task<Mapsui.Geometries.Point> GetCurrentLocation()
+        {
+            var request = new GeolocationRequest(GeolocationAccuracy.Best);
+            var location = await Geolocation.GetLocationAsync(request);
+
+            return new Mapsui.Geometries.Point(location.Latitude, location.Longitude);
+
+        }
+
 
         //todo: add map choice options in configuration
         private Mapsui.Map GetOnlineOSMMap()
