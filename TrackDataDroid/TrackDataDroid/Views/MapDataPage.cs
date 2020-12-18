@@ -9,13 +9,13 @@ using System;
 
 namespace TrackDataDroid.Views
 {
-    public class OsmMapViewPage : ContentPage
+    public class MapDataPage : ContentPage
     {
-        private readonly MapViewModel _viewModel;
 
+        private readonly MapViewModel _viewModel;
         private bool _initialized;
 
-        public OsmMapViewPage(MapViewModel viewModel)
+        public MapDataPage(MapViewModel viewModel)
         {
             _viewModel = viewModel;
             BindingContext = _viewModel;
@@ -29,32 +29,22 @@ namespace TrackDataDroid.Views
         public static Style<Label> DataItemValueStyle => new Style<Label>(
             (Label.TextColorProperty, "#FFFFFF"));
 
-        //OnBindingContextChanged
-
         protected override async void OnAppearing()
-        {
+        {            
             if (!_initialized)
             {
                 Content = await GetPageContent();
-                //await _viewModel.LoadAvailableTracks();
+                _viewModel.ReadyToLoadTracks = true;
+                await _viewModel.LoadAvailableTracks();
                 _initialized = true;
             }
-
             base.OnAppearing();
         }
 
         private async Task<View> GetPageContent()
         {
-            var stackLayout = new StackLayout
-            {
-                //Orientation = StackOrientation.Horizontal,
-                Children =
-                {
-                    await GetMapControlPanel(),
-                    await _viewModel.GetMapViewAsync()
-                }
-            }.Bind(StackLayout.OrientationProperty, nameof(_viewModel.CurrentStackOrientation));
-            return stackLayout;
+            //await _viewModel.LoadAvailableTracks();
+            return await GetMapControlPanel();
         }
 
         private async Task<View> GetMapControlPanel()
@@ -64,7 +54,7 @@ namespace TrackDataDroid.Views
             {
                 Children =
                 {
-                new Button {Text = "Reload"}.BindCommand(nameof(_viewModel.LoadAvailableTracksCommand)),                    
+                new Button {Text = "Reload"}.BindCommand(nameof(_viewModel.LoadAvailableTracksCommand)),
                 new CollectionView()
                 {
                     ItemTemplate = new DataTemplate(() =>
@@ -79,7 +69,7 @@ namespace TrackDataDroid.Views
                                     {
                                     new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
                                         .Bind(Label.TextProperty, $"{nameof(TrackSummaryViewModel.CoordinateData)}.{nameof(CoordinateDataSummary.Description)}")
-                                        .Style(DataItemValueStyle),                                    
+                                        .Style(DataItemValueStyle),
                                     new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
                                         .Bind(Label.TextProperty, $"{nameof(TrackSummaryViewModel.CoordinateData)}.{nameof(CoordinateDataSummary.DataItemCount)}")
                                         .Style(DataItemValueStyle),
@@ -99,4 +89,3 @@ namespace TrackDataDroid.Views
 
     }
 }
-   

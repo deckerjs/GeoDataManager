@@ -27,9 +27,9 @@ namespace TrackDataDroid.ViewModels
     public class MapViewModel: BaseViewModel
     {
         private readonly CoordinateDataRepository _dataRepository;
-        private bool _readyToLoadTracks = false;
         private Mapsui.Map _map;
         private MapView _mapView;
+        public bool ReadyToLoadTracks = false;
 
         public MapViewModel(CoordinateDataRepository dataRepository)
         {
@@ -44,12 +44,12 @@ namespace TrackDataDroid.ViewModels
 
         private Func<bool> CanLoadAvailableTracks()
         {
-            return ()=> _readyToLoadTracks;
+            return ()=> ReadyToLoadTracks;
         }
 
         private Func<string, bool> CanLoadTrack()
         {
-            return (x) => _readyToLoadTracks;
+            return (x) => ReadyToLoadTracks;
         }
 
         public Command LoadAvailableTracksCommand { get; }
@@ -142,7 +142,7 @@ namespace TrackDataDroid.ViewModels
             // (once track is loaded) - track 
 
 
-            if (_readyToLoadTracks)
+            if (ReadyToLoadTracks)
             {
                 var items = await GetAvailableTracks();
                 foreach (var item in items)
@@ -150,10 +150,10 @@ namespace TrackDataDroid.ViewModels
                     AvailableCoordinateData.Add(item);
                 }
 
-                if (items!=null && items.Any())
-                {
-                    await AddTrackLayerToMap(items.First().CoordinateData.ID);
-                }
+                //if (items!=null && items.Any())
+                //{
+                //    await AddTrackLayerToMap(items.First().CoordinateData.ID);
+                //}
             }
         }
 
@@ -189,7 +189,7 @@ namespace TrackDataDroid.ViewModels
                 VerticalAlignment = VerticalAlignment.Top
             });
 
-            _readyToLoadTracks = true;
+            //_readyToLoadTracks = true;
 
             _mapView = new MapView()
             {
@@ -209,7 +209,7 @@ namespace TrackDataDroid.ViewModels
 
         private async Task<List<TrackSummaryViewModel>> GetAvailableTracks()
         {
-            if (!_readyToLoadTracks) return null;
+            if (!ReadyToLoadTracks) return null;
 
             var getResult = await _dataRepository.GetTracksSummaryAsync();
 
@@ -223,7 +223,7 @@ namespace TrackDataDroid.ViewModels
 
         private async Task AddTrackLayerToMap(string trackId)
         {
-            if (_readyToLoadTracks && ! string.IsNullOrEmpty(trackId))
+            if (ReadyToLoadTracks && ! string.IsNullOrEmpty(trackId))
             {
                 var lineStringLayer = await GetTrackLayer(trackId);
                 _map.Layers.Add(lineStringLayer);                
@@ -245,7 +245,7 @@ namespace TrackDataDroid.ViewModels
             return new MemoryLayer
             {                
                 DataSource = new MemoryProvider(features),
-                Name = "LineStringLayer",
+                Name = coordData.ID,
                 Style = GetLineStringStyle()
             };
 

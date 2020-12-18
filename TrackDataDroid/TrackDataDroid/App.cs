@@ -49,34 +49,33 @@ namespace TrackDataDroid
                  // using something like App.Host.Services.GetRequiredService<something>
 
                  // todo: also may want to add each view,viewmodel,repo in its own method/extension
-                 services.AddScoped<AppShell>();
-                 services.AddScoped<MainPage>();
-                 services.AddScoped<SensorItemsPage>();
-                 services.AddScoped<MapViewPage>();
-                 services.AddScoped<OsmMapViewPage>();
+                 services.AddSingleton<AppShell>();
 
-                 services.AddScoped<MainPageViewModel>();
-                 services.AddScoped<ISensorValuesViewModel, SensorValuesViewModel>();
-                 services.AddScoped<ISensorValuesRepository, SensorValuesRepository>();
+                 services.AddSingleton<OsmMapViewPage>();
+                 services.AddSingleton<MapDataPage>();
+
+                 //services.AddScoped<MainPageViewModel>();
+                 //services.AddScoped<ISensorValuesViewModel, SensorValuesViewModel>();
+                 //services.AddScoped<ISensorValuesRepository, SensorValuesRepository>();
 
                  //services.Configure<AppOptions>(Configuration.GetSection("AppOptions"));
                  //services.AddScoped<AppOptions>(x => x.GetService<IOptions<AppOptions>>().Value);
                  
                  services.Configure<ApiClientSettings>(context.Configuration.GetSection("ApiClientSettings"));
-                 services.AddScoped<ApiClientSettings>(x =>
+                 services.AddSingleton<ApiClientSettings>(x =>
                  {
                      return Microsoft.Extensions.DependencyInjection
                      .ServiceProviderServiceExtensions.GetService<IOptions<ApiClientSettings>>(x).Value;
                      //return x.GetService<IOptions<ApiClientSettings>>().Value;
                  });
 
-                 services.AddScoped<MapViewModel>();
-                 services.AddScoped<CoordinateDataRepository>();
-                 services.AddScoped<CoordinateDataSourceFactory>();
-                 services.AddScoped<CoordinateDataOnlineSource>();
-                 services.AddScoped<CoordinateDataOfflineSource>();
+                 services.AddSingleton<MapViewModel>();
+                 services.AddSingleton<CoordinateDataRepository>();
+                 services.AddSingleton<CoordinateDataSourceFactory>();
+                 services.AddSingleton<CoordinateDataOnlineSource>();
+                 services.AddSingleton<CoordinateDataOfflineSource>();
 
-                 services.AddScoped<CoordinateDataApiClient>();
+                 services.AddSingleton<CoordinateDataApiClient>();
 
 
 

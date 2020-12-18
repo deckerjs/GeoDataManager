@@ -105,10 +105,20 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\IMG_20200605_104205973.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\globe_americas_solid.svg">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\tab_globe.png">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties XamarinHotReloadDebuggerTimeoutExceptionGeoDataDroidUIAndroidHideInfoBar="True" XamarinHotReloadDebuggerTimeoutExceptionTrackDataDroidAndroidHideInfoBar="True" />
+      <UserProperties XamarinHotReloadDebuggerTimeoutExceptionTrackDataDroidAndroidHideInfoBar="True" XamarinHotReloadDebuggerTimeoutExceptionGeoDataDroidUIAndroidHideInfoBar="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
