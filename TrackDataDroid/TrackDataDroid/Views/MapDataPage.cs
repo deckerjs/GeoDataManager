@@ -33,7 +33,7 @@ namespace TrackDataDroid.Views
         {            
             if (!_initialized)
             {
-                Content = await GetPageContent();
+                Content = GetPageContent();
                 _viewModel.ReadyToLoadTracks = true;
                 await _viewModel.LoadAvailableTracks();
                 _initialized = true;
@@ -41,15 +41,25 @@ namespace TrackDataDroid.Views
             base.OnAppearing();
         }
 
-        private async Task<View> GetPageContent()
+        private View GetPageContent()
         {
             //await _viewModel.LoadAvailableTracks();
-            return await GetMapControlPanel();
+            //return await GetLayerManagemenPanel();
+
+            var stackLayout = new StackLayout
+            {
+                //Orientation = StackOrientation.Horizontal,
+                Children =
+                {
+                    GetAvailableTracksPanel(),
+                    GetLayerManagemenPanel()
+                }
+            }.Bind(StackLayout.OrientationProperty, nameof(_viewModel.CurrentStackOrientation));
+            return stackLayout;
         }
 
-        private async Task<View> GetMapControlPanel()
+        private View GetAvailableTracksPanel()
         {
-
             var refreshView = new RefreshView().Content = new StackLayout
             {
                 Children =
@@ -73,9 +83,9 @@ namespace TrackDataDroid.Views
                                     new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
                                         .Bind(Label.TextProperty, $"{nameof(TrackSummaryViewModel.CoordinateData)}.{nameof(CoordinateDataSummary.DataItemCount)}")
                                         .Style(DataItemValueStyle),
-                                    new Button {Text = "+", WidthRequest=15, HeightRequest=15, FontSize=14}.BindCommand(nameof(_viewModel.LoadTrackCommand),_viewModel,$"CoordinateData.{nameof(CoordinateDataSummary.ID)}"),
-                                    new CheckBox().Bind(CheckBox.IsCheckedProperty, nameof(TrackSummaryViewModel.ShowOnMap))
-                                    }
+                                    new Button {Text = "Add", WidthRequest=15, HeightRequest=15, FontSize=14}.BindCommand(nameof(_viewModel.LoadTrackCommand),_viewModel)
+//,$"CoordinateData.{nameof(CoordinateDataSummary.ID)}"
+                            }
                             };
                     })
                     }.Bind(CollectionView.ItemsSourceProperty, nameof(_viewModel.AvailableCoordinateData))
@@ -84,7 +94,43 @@ namespace TrackDataDroid.Views
             .Bind(StackLayout.HeightRequestProperty, nameof(_viewModel.Section2Height))
             .Bind(StackLayout.WidthRequestProperty, nameof(_viewModel.Section2Width));
             return refreshView;
+        }
 
+        private View GetLayerManagemenPanel()
+        {
+            var refreshView = new RefreshView().Content = new StackLayout
+            {
+                Children =
+                {
+                new CollectionView()
+                {
+                    ItemTemplate = new DataTemplate(() =>
+                    {
+                        return new StackLayout
+                            {
+                                Orientation = StackOrientation.Horizontal,
+                                HorizontalOptions = LayoutOptions.Start,
+                                VerticalOptions = LayoutOptions.Start,
+                                Padding = 1,
+                                Children =
+                                    {
+                                    new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
+                                        .Bind(Label.TextProperty, $"{nameof(LayerViewModel<CoordinateData>.LayerData)}.{nameof(CoordinateData.Description)}")
+                                        .Style(DataItemValueStyle),
+                                    new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
+                                        .Bind(Label.TextProperty, $"{nameof(LayerViewModel<CoordinateData>.LayerData)}.{nameof(CoordinateData.Data)}.{nameof(CoordinateData.Data.Count)}")
+                                        .Style(DataItemValueStyle),
+                                    new Button {Text = "Remove", WidthRequest=15, HeightRequest=15, FontSize=14}.BindCommand(nameof(_viewModel.RemoveLoadedTrackCommand),_viewModel)
+//, $"{nameof(LayerViewModel<CoordinateData>.LayerData)}.{nameof(CoordinateData.ID)}"
+                                    }
+                            };
+                    })
+                    }.Bind(CollectionView.ItemsSourceProperty, nameof(_viewModel.AvailableTrackLayers))
+                }
+            }
+               .Bind(StackLayout.HeightRequestProperty, nameof(_viewModel.Section1Height))
+               .Bind(StackLayout.WidthRequestProperty, nameof(_viewModel.Section1Width));
+            return refreshView;
         }
 
     }

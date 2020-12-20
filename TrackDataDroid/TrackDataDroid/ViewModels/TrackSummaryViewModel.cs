@@ -15,11 +15,11 @@ namespace TrackDataDroid.ViewModels
             set { SetProperty(ref _coordinateData, value); }
         }
 
-        private bool _showOnMap;
-        public bool ShowOnMap
-        {
-            get { return _showOnMap; }
-            set { SetProperty(ref _showOnMap, value); }
-        }
+        //private bool _showOnMap;
+        //public bool ShowOnMap
+        //{
+        //    get { return _showOnMap; }
+        //    set { SetProperty(ref _showOnMap, value); }
+        //}
     }
 }

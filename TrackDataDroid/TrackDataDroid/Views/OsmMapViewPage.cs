@@ -6,6 +6,7 @@ using Xamarin.Forms.Markup;
 using CoordinateDataModels;
 using Xamarin.Essentials;
 using System;
+using Mapsui.Layers;
 
 namespace TrackDataDroid.Views
 {
@@ -28,6 +29,9 @@ namespace TrackDataDroid.Views
 
         public static Style<Label> DataItemValueStyle => new Style<Label>(
             (Label.TextColorProperty, "#FFFFFF"));
+        
+        public static Style<CheckBox> DataItemCheckStyle => new Style<CheckBox>(
+            (CheckBox.ColorProperty, "#FFFFFF"));
 
         //OnBindingContextChanged
 
@@ -50,21 +54,21 @@ namespace TrackDataDroid.Views
                 //Orientation = StackOrientation.Horizontal,
                 Children =
                 {
-                    await GetMapControlPanel(),
+                    GetMapControlPanel(),
                     await _viewModel.GetMapViewAsync()
                 }
             }.Bind(StackLayout.OrientationProperty, nameof(_viewModel.CurrentStackOrientation));
             return stackLayout;
         }
 
-        private async Task<View> GetMapControlPanel()
+        private View GetMapControlPanel()
         {
 
             var refreshView = new RefreshView().Content = new StackLayout
             {
                 Children =
                 {
-                new Button {Text = "Reload"}.BindCommand(nameof(_viewModel.LoadAvailableTracksCommand)),                    
+                //new Button {Text = "Reload"}.BindCommand(nameof(_viewModel.LoadAvailableTracksCommand)),                    
                 new CollectionView()
                 {
                     ItemTemplate = new DataTemplate(() =>
@@ -78,17 +82,17 @@ namespace TrackDataDroid.Views
                                 Children =
                                     {
                                     new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
-                                        .Bind(Label.TextProperty, $"{nameof(TrackSummaryViewModel.CoordinateData)}.{nameof(CoordinateDataSummary.Description)}")
+                                        .Bind(Label.TextProperty, $"{nameof(ILayer.Name)}")
                                         .Style(DataItemValueStyle),                                    
-                                    new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
-                                        .Bind(Label.TextProperty, $"{nameof(TrackSummaryViewModel.CoordinateData)}.{nameof(CoordinateDataSummary.DataItemCount)}")
-                                        .Style(DataItemValueStyle),
-                                    new Button {Text = "+", WidthRequest=15, HeightRequest=15, FontSize=14}.BindCommand(nameof(_viewModel.LoadTrackCommand),_viewModel,$"CoordinateData.{nameof(CoordinateDataSummary.ID)}"),
-                                    new CheckBox().Bind(CheckBox.IsCheckedProperty, nameof(TrackSummaryViewModel.ShowOnMap))
+                                    //new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
+                                    //    .Bind(Label.TextProperty, $"{nameof(ILayer.Enabled)}")
+                                    //    .Style(DataItemValueStyle),
+                                    //new Button {Text = "+", WidthRequest=15, HeightRequest=15, FontSize=14}.BindCommand(nameof(_viewModel.LoadTrackCommand),_viewModel,$"CoordinateData.{nameof(CoordinateDataSummary.ID)}"),
+                                    new CheckBox().Bind(CheckBox.IsCheckedProperty, nameof(ILayer.Enabled)).Style(DataItemCheckStyle)
                                     }
                             };
                     })
-                    }.Bind(CollectionView.ItemsSourceProperty, nameof(_viewModel.AvailableCoordinateData))
+                    }.Bind(CollectionView.ItemsSourceProperty, $"{nameof(_viewModel.Map)}.{nameof(_viewModel.Map.Layers)}")
                 }
             }
             .Bind(StackLayout.HeightRequestProperty, nameof(_viewModel.Section2Height))

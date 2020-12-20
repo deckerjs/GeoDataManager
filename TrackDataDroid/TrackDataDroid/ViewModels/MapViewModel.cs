@@ -27,19 +27,25 @@ namespace TrackDataDroid.ViewModels
     public class MapViewModel: BaseViewModel
     {
         private readonly CoordinateDataRepository _dataRepository;
-        private Mapsui.Map _map;
+        
         private MapView _mapView;
-        public bool ReadyToLoadTracks = false;
-
+        
         public MapViewModel(CoordinateDataRepository dataRepository)
         {
             _dataRepository = dataRepository;
+
             AvailableCoordinateData = new ObservableCollection<TrackSummaryViewModel>();
+            AvailableTrackLayers = new ObservableCollection<LayerViewModel<CoordinateData>>();
+
             LoadAvailableTracksCommand = new Command(async () => await LoadAvailableTracks(), CanLoadAvailableTracks());
-            LoadTrackCommand = new Command<string>(async (x) => await AddTrackLayerToMap(x),CanLoadTrack());
+            LoadTrackCommand = new Command<TrackSummaryViewModel>(async (x) => await AddTrackLayer(x),CanLoadTrack());
+            RemoveLoadedTrackCommand = new Command<LayerViewModel<CoordinateData>>((x) => RemoveTrackLayer(x), CanRemoveLoadedTrack());
 
             UpdateDisplayInfo();
             DeviceDisplay.MainDisplayInfoChanged += OnMainDisplayInfoChanged;
+
+            _map = GetCustomMap();
+            _mapView = GetNewMapView();
         }
 
         private Func<bool> CanLoadAvailableTracks()
@@ -47,14 +53,43 @@ namespace TrackDataDroid.ViewModels
             return ()=> ReadyToLoadTracks;
         }
 
-        private Func<string, bool> CanLoadTrack()
+        private Func<TrackSummaryViewModel, bool> CanLoadTrack()
         {
             return (x) => ReadyToLoadTracks;
         }
+        
+        private Func<LayerViewModel<CoordinateData>, bool> CanRemoveLoadedTrack()
+        {
+            return (x) => AvailableTrackLayers.Where(t=>t.LayerData.ID == x?.LayerData?.ID).Any();
+        }
+
+        private bool _readyToLoadTracks;
+        public bool ReadyToLoadTracks
+        {
+            get { return _readyToLoadTracks; }
+            set 
+            {
+                SetProperty(ref _readyToLoadTracks , value);
+                LoadAvailableTracksCommand.ChangeCanExecute();
+                LoadTrackCommand.ChangeCanExecute();
+            }
+        }
+
 
         public Command LoadAvailableTracksCommand { get; }
-        public Command<string> LoadTrackCommand { get; }
+        public Command<TrackSummaryViewModel> LoadTrackCommand { get; }
+        public Command<LayerViewModel<CoordinateData>> RemoveLoadedTrackCommand { get; }
+
+        
+        private Mapsui.Map _map;
+        public Mapsui.Map Map
+        {
+            get { return _map; }
+            set { SetProperty(ref _map,value); }
+        }
+
         public ObservableCollection<TrackSummaryViewModel> AvailableCoordinateData { get; private set; }
+        public ObservableCollection<LayerViewModel<CoordinateData>> AvailableTrackLayers { get; private set; }
         
         private DisplayInfo _currentDisplayInfo;        
         public DisplayInfo CurrentDisplayInfo
@@ -159,7 +194,7 @@ namespace TrackDataDroid.ViewModels
 
         public async Task<MapView> GetMapViewAsync()
         {
-            _map = GetCustomMap();
+            //_map = GetCustomMap();
 
             //load data for track summary list, use for binding to list control
             //command can pick which track(s) to render
@@ -191,64 +226,111 @@ namespace TrackDataDroid.ViewModels
 
             //_readyToLoadTracks = true;
 
-            _mapView = new MapView()
+            //_mapView = new MapView()
+            //{
+            //    IsNorthingButtonVisible= true,
+            //    IsZoomButtonVisible=false,
+            //    IsMyLocationButtonVisible=true,
+            //    MyLocationEnabled =true,
+            //    VerticalOptions = LayoutOptions.FillAndExpand,
+            //    HorizontalOptions = LayoutOptions.FillAndExpand,
+            //    BackgroundColor = System.Drawing.Color.Black,
+            //    Map = _map
+            //}.Bind(StackLayout.HeightRequestProperty, nameof(Section1Height))
+            //.Bind(StackLayout.WidthRequestProperty, nameof(Section1Width));
+
+            return _mapView;
+        }
+
+        private MapView GetNewMapView()
+        {
+            return new MapView()
             {
-                IsNorthingButtonVisible= true,
-                IsZoomButtonVisible=false,
-                IsMyLocationButtonVisible=true,
-                MyLocationEnabled =true,
+                IsNorthingButtonVisible = true,
+                IsZoomButtonVisible = false,
+                IsMyLocationButtonVisible = true,
+                MyLocationEnabled = true,
                 VerticalOptions = LayoutOptions.FillAndExpand,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = System.Drawing.Color.Black,
                 Map = _map
             }.Bind(StackLayout.HeightRequestProperty, nameof(Section1Height))
             .Bind(StackLayout.WidthRequestProperty, nameof(Section1Width));
-
-            return _mapView;
         }
 
         private async Task<List<TrackSummaryViewModel>> GetAvailableTracks()
         {
             if (!ReadyToLoadTracks) return null;
-
             var getResult = await _dataRepository.GetTracksSummaryAsync();
-
             List<TrackSummaryViewModel> trackSummary = getResult?.Select(x=> new TrackSummaryViewModel()
             { 
-                CoordinateData = x,
-                ShowOnMap = false                
+                CoordinateData = x               
             }).ToList();
             return trackSummary;
         }
 
-        private async Task AddTrackLayerToMap(string trackId)
+        private async Task AddTrackLayer(TrackSummaryViewModel trackSummaryVm)
         {
-            if (ReadyToLoadTracks && ! string.IsNullOrEmpty(trackId))
+            if (ReadyToLoadTracks && trackSummaryVm!=null && !string.IsNullOrEmpty(trackSummaryVm.CoordinateData?.ID))
             {
-                var lineStringLayer = await GetTrackLayer(trackId);
-                _map.Layers.Add(lineStringLayer);                
-                _mapView.Navigator.NavigateTo(lineStringLayer.Envelope.Centroid, 100);
+                var trackLayerVm = await GetTrackLayerVm(trackSummaryVm.CoordinateData.ID);
+                if (trackLayerVm != null)
+                {
+                    _map.Layers.Add(trackLayerVm.Layer);
+                    _mapView.Navigator.NavigateTo(trackLayerVm.Layer.Envelope.Centroid, 100);
+                    AvailableTrackLayers.Add(trackLayerVm);
+                }
+            }
+        }
+        
+        private void RemoveTrackLayer(LayerViewModel<CoordinateData> trackLayerVm)
+        {
+            if (!string.IsNullOrEmpty(trackLayerVm?.LayerData?.ID))//&& CanRemoveLoadedTrack()(trackLayerVm)
+            {
+                var layers = _map.Layers.Where(l => l.Name == trackLayerVm.LayerData.ID).ToList();
+                foreach (var layer in layers)
+                {
+                    _map.Layers.Remove(layer);
+                }
+
+                var tracks = AvailableTrackLayers.Where(t => t.LayerData.ID == trackLayerVm.LayerData.ID).ToList();
+                foreach (var track in tracks)
+                {
+                    AvailableTrackLayers.Remove(track);
+                }
             }
         }
 
-        private async Task<ILayer> GetTrackLayer(string trackId)
+        private async Task<LayerViewModel<CoordinateData>> GetTrackLayerVm(string trackId)
         {
             var coordData = await _dataRepository.GetTrackAsync(trackId);
-            var trackPoints = coordData.Data.First().Coordinates.Select(x => SphericalMercator.FromLonLat(x.Longitude, x.Latitude));
 
-            //todo: try to style starting and ending points differently
-            var startingPoint = new Feature { Geometry = trackPoints.First() };
-            var endingPoint = new Feature { Geometry = trackPoints.Last() };
-            var trackLine = new Feature { Geometry = new LineString(trackPoints) };
-
-            var features = new[] { startingPoint, endingPoint, trackLine };
-            return new MemoryLayer
+            if (coordData != null)
             {                
-                DataSource = new MemoryProvider(features),
-                Name = coordData.ID,
-                Style = GetLineStringStyle()
-            };
+                //todo: loop through segments and add feature for each
+                //add feature factory or something
+                var trackPoints = coordData.Data.First().Coordinates.Select(x => SphericalMercator.FromLonLat(x.Longitude, x.Latitude));
 
+                //todo: try to style starting and ending points differently
+                var startingPoint = new Feature { Geometry = trackPoints.First() };
+                var endingPoint = new Feature { Geometry = trackPoints.Last() };
+                var trackLine = new Feature { Geometry = new LineString(trackPoints) };
+
+                var features = new[] { startingPoint, endingPoint, trackLine };
+                var memLayer = new MemoryLayer
+                {                
+                    DataSource = new MemoryProvider(features),
+                    Name = coordData.ID,
+                    Style = GetLineStringStyle()
+                };
+
+                LayerViewModel<CoordinateData> trackLayerVm = new LayerViewModel<CoordinateData>();
+                trackLayerVm.Layer = memLayer;
+                trackLayerVm.LayerData = coordData;
+
+                return trackLayerVm;
+            }
+            return null;
         }
 
         private async Task<ILayer> CreateLineStringLayer(IStyle style = null)

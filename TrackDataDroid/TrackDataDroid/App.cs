@@ -70,12 +70,13 @@ namespace TrackDataDroid
                  });
 
                  services.AddSingleton<MapViewModel>();
-                 services.AddSingleton<CoordinateDataRepository>();
                  services.AddSingleton<CoordinateDataSourceFactory>();
-                 services.AddSingleton<CoordinateDataOnlineSource>();
-                 services.AddSingleton<CoordinateDataOfflineSource>();
 
-                 services.AddSingleton<CoordinateDataApiClient>();
+                 services.AddScoped<CoordinateDataRepository>();
+                 services.AddScoped<CoordinateDataOnlineSource>();
+                 services.AddScoped<CoordinateDataOfflineSource>();
+
+                 services.AddScoped<CoordinateDataApiClient>();
 
 
 

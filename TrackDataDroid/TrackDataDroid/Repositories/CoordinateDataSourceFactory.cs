@@ -8,23 +8,27 @@ namespace TrackDataDroid.Repositories
 {
     public class CoordinateDataSourceFactory
     {
-        public CoordinateDataSourceFactory()
-        {
+        private ICoordinateDataSource _onlineSource;
+        private ICoordinateDataSource _offlineSource;
 
-        }
+        public CoordinateDataSourceFactory(){}
 
         public async Task<ICoordinateDataSource> GetOnlineDataSourceAsync()
         {
-            ICoordinateDataSource source = App.Host.Services.GetRequiredService<CoordinateDataOnlineSource>();
-            await source.InitializeAsync();
-            return source;
+            if (_onlineSource == null)
+            {
+                _onlineSource = App.Host.Services.GetRequiredService<CoordinateDataOnlineSource>();
+                await _onlineSource.InitializeAsync();
+            }
+
+            return _onlineSource;
         }
         
         public async Task<ICoordinateDataSource> GetOfflineDataSourceAsync()
         {
-            ICoordinateDataSource source = App.Host.Services.GetRequiredService<CoordinateDataOfflineSource>();
-            await source.InitializeAsync();
-            return source;
+            _offlineSource = App.Host.Services.GetRequiredService<CoordinateDataOfflineSource>();
+            await _offlineSource.InitializeAsync();
+            return _offlineSource;
         }
 
 
