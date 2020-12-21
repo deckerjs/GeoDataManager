@@ -73,9 +73,13 @@ namespace TrackDataDroid.Views
                 {
                     ItemTemplate = new DataTemplate(() =>
                     {
-                        return new StackLayout
+                        return new Grid
                             {
-                                Orientation = StackOrientation.Horizontal,
+                                ColumnDefinitions = 
+                                    {
+                                        new ColumnDefinition { Width = new GridLength(3,GridUnitType.Star)}, 
+                                        new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)} 
+                                    },
                                 HorizontalOptions = LayoutOptions.Start,
                                 VerticalOptions = LayoutOptions.Start,
                                 Padding = 1,
@@ -83,12 +87,12 @@ namespace TrackDataDroid.Views
                                     {
                                     new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
                                         .Bind(Label.TextProperty, $"{nameof(ILayer.Name)}")
-                                        .Style(DataItemValueStyle),                                    
-                                    //new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
-                                    //    .Bind(Label.TextProperty, $"{nameof(ILayer.Enabled)}")
-                                    //    .Style(DataItemValueStyle),
-                                    //new Button {Text = "+", WidthRequest=15, HeightRequest=15, FontSize=14}.BindCommand(nameof(_viewModel.LoadTrackCommand),_viewModel,$"CoordinateData.{nameof(CoordinateDataSummary.ID)}"),
-                                    new CheckBox().Bind(CheckBox.IsCheckedProperty, nameof(ILayer.Enabled)).Style(DataItemCheckStyle)
+                                        .Style(DataItemValueStyle)
+                                        .Row(0).Column(0).CenterVertical(),                                    
+                                    new CheckBox()
+                                        .Bind(CheckBox.IsCheckedProperty, nameof(ILayer.Enabled))
+                                        .Style(DataItemCheckStyle)
+                                        .Row(0).Column(1).CenterVertical()
                                     }
                             };
                     })

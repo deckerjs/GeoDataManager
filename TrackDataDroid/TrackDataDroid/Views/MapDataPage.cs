@@ -69,9 +69,9 @@ namespace TrackDataDroid.Views
                 {
                     ItemTemplate = new DataTemplate(() =>
                     {
-                        return new StackLayout
+                        return new Grid
                             {
-                                Orientation = StackOrientation.Horizontal,
+                                //Orientation = StackOrientation.Horizontal,
                                 HorizontalOptions = LayoutOptions.Start,
                                 VerticalOptions = LayoutOptions.Start,
                                 Padding = 1,
@@ -79,11 +79,15 @@ namespace TrackDataDroid.Views
                                     {
                                     new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
                                         .Bind(Label.TextProperty, $"{nameof(TrackSummaryViewModel.CoordinateData)}.{nameof(CoordinateDataSummary.Description)}")
-                                        .Style(DataItemValueStyle),
+                                        .Style(DataItemValueStyle)
+                                        .Row(0).Column(0).CenterVertical(),
                                     new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
                                         .Bind(Label.TextProperty, $"{nameof(TrackSummaryViewModel.CoordinateData)}.{nameof(CoordinateDataSummary.DataItemCount)}")
-                                        .Style(DataItemValueStyle),
-                                    new Button {Text = "Add", WidthRequest=15, HeightRequest=15, FontSize=14}.BindCommand(nameof(_viewModel.LoadTrackCommand),_viewModel)
+                                        .Style(DataItemValueStyle)
+                                        .Row(0).Column(1).CenterVertical(),
+                                    new Button {Text = "Add", WidthRequest=15, HeightRequest=15, FontSize=14}
+                                        .BindCommand(nameof(_viewModel.LoadTrackCommand),_viewModel)
+                                        .Row(0).Column(2).CenterVertical()
 //,$"CoordinateData.{nameof(CoordinateDataSummary.ID)}"
                             }
                             };
@@ -106,9 +110,9 @@ namespace TrackDataDroid.Views
                 {
                     ItemTemplate = new DataTemplate(() =>
                     {
-                        return new StackLayout
+                        return new Grid
                             {
-                                Orientation = StackOrientation.Horizontal,
+                                //Orientation = StackOrientation.Horizontal,
                                 HorizontalOptions = LayoutOptions.Start,
                                 VerticalOptions = LayoutOptions.Start,
                                 Padding = 1,
@@ -116,11 +120,15 @@ namespace TrackDataDroid.Views
                                     {
                                     new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
                                         .Bind(Label.TextProperty, $"{nameof(LayerViewModel<CoordinateData>.LayerData)}.{nameof(CoordinateData.Description)}")
-                                        .Style(DataItemValueStyle),
+                                        .Style(DataItemValueStyle)
+                                        .Row(0).Column(0).CenterVertical(),
                                     new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
                                         .Bind(Label.TextProperty, $"{nameof(LayerViewModel<CoordinateData>.LayerData)}.{nameof(CoordinateData.Data)}.{nameof(CoordinateData.Data.Count)}")
-                                        .Style(DataItemValueStyle),
-                                    new Button {Text = "Remove", WidthRequest=15, HeightRequest=15, FontSize=14}.BindCommand(nameof(_viewModel.RemoveLoadedTrackCommand),_viewModel)
+                                        .Style(DataItemValueStyle)
+                                        .Row(0).Column(1).CenterVertical(),
+                                    new Button {Text = "Remove", WidthRequest=15, HeightRequest=15, FontSize=14}
+                                        .BindCommand(nameof(_viewModel.RemoveLoadedTrackCommand),_viewModel)
+                                        .Row(0).Column(2).CenterVertical(),
 //, $"{nameof(LayerViewModel<CoordinateData>.LayerData)}.{nameof(CoordinateData.ID)}"
                                     }
                             };
