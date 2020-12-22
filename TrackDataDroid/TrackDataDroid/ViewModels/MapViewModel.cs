@@ -171,38 +171,19 @@ namespace TrackDataDroid.ViewModels
         public async Task LoadAvailableTracks()
         {
             //todo: add track date to summary instead of track import date
-            //todo: create viewmodel for track summary data
-            // include properties for
-            // bool: ShowOnMap/selected
-            // (once track is loaded) - track 
-
-
             if (ReadyToLoadTracks)
             {
                 var items = await GetAvailableTracks();
+                AvailableCoordinateData.Clear();
                 foreach (var item in items)
                 {
                     AvailableCoordinateData.Add(item);
                 }
-
-                //if (items!=null && items.Any())
-                //{
-                //    await AddTrackLayerToMap(items.First().CoordinateData.ID);
-                //}
             }
         }
 
         public async Task<MapView> GetMapViewAsync()
         {
-            //_map = GetCustomMap();
-
-            //load data for track summary list, use for binding to list control
-            //command can pick which track(s) to render
-
-            //var lineStringLayer = await CreateLineStringLayer(GetLineStringStyle());            
-            //map.Layers.Add(lineStringLayer);
-            //map.Home = n => n.NavigateTo(lineStringLayer.Envelope.Centroid, 200);
-
             var currentLocation = await GetCurrentLocation();
             _map.Home = n => n.NavigateTo(SphericalMercator.FromLonLat(currentLocation.Y, currentLocation.X), 200);
 
@@ -223,22 +204,7 @@ namespace TrackDataDroid.ViewModels
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top
             });
-
-            //_readyToLoadTracks = true;
-
-            //_mapView = new MapView()
-            //{
-            //    IsNorthingButtonVisible= true,
-            //    IsZoomButtonVisible=false,
-            //    IsMyLocationButtonVisible=true,
-            //    MyLocationEnabled =true,
-            //    VerticalOptions = LayoutOptions.FillAndExpand,
-            //    HorizontalOptions = LayoutOptions.FillAndExpand,
-            //    BackgroundColor = System.Drawing.Color.Black,
-            //    Map = _map
-            //}.Bind(StackLayout.HeightRequestProperty, nameof(Section1Height))
-            //.Bind(StackLayout.WidthRequestProperty, nameof(Section1Width));
-
+                      
             return _mapView;
         }
 
@@ -285,7 +251,7 @@ namespace TrackDataDroid.ViewModels
         
         private void RemoveTrackLayer(LayerViewModel<CoordinateData> trackLayerVm)
         {
-            if (!string.IsNullOrEmpty(trackLayerVm?.LayerData?.ID))//&& CanRemoveLoadedTrack()(trackLayerVm)
+            if (!string.IsNullOrEmpty(trackLayerVm?.LayerData?.ID))
             {
                 var layers = _map.Layers.Where(l => l.Name == trackLayerVm.LayerData.ID).ToList();
                 foreach (var layer in layers)

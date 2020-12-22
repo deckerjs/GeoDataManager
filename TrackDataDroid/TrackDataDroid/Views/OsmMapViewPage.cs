@@ -33,14 +33,11 @@ namespace TrackDataDroid.Views
         public static Style<CheckBox> DataItemCheckStyle => new Style<CheckBox>(
             (CheckBox.ColorProperty, "#FFFFFF"));
 
-        //OnBindingContextChanged
-
         protected override async void OnAppearing()
         {
             if (!_initialized)
             {
                 Content = await GetPageContent();
-                //await _viewModel.LoadAvailableTracks();
                 _initialized = true;
             }
 
@@ -51,7 +48,6 @@ namespace TrackDataDroid.Views
         {
             var stackLayout = new StackLayout
             {
-                //Orientation = StackOrientation.Horizontal,
                 Children =
                 {
                     GetMapControlPanel(),
@@ -68,7 +64,6 @@ namespace TrackDataDroid.Views
             {
                 Children =
                 {
-                //new Button {Text = "Reload"}.BindCommand(nameof(_viewModel.LoadAvailableTracksCommand)),                    
                 new CollectionView()
                 {
                     ItemTemplate = new DataTemplate(() =>
@@ -77,7 +72,7 @@ namespace TrackDataDroid.Views
                             {
                                 ColumnDefinitions = 
                                     {
-                                        new ColumnDefinition { Width = new GridLength(3,GridUnitType.Star)}, 
+                                        new ColumnDefinition { Width = new GridLength(5,GridUnitType.Star)}, 
                                         new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)} 
                                     },
                                 HorizontalOptions = LayoutOptions.Start,

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TrackDataDroid.Configuration;
 using TrackDataDroid.ViewModels;
 using TrackDataDroid.Views;
 using Xamarin.Forms;
@@ -20,13 +21,27 @@ namespace TrackDataDroid
             Resources = GetResources();
             Title = "Track Viewer";
             
+            var layerIconImageSrc = new FontImageSource
+                {
+                    FontFamily = FontIconFamily.FA_Solid,
+                    Size = 44,
+                    Glyph = IconNameConstants.LayerGroup
+                };
+
+            var mapIconImageSrc = new FontImageSource
+                {
+                    FontFamily = FontIconFamily.FA_Solid,
+                    Size = 44,
+                    Glyph = IconNameConstants.GlobeAmericas
+                };
+
             Items.Add(new TabBar 
             { 
                 Title = "Shell Section MainPage",
                 Items = 
                     {
-                        new ShellContent() { Title="Data", Icon="tab_feed.png", Content = _mapDataPage},
-                        new ShellContent() { Title="Map", Icon="tab_globe.svg", Content = _osmMapViewPage}
+                        new ShellContent() { Title="Data", Icon=layerIconImageSrc, Content = _mapDataPage},
+                        new ShellContent() { Title="Map", Icon=mapIconImageSrc, Content = _osmMapViewPage}
                     }
             });
 
