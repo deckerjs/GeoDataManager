@@ -109,9 +109,9 @@ namespace TrackDataDroid.ViewModels
         public double Section1Width
         {
             get { return _section1Width; }
-            set { SetProperty(ref _section1Width ,value); }
+            set { SetProperty(ref _section1Width, value); }
         }
-        
+
         private double _section1Height;
         public double Section1Height
         {
@@ -123,9 +123,9 @@ namespace TrackDataDroid.ViewModels
         public double Section2Width
         {
             get { return _section2Width; }
-            set { SetProperty(ref _section2Width ,value); }
+            set { SetProperty(ref _section2Width, value); }
         }
-        
+
         private double _section2Height;
         public double Section2Height
         {
@@ -146,7 +146,7 @@ namespace TrackDataDroid.ViewModels
             {
                 CurrentStackOrientation = StackOrientation.Horizontal;
                 double threeQW = (CurrentDisplayInfo.Width / 4) * 3;
-                double oneQW = CurrentDisplayInfo.Width-threeQW;
+                double oneQW = CurrentDisplayInfo.Width - threeQW;
 
                 Section1Height = CurrentDisplayInfo.Height;
                 Section1Width = threeQW;
@@ -164,7 +164,7 @@ namespace TrackDataDroid.ViewModels
                 Section1Width = CurrentDisplayInfo.Width;
 
                 Section2Height = oneQH;
-                Section2Width = CurrentDisplayInfo.Width; 
+                Section2Width = CurrentDisplayInfo.Width;
             }
         }
 
@@ -220,7 +220,8 @@ namespace TrackDataDroid.ViewModels
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 BackgroundColor = System.Drawing.Color.Black,
                 Map = _map
-            }.Bind(StackLayout.HeightRequestProperty, nameof(Section1Height))
+            }
+            .Bind(StackLayout.HeightRequestProperty, nameof(Section1Height))
             .Bind(StackLayout.WidthRequestProperty, nameof(Section1Width));
         }
 

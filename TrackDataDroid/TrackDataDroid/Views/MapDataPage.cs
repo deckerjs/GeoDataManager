@@ -65,11 +65,7 @@ namespace TrackDataDroid.Views
                 Size = 14,
                 Glyph = IconNameConstants.MinusCircle
             };
-
-
-
         }
-
 
         protected override async void OnAppearing()
         {            
@@ -135,8 +131,8 @@ namespace TrackDataDroid.Views
                             }
                             };
                     })
-                    }.Bind(CollectionView.ItemsSourceProperty, nameof(_viewModel.AvailableCoordinateData)),                
-                
+                    }.Bind(CollectionView.ItemsSourceProperty, nameof(_viewModel.AvailableCoordinateData)),
+
                     new Grid
                     {
                         RowDefinitions =
@@ -162,9 +158,9 @@ namespace TrackDataDroid.Views
                         }
                     }
                 }
-            }
-            .Bind(StackLayout.HeightRequestProperty, nameof(_viewModel.Section2Height))
-            .Bind(StackLayout.WidthRequestProperty, nameof(_viewModel.Section2Width));
+            };
+            //.Bind(StackLayout.HeightRequestProperty, nameof(_viewModel.Section2Height))
+            //.Bind(StackLayout.WidthRequestProperty, nameof(_viewModel.Section2Width));
             return refreshView;
         }
 
@@ -208,9 +204,9 @@ namespace TrackDataDroid.Views
                     })
                     }.Bind(CollectionView.ItemsSourceProperty, nameof(_viewModel.AvailableTrackLayers))
                 }
-            }
-            .Bind(StackLayout.HeightRequestProperty, nameof(_viewModel.Section1Height))
-            .Bind(StackLayout.WidthRequestProperty, nameof(_viewModel.Section1Width));
+            };
+            //.Bind(StackLayout.HeightRequestProperty, nameof(_viewModel.Section1Height))
+            //.Bind(StackLayout.WidthRequestProperty, nameof(_viewModel.Section1Width));
             return refreshView;
         }
 

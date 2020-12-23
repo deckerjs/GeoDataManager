@@ -51,8 +51,12 @@ namespace TrackDataDroid
                  // todo: also may want to add each view,viewmodel,repo in its own method/extension
                  services.AddSingleton<AppShell>();
 
+                 services.AddSingleton<ConfigurationSettingsPage>();
                  services.AddSingleton<OsmMapViewPage>();
                  services.AddSingleton<MapDataPage>();
+                 services.AddSingleton<GpsPage>();
+
+
 
                  //services.AddScoped<MainPageViewModel>();
                  //services.AddScoped<ISensorValuesViewModel, SensorValuesViewModel>();
