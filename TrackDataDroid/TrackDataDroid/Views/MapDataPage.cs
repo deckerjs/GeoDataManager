@@ -7,6 +7,8 @@ using CoordinateDataModels;
 using Xamarin.Essentials;
 using System;
 using TrackDataDroid.Configuration;
+using TrackDataDroid.Repositories;
+using TrackDataDroid.Services;
 
 namespace TrackDataDroid.Views
 {
@@ -25,46 +27,12 @@ namespace TrackDataDroid.Views
 
             InitializeIconImages();
         }
-
-        //todo: put these somewhere like a repo or service
-        public static Style<Label> DataItemTitleStyle => new Style<Label>(
-        (Label.TextColorProperty, "#249C47"),
-        (Label.FontAttributesProperty, FontAttributes.Bold));
-
-        public static Style<Label> DataItemValueStyle => new Style<Label>(
-            (Label.TextColorProperty, "#FFFFFF"));
-
-        //public static Style<Button> ComandButtonStyle => new Style<Button>(
-        //(Button.TextColorProperty, "#249C47"),
-        //(Button.FontAttributesProperty, FontAttributes.Bold));
         
-        public static Style<Button> ComandButtonStyle => new Style<Button>(
-        (Button.TextColorProperty, "#249C47"),
-        (Button.FontFamilyProperty, FontIconFamily.FA_Solid));
-
         private void InitializeIconImages()
         {
-
-            _refreshIconImageSrc = new FontImageSource
-            {
-                FontFamily = FontIconFamily.FA_Solid,
-                Size = 14,
-                Glyph = IconNameConstants.Sync
-            };
-            
-            _addIconImageSrc = new FontImageSource
-            {
-                FontFamily = FontIconFamily.FA_Solid,
-                Size = 14,
-                Glyph = IconNameConstants.PlusCircle
-            };
-
-            _removeIconImageSrc = new FontImageSource
-            {
-                FontFamily = FontIconFamily.FA_Solid,
-                Size = 14,
-                Glyph = IconNameConstants.MinusCircle
-            };
+            _refreshIconImageSrc = ImageUtility.GetFontImageSource(IconNameConstants.Sync);
+            _addIconImageSrc = ImageUtility.GetFontImageSource(IconNameConstants.PlusCircle);
+            _removeIconImageSrc = ImageUtility.GetFontImageSource(IconNameConstants.MinusCircle);
         }
 
         protected override async void OnAppearing()
@@ -83,12 +51,14 @@ namespace TrackDataDroid.Views
         {
              var stackLayout = new StackLayout
             {
+                Padding = 5,
                 Children =
                 {
-                    GetAvailableTracksPanel(),
-                    GetLayerManagemenPanel()
+                    ViewUtility.WrapViewInFrame(GetAvailableTracksPanel()),
+                    ViewUtility.WrapViewInFrame(GetLayerManagemenPanel())
                 }
-            }.Bind(StackLayout.OrientationProperty, nameof(_viewModel.CurrentStackOrientation));
+            }
+             .Bind(StackLayout.OrientationProperty, nameof(_viewModel.CurrentStackOrientation));
             return stackLayout;
         }
 
@@ -96,7 +66,7 @@ namespace TrackDataDroid.Views
         {
             var refreshView = new RefreshView().Content = new StackLayout
             {
-                Margin = 2,
+                Padding = 5,
                 Children =
                 {
                 new CollectionView()
@@ -109,24 +79,24 @@ namespace TrackDataDroid.Views
                                 {
                                     new ColumnDefinition { Width = new GridLength(3,GridUnitType.Star)},
                                     new ColumnDefinition { Width = new GridLength(2,GridUnitType.Star)},
-                                    new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)}
+                                    new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)},
+                                    new ColumnDefinition { Width = new GridLength(6,GridUnitType.Star)}
                                 },
                                 HorizontalOptions = LayoutOptions.Start,
-                                VerticalOptions = LayoutOptions.Start,
-                                Padding = 1,
+                                VerticalOptions = LayoutOptions.Start,                                
                                 Children =
                                     {
                                     new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
                                         .Bind(Label.TextProperty, $"{nameof(TrackSummaryViewModel.CoordinateData)}.{nameof(CoordinateDataSummary.Description)}")
-                                        .Style(DataItemValueStyle)
+                                        .Style(StyleRepository.DataItemTitleStyle)
                                         .Row(0).Column(0).CenterVertical(),
                                     new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
                                         .Bind(Label.TextProperty, $"{nameof(TrackSummaryViewModel.CoordinateData)}.{nameof(CoordinateDataSummary.DataItemCount)}")
-                                        .Style(DataItemValueStyle)
+                                        .Style(StyleRepository.DataItemValueStyle)
                                         .Row(0).Column(1).CenterVertical(),
                                     new Button { ImageSource=_addIconImageSrc}
                                         .BindCommand(nameof(_viewModel.LoadTrackCommand),_viewModel)
-                                        .Style(ComandButtonStyle)
+                                        .Style(StyleRepository.ComandButtonStyle)
                                         .Row(0).Column(2).CenterVertical()
                             }
                             };
@@ -142,25 +112,22 @@ namespace TrackDataDroid.Views
                         ColumnDefinitions =
                         {
                             new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)},
-                            new ColumnDefinition { Width = new GridLength(5,GridUnitType.Star)}
+                            new ColumnDefinition { Width = new GridLength(5,GridUnitType.Star)},
+                            new ColumnDefinition { Width = new GridLength(6,GridUnitType.Star)},
                         },
                         HorizontalOptions = LayoutOptions.Start,
                         VerticalOptions = LayoutOptions.Start,
-                        Padding = 1,
-                        Margin = 1,
+                        Padding = 1,                        
                         Children =
                         {
-                            //new Button {Text = IconNameConstants.Sync, HeightRequest = 40, FontSize = 12, ImageSource = _refreshIconImageSrc}
-                            new Button {HeightRequest = 40, ImageSource = _refreshIconImageSrc}
-                                .Style(ComandButtonStyle)
+                            new Button {HeightRequest = 20, ImageSource = _refreshIconImageSrc}
+                                .Style(StyleRepository.ComandButtonStyle)
                                 .BindCommand(nameof(_viewModel.LoadAvailableTracksCommand))
                                 .Row(0).Column(0)
                         }
                     }
                 }
             };
-            //.Bind(StackLayout.HeightRequestProperty, nameof(_viewModel.Section2Height))
-            //.Bind(StackLayout.WidthRequestProperty, nameof(_viewModel.Section2Width));
             return refreshView;
         }
 
@@ -168,7 +135,7 @@ namespace TrackDataDroid.Views
         {
             var refreshView = new RefreshView().Content = new StackLayout
             {
-                Margin = 2,
+                Padding = 5,
                 Children =
                 {
                 new CollectionView()
@@ -181,20 +148,20 @@ namespace TrackDataDroid.Views
                                     {
                                         new ColumnDefinition { Width = new GridLength(3,GridUnitType.Star)},
                                         new ColumnDefinition { Width = new GridLength(2,GridUnitType.Star)},
-                                        new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)}
+                                        new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)},
+                                        new ColumnDefinition { Width = new GridLength(6,GridUnitType.Star)}
                                     },
                                 HorizontalOptions = LayoutOptions.Start,
-                                VerticalOptions = LayoutOptions.Start,
-                                Padding = 1,
+                                VerticalOptions = LayoutOptions.Start,                                
                                 Children =
                                     {
                                     new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
                                         .Bind(Label.TextProperty, $"{nameof(LayerViewModel<CoordinateData>.LayerData)}.{nameof(CoordinateData.Description)}")
-                                        .Style(DataItemValueStyle)
+                                        .Style(StyleRepository.DataItemTitleStyle)
                                         .Row(0).Column(0).CenterVertical(),
                                     new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
                                         .Bind(Label.TextProperty, $"{nameof(LayerViewModel<CoordinateData>.LayerData)}.{nameof(CoordinateData.Data)}.{nameof(CoordinateData.Data.Count)}")
-                                        .Style(DataItemValueStyle)
+                                        .Style(StyleRepository.DataItemValueStyle)
                                         .Row(0).Column(1).CenterVertical(),
                                     new Button {ImageSource=_removeIconImageSrc}
                                         .BindCommand(nameof(_viewModel.RemoveLoadedTrackCommand),_viewModel)
@@ -205,8 +172,6 @@ namespace TrackDataDroid.Views
                     }.Bind(CollectionView.ItemsSourceProperty, nameof(_viewModel.AvailableTrackLayers))
                 }
             };
-            //.Bind(StackLayout.HeightRequestProperty, nameof(_viewModel.Section1Height))
-            //.Bind(StackLayout.WidthRequestProperty, nameof(_viewModel.Section1Width));
             return refreshView;
         }
 

@@ -7,13 +7,14 @@ using CoordinateDataModels;
 using Xamarin.Essentials;
 using System;
 using Mapsui.Layers;
+using TrackDataDroid.Repositories;
+using TrackDataDroid.Services;
 
 namespace TrackDataDroid.Views
 {
     public class OsmMapViewPage : ContentPage
     {
         private readonly MapViewModel _viewModel;
-
         private bool _initialized;
 
         public OsmMapViewPage(MapViewModel viewModel)
@@ -22,17 +23,6 @@ namespace TrackDataDroid.Views
             BindingContext = _viewModel;
         }
 
-        //todo: put these somewhere like a repo or service
-        public static Style<Label> DataItemTitleStyle => new Style<Label>(
-        (Label.TextColorProperty, "#249C47"),
-        (Label.FontAttributesProperty, FontAttributes.Bold));
-
-        public static Style<Label> DataItemValueStyle => new Style<Label>(
-            (Label.TextColorProperty, "#FFFFFF"));
-        
-        public static Style<CheckBox> DataItemCheckStyle => new Style<CheckBox>(
-            (CheckBox.ColorProperty, "#FFFFFF"));
-
         protected override async void OnAppearing()
         {
             if (!_initialized)
@@ -40,7 +30,6 @@ namespace TrackDataDroid.Views
                 Content = await GetPageContent();
                 _initialized = true;
             }
-
             base.OnAppearing();
         }
 
@@ -50,8 +39,8 @@ namespace TrackDataDroid.Views
             {
                 Children =
                 {
-                    GetMapControlPanel(),
-                    await _viewModel.GetMapViewAsync()
+                    ViewUtility.WrapViewInFrame(GetMapControlPanel()),
+                    ViewUtility.WrapViewInFrame(await _viewModel.GetMapViewAsync())
                 }
             }.Bind(StackLayout.OrientationProperty, nameof(_viewModel.CurrentStackOrientation));
             return stackLayout;
@@ -59,9 +48,9 @@ namespace TrackDataDroid.Views
 
         private View GetMapControlPanel()
         {
-
             var refreshView = new RefreshView().Content = new StackLayout
             {
+                Padding = 5,
                 Children =
                 {
                 new CollectionView()
@@ -72,21 +61,20 @@ namespace TrackDataDroid.Views
                             {
                                 ColumnDefinitions = 
                                     {
-                                        new ColumnDefinition { Width = new GridLength(5,GridUnitType.Star)}, 
-                                        new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)} 
+                                        new ColumnDefinition { Width = new GridLength(9,GridUnitType.Star)}, 
+                                        new ColumnDefinition { Width = new GridLength(3,GridUnitType.Star)}
                                     },
                                 HorizontalOptions = LayoutOptions.Start,
                                 VerticalOptions = LayoutOptions.Start,
-                                Padding = 1,
+                                Padding = 5,
                                 Children =
                                     {
-                                    new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=10}
+                                    new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=12}
                                         .Bind(Label.TextProperty, $"{nameof(ILayer.Name)}")
-                                        .Style(DataItemValueStyle)
+                                        .Style(StyleRepository.DataItemTitleStyle)
                                         .Row(0).Column(0).CenterVertical(),                                    
-                                    new CheckBox()
-                                        .Bind(CheckBox.IsCheckedProperty, nameof(ILayer.Enabled))
-                                        .Style(DataItemCheckStyle)
+                                    new Switch()
+                                        .Bind(Switch.IsToggledProperty, nameof(ILayer.Enabled))
                                         .Row(0).Column(1).CenterVertical()
                                     }
                             };

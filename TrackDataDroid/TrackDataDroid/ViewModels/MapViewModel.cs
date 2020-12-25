@@ -190,15 +190,16 @@ namespace TrackDataDroid.ViewModels
             _map.Widgets.Add(new Mapsui.Widgets.Zoom.ZoomInOutWidget()
             {
                 Enabled = true,
-                BackColor = Mapsui.Styles.Color.Black,
-                TextColor = Mapsui.Styles.Color.Orange
+                StrokeColor = Mapsui.Styles.Color.FromString(StyleRepository.Primary_Color),
+                BackColor = Mapsui.Styles.Color.FromString(StyleRepository.Primary_Color_Shaded),
+                TextColor = Mapsui.Styles.Color.FromString(StyleRepository.Primary_Color),
             });
 
             _map.Widgets.Add(new Mapsui.Widgets.ScaleBar.ScaleBarWidget(_map)
             {
                 StrokeWidth = 1,
-                TextColor = Mapsui.Styles.Color.Orange,
-                Halo = Mapsui.Styles.Color.Black,
+                TextColor = Mapsui.Styles.Color.FromString(StyleRepository.Primary_Color_Highlight),
+                Halo = Mapsui.Styles.Color.FromString(StyleRepository.Primary_Black),
                 Enabled = true,
                 TextAlignment = Alignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
@@ -212,13 +213,13 @@ namespace TrackDataDroid.ViewModels
         {
             return new MapView()
             {
-                IsNorthingButtonVisible = true,
+                IsNorthingButtonVisible = false,
                 IsZoomButtonVisible = false,
-                IsMyLocationButtonVisible = true,
+                IsMyLocationButtonVisible = false,
                 MyLocationEnabled = true,
                 VerticalOptions = LayoutOptions.FillAndExpand,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
-                BackgroundColor = System.Drawing.Color.Black,
+                BackgroundColor = Xamarin.Forms.Color.FromHex(StyleRepository.Primary_Black),
                 Map = _map
             }
             .Bind(StackLayout.HeightRequestProperty, nameof(Section1Height))
@@ -334,12 +335,11 @@ namespace TrackDataDroid.ViewModels
 
         private static IStyle GetLineStringStyle()
         {
-            //todo: add configuration to pick line string style. (color,width)
             return new VectorStyle
             {
                 Fill = null,
                 Outline = null,
-                Line = { Color = Mapsui.Styles.Color.Yellow, Width = 4 }
+                Line = { Color = Mapsui.Styles.Color.FromString(StyleRepository.Primary_Color_Highlight), Width = 3 }
             };
         }        
         

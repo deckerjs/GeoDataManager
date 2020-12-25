@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using TrackDataDroid.Configuration;
+using TrackDataDroid.Repositories;
 using Xamarin.Forms;
 
 namespace TrackDataDroid.Services
@@ -15,10 +16,14 @@ namespace TrackDataDroid.Services
             Large=44
         }
 
-        public static FontImageSource GetFontImageSource(string iconName, DefaultImageSize size = DefaultImageSize.Small)
+        public static FontImageSource GetFontImageSource(
+            string iconName, 
+            DefaultImageSize size = DefaultImageSize.Small, 
+            string color = StyleRepository.Primary_Color)
         {
             var imageSource = new FontImageSource
             {
+                Color = Color.FromHex(color),
                 FontFamily = FontIconFamily.FA_Solid,
                 Size = (double)size,
                 Glyph = iconName
