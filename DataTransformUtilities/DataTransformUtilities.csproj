@@ -7,7 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="../GeoDataModels/GeoDataModels.csproj" />
     <ProjectReference Include="..\CoordinateDataModels\GeoStoreApi.Abstractions.CoordinateDataModels.csproj" />
-    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.0" />
   </ItemGroup>
 
 </Project>
