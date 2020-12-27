@@ -9,6 +9,7 @@ using System;
 using Mapsui.Layers;
 using TrackDataDroid.Repositories;
 using TrackDataDroid.Services;
+using TrackDataDroid.Configuration;
 
 namespace TrackDataDroid.Views
 {
@@ -61,7 +62,8 @@ namespace TrackDataDroid.Views
                             {
                                 ColumnDefinitions = 
                                     {
-                                        new ColumnDefinition { Width = new GridLength(9,GridUnitType.Star)}, 
+                                        new ColumnDefinition { Width = new GridLength(6,GridUnitType.Star)}, 
+                                        new ColumnDefinition { Width = new GridLength(3,GridUnitType.Star)},
                                         new ColumnDefinition { Width = new GridLength(3,GridUnitType.Star)}
                                     },
                                 HorizontalOptions = LayoutOptions.Start,
@@ -72,10 +74,13 @@ namespace TrackDataDroid.Views
                                     new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=12}
                                         .Bind(Label.TextProperty, $"{nameof(ILayer.Name)}")
                                         .Style(StyleRepository.DataItemTitleStyle)
-                                        .Row(0).Column(0).CenterVertical(),                                    
+                                        .Row(0).Column(0).CenterVertical(),
+                                    new ImageButton {Source = ImageUtility.GetFontImageSource(IconNameConstants.Crosshairs) }
+                                        .Style(StyleRepository.ImageButtonStyle)
+                                        .Row(0).Column(1).CenterVertical(),
                                     new Switch()
                                         .Bind(Switch.IsToggledProperty, nameof(ILayer.Enabled))
-                                        .Row(0).Column(1).CenterVertical()
+                                        .Row(0).Column(2).CenterVertical()
                                     }
                             };
                     })

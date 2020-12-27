@@ -29,28 +29,7 @@ namespace TrackDataDroid
             _gpsPage = gpsPage;
             Resources = GetResources();
             Title = "Track Viewer";
-            
-            //var layerIconImageSrc = new FontImageSource
-            //    {
-            //        FontFamily = FontIconFamily.FA_Solid,
-            //        Size = 44,
-            //        Glyph = IconNameConstants.LayerGroup
-            //    };
-
-            //var mapIconImageSrc = new FontImageSource
-            //    {
-            //        FontFamily = FontIconFamily.FA_Solid,
-            //        Size = 44,
-            //        Glyph = IconNameConstants.GlobeAmericas
-            //    };
-
-            //var satelliteIconImageSrc = new FontImageSource
-            //    {
-            //        FontFamily = FontIconFamily.FA_Solid,
-            //        Size = 44,
-            //        Glyph = IconNameConstants.Satellite
-            //    };
-
+                        
             Items.Add(new TabBar 
             { 
                 Title = "Shell Section MainPage",

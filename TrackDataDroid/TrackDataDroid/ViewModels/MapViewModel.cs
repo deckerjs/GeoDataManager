@@ -206,6 +206,9 @@ namespace TrackDataDroid.ViewModels
                 VerticalAlignment = VerticalAlignment.Top
             });
                       
+            _mapView.MyLocationLayer.UpdateMyLocation(new Position(currentLocation.X, currentLocation.Y),true );
+            _mapView.MyLocationLayer.Name = "Current Location";
+            
             return _mapView;
         }
 
