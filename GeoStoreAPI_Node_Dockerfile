@@ -1,9 +1,9 @@
 ## docker build -t apinodetest -f GeoStoreAPI_Node_Dockerfile .
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet5.0 AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:5.0 AS build
 WORKDIR /src
 COPY ["GeoStoreAPI/GeoStoreAPI.csproj", "GeoStoreAPI/"]
 RUN dotnet restore "GeoStoreAPI/GeoStoreAPI.csproj"
