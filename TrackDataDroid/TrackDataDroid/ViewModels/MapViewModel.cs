@@ -36,10 +36,13 @@ namespace TrackDataDroid.ViewModels
 
             AvailableCoordinateData = new ObservableCollection<TrackSummaryViewModel>();
             AvailableTrackLayers = new ObservableCollection<LayerViewModel<CoordinateData>>();
+            MapLayersFiltered = new ObservableCollection<ILayer>();
 
             LoadAvailableTracksCommand = new Command(async () => await LoadAvailableTracks(), CanLoadAvailableTracks());
             LoadTrackCommand = new Command<TrackSummaryViewModel>(async (x) => await AddTrackLayer(x),CanLoadTrack());
             RemoveLoadedTrackCommand = new Command<LayerViewModel<CoordinateData>>((x) => RemoveTrackLayer(x), CanRemoveLoadedTrack());
+            NavToLayerCenterCommand = new Command<ILayer>(x => CenterLayer(x), (x)=> x != null &&_mapView!=null);
+            AddMBTileFileLayerCommand = new Command<string>(x => AddMBTileFileLayer(x, x, _map));
 
             UpdateDisplayInfo();
             DeviceDisplay.MainDisplayInfoChanged += OnMainDisplayInfoChanged;
@@ -79,6 +82,8 @@ namespace TrackDataDroid.ViewModels
         public Command LoadAvailableTracksCommand { get; }
         public Command<TrackSummaryViewModel> LoadTrackCommand { get; }
         public Command<LayerViewModel<CoordinateData>> RemoveLoadedTrackCommand { get; }
+        public Command<ILayer> NavToLayerCenterCommand { get; }
+        public Command<string> AddMBTileFileLayerCommand { get; }
 
         
         private Mapsui.Map _map;
@@ -91,6 +96,8 @@ namespace TrackDataDroid.ViewModels
         public ObservableCollection<TrackSummaryViewModel> AvailableCoordinateData { get; private set; }
         public ObservableCollection<LayerViewModel<CoordinateData>> AvailableTrackLayers { get; private set; }
         
+        public ObservableCollection<ILayer> MapLayersFiltered { get; private set; }
+
         private DisplayInfo _currentDisplayInfo;        
         public DisplayInfo CurrentDisplayInfo
         {
@@ -248,7 +255,8 @@ namespace TrackDataDroid.ViewModels
                 if (trackLayerVm != null)
                 {
                     _map.Layers.Add(trackLayerVm.Layer);
-                    _mapView.Navigator.NavigateTo(trackLayerVm.Layer.Envelope.Centroid, 100);
+                    //_mapView.Navigator.NavigateTo(trackLayerVm.Layer.Envelope.Centroid, 100);
+                    CenterLayer(trackLayerVm.Layer);
                     AvailableTrackLayers.Add(trackLayerVm);
                 }
             }
@@ -304,6 +312,11 @@ namespace TrackDataDroid.ViewModels
             return null;
         }
 
+        private void CenterLayer(ILayer layer)
+        {
+            _mapView.Navigator.NavigateTo(layer.Envelope.Centroid, 100);
+        }
+
         private async Task<ILayer> CreateLineStringLayer(IStyle style = null)
         {
 
@@ -346,7 +359,7 @@ namespace TrackDataDroid.ViewModels
             };
         }        
         
-        private static Mapsui.Map GetCustomMap()
+        private Mapsui.Map GetCustomMap()
         {
             var map = new Mapsui.Map()
             {
@@ -354,38 +367,55 @@ namespace TrackDataDroid.ViewModels
                 Transformation = new MinimalTransformation()
             };
 
+            map.Layers.LayerAdded += MapLayerAdded;
+            map.Layers.LayerRemoved += MapLayerRemoved;
+
             //todo: add configuration pick base map(s)
-            var worldLayerFile = "world.mbtiles";
-            var baseLayerFile = "co-full-base-dark-1.mbtiles";
-            var trackLayerFile = "co-full-tracks-only-dark-1.mbtiles";
-            var roadLayerFile = "co-full-roads-only-dark-1.mbtiles";
+            var worldLayerFile = CreateFileFromResource("world.mbtiles");
+            var baseLayerFile = CreateFileFromResource("co-full-base-dark-1.mbtiles");
+            var trackLayerFile = CreateFileFromResource("co-full-tracks-only-dark-1.mbtiles");
+            var roadLayerFile = CreateFileFromResource("co-full-roads-only-dark-1.mbtiles");
 
-            var worldLayerFullPath = GetFullPath(worldLayerFile);
-            var baseLayerFullPath = GetFullPath(baseLayerFile);
-            var trackLayerFullPath = GetFullPath(trackLayerFile);
-            var roadLayerFullPath = GetFullPath(roadLayerFile);
-
-            WriteStreamToFile(worldLayerFile);
-            WriteStreamToFile(baseLayerFile);
-            WriteStreamToFile(trackLayerFile);
-            WriteStreamToFile(roadLayerFile);
-
-            if (File.Exists(baseLayerFullPath) && File.Exists(trackLayerFullPath))
-            {
-                map.Layers.Add(CreateMbTilesLayer(worldLayerFullPath, "world"));
-                map.Layers.Add(CreateMbTilesLayer(baseLayerFullPath, "base"));
-                map.Layers.Add(CreateMbTilesLayer(roadLayerFullPath, "roads"));
-                map.Layers.Add(CreateMbTilesLayer(trackLayerFullPath, "tracks"));
-            }
-            else
-            {
-                throw new Exception($"invalid file path: {baseLayerFullPath}");
-            }
+            AddMBTileFileLayer(worldLayerFile, "world", map);
+            AddMBTileFileLayer(baseLayerFile, "base", map);
+            AddMBTileFileLayer(trackLayerFile, "roads", map);
+            AddMBTileFileLayer(roadLayerFile, "tracks", map);
 
             return map;
         }
 
-        private static string GetFullPath(string baseLayerfile)
+        private void MapLayerRemoved(ILayer layer)
+        {
+            MapLayersFiltered.Remove(layer);
+        }
+
+        private void MapLayerAdded(ILayer layer)
+        {
+            if (layer.Envelope != null)
+            {
+                MapLayersFiltered.Add(layer);
+            }
+        }
+
+        private string CreateFileFromResource(string layerFileName)
+        {
+            WriteStreamToFile(layerFileName);
+            return GetSpecialFolderPath(layerFileName);
+        }
+
+        private void AddMBTileFileLayer(string path, string layerName, Mapsui.Map map)
+        {
+            if (File.Exists(path) && !string.IsNullOrEmpty(layerName) && map != null)
+            {
+                map.Layers.Add(CreateMbTilesLayer(path, layerName));
+            }
+            else
+            {
+                throw new Exception($"invalid file path: {path}");
+            }
+        }
+
+        private static string GetSpecialFolderPath(string baseLayerfile)
         {
             //todo: look into sd card location for base maps
             var basepath = @"." + Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -395,7 +425,7 @@ namespace TrackDataDroid.ViewModels
         private static void WriteStreamToFile(string fileName)
         {
             var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"TrackDataDroid.{fileName}");
-            var fullPath = GetFullPath(fileName);
+            var fullPath = GetSpecialFolderPath(fileName);
 
             using (BinaryReader br = new BinaryReader(stream))
             {
@@ -428,7 +458,6 @@ namespace TrackDataDroid.ViewModels
             return new Mapsui.Geometries.Point(location.Latitude, location.Longitude);
 
         }
-
 
         //todo: add map choice options in configuration
         private Mapsui.Map GetOnlineOSMMap()

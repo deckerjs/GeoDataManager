@@ -95,7 +95,7 @@ namespace TrackDataDroid.Views
                                         .Style(StyleRepository.DataItemValueStyle)
                                         .Row(0).Column(1).CenterVertical(),
                                     new Button { ImageSource=_addIconImageSrc}
-                                        .BindCommand(nameof(_viewModel.LoadTrackCommand),_viewModel)
+                                        .BindCommand(nameof(_viewModel.LoadTrackCommand),_viewModel,".")
                                         .Style(StyleRepository.ComandButtonStyle)
                                         .Row(0).Column(2).CenterVertical()
                             }
@@ -164,7 +164,7 @@ namespace TrackDataDroid.Views
                                         .Style(StyleRepository.DataItemValueStyle)
                                         .Row(0).Column(1).CenterVertical(),
                                     new Button {ImageSource=_removeIconImageSrc}
-                                        .BindCommand(nameof(_viewModel.RemoveLoadedTrackCommand),_viewModel)
+                                        .BindCommand(nameof(_viewModel.RemoveLoadedTrackCommand),_viewModel,".")
                                         .Row(0).Column(2).CenterVertical(),
                                     }
                             };

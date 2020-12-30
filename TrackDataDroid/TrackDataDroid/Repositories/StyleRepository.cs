@@ -76,17 +76,19 @@ namespace TrackDataDroid.Repositories
             (Button.FontFamilyProperty, FontIconFamily.FA_Solid));
 
         public static Style<ImageButton> ImageButtonStyle => new Style<ImageButton>(
-                    (ImageButton.HeightRequestProperty, 20),
-                    (ImageButton.BorderColorProperty, Primary_Color),
-                    (ImageButton.BorderWidthProperty, 1),
+                    //(ImageButton.HeightRequestProperty, 20),
+                    //(ImageButton.VerticalOptionsProperty, LayoutOptions.CenterAndExpand),
+                    //(ImageButton.BorderColorProperty, Primary_Color),
+                    (ImageButton.BorderWidthProperty, 0),
                     (ImageButton.CornerRadiusProperty, 3),
-                    (ImageButton.BackgroundColorProperty, Primary_Color_Shaded)
+                    (ImageButton.BackgroundColorProperty, Primary_Black)
                     );
 
         public static Style<CheckBox> DataItemCheckStyle => new Style<CheckBox>(
             (CheckBox.ColorProperty, Primary_Color));
         
-        public static Style<Switch> DataItemSwitchStyle => new Style<Switch>(            
+        public static Style<Switch> DataItemSwitchStyle => new Style<Switch>(
+            //(Switch.VerticalOptionsProperty, LayoutOptions.CenterAndExpand),
             (Switch.ThumbColorProperty, Primary_Color),
             (Switch.OnColorProperty, Primary_Color_Shaded),
             (Switch.BackgroundColorProperty, Primary_DarkShade));

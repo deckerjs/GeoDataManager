@@ -60,11 +60,25 @@ namespace TrackDataDroid.Views
                     {
                         return new Grid
                             {
+                                RowDefinitions =
+                                {
+                                    new RowDefinition { Height = new GridLength(20)},
+                                    new RowDefinition { Height = new GridLength(20)}
+                                },
                                 ColumnDefinitions = 
                                     {
-                                        new ColumnDefinition { Width = new GridLength(6,GridUnitType.Star)}, 
-                                        new ColumnDefinition { Width = new GridLength(3,GridUnitType.Star)},
-                                        new ColumnDefinition { Width = new GridLength(3,GridUnitType.Star)}
+                                        new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)},
+                                        new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)},
+                                        new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)},
+                                        new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)},
+                                        new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)},
+                                        new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)},                                        new ColumnDefinition { Width = new GridLength(2,GridUnitType.Star)},
+                                        new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)},
+                                        new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)},
+                                        new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)},
+                                        new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)},
+                                        new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)},
+                                        new ColumnDefinition { Width = new GridLength(1,GridUnitType.Star)}
                                     },
                                 HorizontalOptions = LayoutOptions.Start,
                                 VerticalOptions = LayoutOptions.Start,
@@ -74,17 +88,22 @@ namespace TrackDataDroid.Views
                                     new Label{LineBreakMode = LineBreakMode.NoWrap, FontSize=12}
                                         .Bind(Label.TextProperty, $"{nameof(ILayer.Name)}")
                                         .Style(StyleRepository.DataItemTitleStyle)
-                                        .Row(0).Column(0).CenterVertical(),
-                                    new ImageButton {Source = ImageUtility.GetFontImageSource(IconNameConstants.Crosshairs) }
-                                        .Style(StyleRepository.ImageButtonStyle)
-                                        .Row(0).Column(1).CenterVertical(),
+                                        .Row(0).Column(0).ColumnSpan(9).CenterVertical(),
                                     new Switch()
                                         .Bind(Switch.IsToggledProperty, nameof(ILayer.Enabled))
-                                        .Row(0).Column(2).CenterVertical()
+                                        .Height(40)
+                                        .Row(0).RowSpan(2).Column(10).ColumnSpan(3),
+                                    new ImageButton {Source = ImageUtility.GetFontImageSource(IconNameConstants.Crosshairs) }
+                                        .Style(StyleRepository.ImageButtonStyle)
+                                        .Row(1).Column(0).ColumnSpan(2).CenterVertical()
+                                        .BindCommand(nameof(_viewModel.NavToLayerCenterCommand),_viewModel,"."),
+
                                     }
                             };
                     })
-                    }.Bind(CollectionView.ItemsSourceProperty, $"{nameof(_viewModel.Map)}.{nameof(_viewModel.Map.Layers)}")
+                    }.Bind(CollectionView.ItemsSourceProperty, $"{nameof(_viewModel.MapLayersFiltered)}")
+                //.Bind(CollectionView.ItemsSourceProperty, $"{nameof(_viewModel.Map)}.{nameof(_viewModel.Map.Layers)}")
+                
                 }
             }
             .Bind(StackLayout.HeightRequestProperty, nameof(_viewModel.Section2Height))
