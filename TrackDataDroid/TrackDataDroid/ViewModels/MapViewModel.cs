@@ -37,12 +37,16 @@ namespace TrackDataDroid.ViewModels
             AvailableCoordinateData = new ObservableCollection<TrackSummaryViewModel>();
             AvailableTrackLayers = new ObservableCollection<LayerViewModel<CoordinateData>>();
             MapLayersFiltered = new ObservableCollection<ILayer>();
+            MapFileLayers = new ObservableCollection<LayerViewModel<string>>();
 
             LoadAvailableTracksCommand = new Command(async () => await LoadAvailableTracks(), CanLoadAvailableTracks());
             LoadTrackCommand = new Command<TrackSummaryViewModel>(async (x) => await AddTrackLayer(x),CanLoadTrack());
             RemoveLoadedTrackCommand = new Command<LayerViewModel<CoordinateData>>((x) => RemoveTrackLayer(x), CanRemoveLoadedTrack());
             NavToLayerCenterCommand = new Command<ILayer>(x => CenterLayer(x), (x)=> x != null &&_mapView!=null);
-            AddMBTileFileLayerCommand = new Command<string>(x => AddMBTileFileLayer(x, x, _map));
+            AddMBTileFileLayerCommand = new Command<LayerViewModel<string>>(x => AddMBTileFileLayer(x.LayerData, x.LayerData, _map));
+            RemoveMBTileFileLayerCommand = new Command<LayerViewModel<string>>(x => RemoveMBTileFileLayer(x, _map));
+            SelectFileCommand = new Command(async () => await SelectFileAsync());
+
 
             UpdateDisplayInfo();
             DeviceDisplay.MainDisplayInfoChanged += OnMainDisplayInfoChanged;
@@ -83,7 +87,9 @@ namespace TrackDataDroid.ViewModels
         public Command<TrackSummaryViewModel> LoadTrackCommand { get; }
         public Command<LayerViewModel<CoordinateData>> RemoveLoadedTrackCommand { get; }
         public Command<ILayer> NavToLayerCenterCommand { get; }
-        public Command<string> AddMBTileFileLayerCommand { get; }
+        public Command<LayerViewModel<string>> AddMBTileFileLayerCommand { get; }
+        public Command<LayerViewModel<string>> RemoveMBTileFileLayerCommand { get; }
+        public Command SelectFileCommand { get; }
 
         
         private Mapsui.Map _map;
@@ -97,6 +103,7 @@ namespace TrackDataDroid.ViewModels
         public ObservableCollection<LayerViewModel<CoordinateData>> AvailableTrackLayers { get; private set; }
         
         public ObservableCollection<ILayer> MapLayersFiltered { get; private set; }
+        public ObservableCollection<LayerViewModel<string>> MapFileLayers { get; private set; }
 
         private DisplayInfo _currentDisplayInfo;        
         public DisplayInfo CurrentDisplayInfo
@@ -255,7 +262,6 @@ namespace TrackDataDroid.ViewModels
                 if (trackLayerVm != null)
                 {
                     _map.Layers.Add(trackLayerVm.Layer);
-                    //_mapView.Navigator.NavigateTo(trackLayerVm.Layer.Envelope.Centroid, 100);
                     CenterLayer(trackLayerVm.Layer);
                     AvailableTrackLayers.Add(trackLayerVm);
                 }
@@ -403,15 +409,60 @@ namespace TrackDataDroid.ViewModels
             return GetSpecialFolderPath(layerFileName);
         }
 
+        private async Task SelectFileAsync()
+        {
+            try
+            {                
+                var result = await FilePicker.PickAsync();
+                if (result != null)
+                {
+                    var fileName = $"File Name: {result.FileName}";
+                    if (result.FileName.EndsWith("mbtiles", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AddMBTileFileLayer(result.FullPath, result.FileName, _map);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"FilePicker Exception: {ex.Message}");
+            }
+        }
+
         private void AddMBTileFileLayer(string path, string layerName, Mapsui.Map map)
         {
             if (File.Exists(path) && !string.IsNullOrEmpty(layerName) && map != null)
             {
-                map.Layers.Add(CreateMbTilesLayer(path, layerName));
+                var layer = CreateMbTilesLayer(path, layerName);
+                map.Layers.Add(layer);
+                MapFileLayers.Add(new LayerViewModel<string>
+                {
+                    Description = layerName,
+                    LayerData = path,
+                    Layer = layer
+                });
             }
             else
             {
                 throw new Exception($"invalid file path: {path}");
+            }
+        }
+
+        private void RemoveMBTileFileLayer(LayerViewModel<string> layerVm, Mapsui.Map map)
+        {
+            if (!string.IsNullOrEmpty(layerVm?.LayerData))
+            {
+                var layers = _map.Layers.Where(l => l.Name == layerVm?.LayerData).ToList();
+                foreach (var layer in layers)
+                {
+                    _map.Layers.Remove(layer);
+                }
+
+                var fileLayers = MapFileLayers.Where(t => t.LayerData == layerVm.LayerData).ToList();
+                foreach (var layer in fileLayers)
+                {
+                    MapFileLayers.Remove(layer);
+                }
             }
         }
 

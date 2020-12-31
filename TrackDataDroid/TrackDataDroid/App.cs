@@ -51,22 +51,13 @@ namespace TrackDataDroid
                  services.AddSingleton<OsmMapViewPage>();
                  services.AddSingleton<MapDataPage>();
                  services.AddSingleton<GpsPage>();
-
-
-
-                 //services.AddScoped<MainPageViewModel>();
-                 //services.AddScoped<ISensorValuesViewModel, SensorValuesViewModel>();
-                 //services.AddScoped<ISensorValuesRepository, SensorValuesRepository>();
-
-                 //services.Configure<AppOptions>(Configuration.GetSection("AppOptions"));
-                 //services.AddScoped<AppOptions>(x => x.GetService<IOptions<AppOptions>>().Value);
+                 services.AddSingleton<MapFileLayerPage>();
                  
                  services.Configure<ApiClientSettings>(context.Configuration.GetSection("ApiClientSettings"));
                  services.AddSingleton<ApiClientSettings>(x =>
                  {
                      return Microsoft.Extensions.DependencyInjection
                      .ServiceProviderServiceExtensions.GetService<IOptions<ApiClientSettings>>(x).Value;
-                     //return x.GetService<IOptions<ApiClientSettings>>().Value;
                  });
 
                  services.AddSingleton<MapViewModel>();
@@ -77,9 +68,6 @@ namespace TrackDataDroid
                  services.AddScoped<CoordinateDataOfflineSource>();
 
                  services.AddScoped<CoordinateDataApiClient>();
-
-
-
              });
         }
 
