@@ -43,6 +43,9 @@ namespace TrackDataDroid.ViewModels
             LoadTrackCommand = new Command<TrackSummaryViewModel>(async (x) => await AddTrackLayer(x),CanLoadTrack());
             RemoveLoadedTrackCommand = new Command<LayerViewModel<CoordinateData>>((x) => RemoveTrackLayer(x), CanRemoveLoadedTrack());
             NavToLayerCenterCommand = new Command<ILayer>(x => CenterLayer(x), (x)=> x != null &&_mapView!=null);
+            MoveLayerUpCommand = new Command<ILayer>(x => MoveLayerUp(x, _map.Layers), (x) => x != null && _mapView != null);
+            MoveLayerDownCommand = new Command<ILayer>(x => MoveLayerDown(x, _map.Layers), (x) => x != null && _mapView != null);
+
             AddMBTileFileLayerCommand = new Command<LayerViewModel<string>>(x => AddMBTileFileLayer(x.LayerData, x.LayerData, _map));
             RemoveMBTileFileLayerCommand = new Command<LayerViewModel<string>>(x => RemoveMBTileFileLayer(x, _map));
             SelectFileCommand = new Command(async () => await SelectFileAsync());
@@ -87,6 +90,8 @@ namespace TrackDataDroid.ViewModels
         public Command<TrackSummaryViewModel> LoadTrackCommand { get; }
         public Command<LayerViewModel<CoordinateData>> RemoveLoadedTrackCommand { get; }
         public Command<ILayer> NavToLayerCenterCommand { get; }
+        public Command<ILayer> MoveLayerUpCommand { get; }
+        public Command<ILayer> MoveLayerDownCommand { get; }
         public Command<LayerViewModel<string>> AddMBTileFileLayerCommand { get; }
         public Command<LayerViewModel<string>> RemoveMBTileFileLayerCommand { get; }
         public Command SelectFileCommand { get; }
@@ -320,7 +325,10 @@ namespace TrackDataDroid.ViewModels
 
         private void CenterLayer(ILayer layer)
         {
-            _mapView.Navigator.NavigateTo(layer.Envelope.Centroid, 100);
+            if (layer.Envelope != null)
+            {
+                _mapView.Navigator.NavigateTo(layer.Envelope.Centroid, 100);
+            }
         }
 
         private async Task<ILayer> CreateLineStringLayer(IStyle style = null)
@@ -397,10 +405,7 @@ namespace TrackDataDroid.ViewModels
 
         private void MapLayerAdded(ILayer layer)
         {
-            if (layer.Envelope != null)
-            {
-                MapLayersFiltered.Add(layer);
-            }
+            MapLayersFiltered.Add(layer);
         }
 
         private string CreateFileFromResource(string layerFileName)
@@ -465,6 +470,41 @@ namespace TrackDataDroid.ViewModels
                 }
             }
         }
+
+        private void MoveLayerUp(ILayer layer, LayerCollection layerCollection)
+        {
+            var layerIndex = GetLayerIndex(layer, layerCollection);
+            if (layerIndex != -1 && layerIndex < MapLayersFiltered.Count())
+            {
+                layerCollection.Move(layerIndex + 1, layer);
+                MapLayersFiltered.Move(layerIndex, layerIndex + 1);
+                _mapView.Refresh();
+            }
+        }
+
+        private void MoveLayerDown(ILayer layer, LayerCollection layerCollection)
+        {
+            var layerIndex = GetLayerIndex(layer, layerCollection);
+            if (layerIndex != -1 && layerIndex > 0)
+            {
+                layerCollection.Move(layerIndex - 1, layer);
+                MapLayersFiltered.Move(layerIndex, layerIndex - 1);
+                _mapView.Refresh();
+            }
+        }
+
+        private int GetLayerIndex(ILayer layer, LayerCollection layerCollection)
+        {
+            int index = 0;
+            var comparer = EqualityComparer<ILayer>.Default;
+            foreach (ILayer item in layerCollection)
+            {
+                if (comparer.Equals(item, layer)) return index;
+                index++;
+            }
+            return -1;
+        }
+
 
         private static string GetSpecialFolderPath(string baseLayerfile)
         {

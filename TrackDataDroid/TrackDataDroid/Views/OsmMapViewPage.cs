@@ -93,17 +93,22 @@ namespace TrackDataDroid.Views
                                         .Bind(Switch.IsToggledProperty, nameof(ILayer.Enabled))
                                         .Height(40)
                                         .Row(0).RowSpan(2).Column(10).ColumnSpan(3),
-                                    new ImageButton {Source = ImageUtility.GetFontImageSource(IconNameConstants.Crosshairs) }
+                                    new ImageButton {Source = ImageUtility.GetFontImageSource(IconNameConstants.Crosshairs)}
                                         .Style(StyleRepository.ImageButtonStyle)
                                         .Row(1).Column(0).ColumnSpan(2).CenterVertical()
                                         .BindCommand(nameof(_viewModel.NavToLayerCenterCommand),_viewModel,"."),
-
+                                    new ImageButton {Source = ImageUtility.GetFontImageSource(IconNameConstants.ArrowUp)}
+                                        .Style(StyleRepository.ImageButtonStyle)
+                                        .Row(1).Column(2).ColumnSpan(2).CenterVertical()
+                                        .BindCommand(nameof(_viewModel.MoveLayerUpCommand),_viewModel,"."),
+                                    new ImageButton {Source = ImageUtility.GetFontImageSource(IconNameConstants.ArrowDown)}
+                                        .Style(StyleRepository.ImageButtonStyle)
+                                        .Row(1).Column(4).ColumnSpan(2).CenterVertical()
+                                        .BindCommand(nameof(_viewModel.MoveLayerDownCommand),_viewModel,".")
                                     }
                             };
                     })
                     }.Bind(CollectionView.ItemsSourceProperty, $"{nameof(_viewModel.MapLayersFiltered)}")
-                //.Bind(CollectionView.ItemsSourceProperty, $"{nameof(_viewModel.Map)}.{nameof(_viewModel.Map.Layers)}")
-                
                 }
             }
             .Bind(StackLayout.HeightRequestProperty, nameof(_viewModel.Section2Height))

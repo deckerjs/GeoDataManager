@@ -7,6 +7,7 @@ using Xamarin.Forms;
 
 using TrackDataDroid.Models;
 using TrackDataDroid.Services;
+using System.Collections.Specialized;
 
 namespace TrackDataDroid.ViewModels
 {
@@ -33,8 +34,7 @@ namespace TrackDataDroid.ViewModels
             OnPropertyChanged(propertyName);
             return true;
         }
-
-        #region INotifyPropertyChanged
+                
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
@@ -44,6 +44,5 @@ namespace TrackDataDroid.ViewModels
 
             changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        #endregion
     }
 }
