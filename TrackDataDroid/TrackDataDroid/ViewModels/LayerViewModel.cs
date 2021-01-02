@@ -15,6 +15,13 @@ namespace TrackDataDroid.ViewModels
             set { SetProperty(ref _layerData, value); }
         }
 
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set { SetProperty(ref _name, value); }
+        }
+
         private string _description;
         public string Description
         {

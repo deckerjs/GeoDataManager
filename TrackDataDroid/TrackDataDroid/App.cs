@@ -52,6 +52,7 @@ namespace TrackDataDroid
                  services.AddSingleton<MapDataPage>();
                  services.AddSingleton<GpsPage>();
                  services.AddSingleton<MapFileLayerPage>();
+                 services.AddSingleton<MapUrlLayerPage>();
                  
                  services.Configure<ApiClientSettings>(context.Configuration.GetSection("ApiClientSettings"));
                  services.AddSingleton<ApiClientSettings>(x =>

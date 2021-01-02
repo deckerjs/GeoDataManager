@@ -16,6 +16,7 @@ namespace TrackDataDroid
         private readonly OsmMapViewPage _osmMapViewPage;
         private readonly MapDataPage _mapDataPage;
         private readonly MapFileLayerPage _mapFileLayerPage;
+        private readonly MapUrlLayerPage _mapUrlLayerPage;
         private readonly GpsPage _gpsPage;
 
         public AppShell(
@@ -23,12 +24,14 @@ namespace TrackDataDroid
             OsmMapViewPage osmMapViewPage, 
             MapDataPage mapViewPage,
             MapFileLayerPage mapFileLayerPage,
+            MapUrlLayerPage mapUrlLayerPage,
             GpsPage gpsPage)
         {
             _settingsPage = settingsPage;
             _osmMapViewPage = osmMapViewPage;
             _mapDataPage = mapViewPage;
             _mapFileLayerPage = mapFileLayerPage;
+            _mapUrlLayerPage = mapUrlLayerPage;
             _gpsPage = gpsPage;
             Resources = GetResources();
             Title = "Track Viewer";
@@ -55,6 +58,12 @@ namespace TrackDataDroid
                                 Title="File Layers", 
                                 Icon=ImageUtility.GetFontImageSource(IconNameConstants.LayerGroup, ImageUtility.DefaultImageSize.Large),
                                 Content = _mapFileLayerPage
+                            },
+                        new ShellContent() 
+                            { 
+                                Title="Url Layers", 
+                                Icon=ImageUtility.GetFontImageSource(IconNameConstants.LayerGroup, ImageUtility.DefaultImageSize.Large),
+                                Content = _mapUrlLayerPage
                             },
                         new ShellContent() 
                             { 

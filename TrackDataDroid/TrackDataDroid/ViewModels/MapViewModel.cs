@@ -50,6 +50,11 @@ namespace TrackDataDroid.ViewModels
             RemoveMBTileFileLayerCommand = new Command<LayerViewModel<string>>(x => RemoveMBTileFileLayer(x, _map));
             SelectFileCommand = new Command(async () => await SelectFileAsync());
 
+            AddUrlLayerCommand = new Command<LayerViewModel<string>>(x => AddUrlLayer(x.LayerData, x.LayerData, _map));
+            RemoveUrlLayerCommand = new Command<LayerViewModel<string>>(x => RemoveUrlLayer(x, _map));
+            
+            LayerViewModelEntry = new LayerViewModel<string>();
+
 
             UpdateDisplayInfo();
             DeviceDisplay.MainDisplayInfoChanged += OnMainDisplayInfoChanged;
@@ -94,6 +99,8 @@ namespace TrackDataDroid.ViewModels
         public Command<ILayer> MoveLayerDownCommand { get; }
         public Command<LayerViewModel<string>> AddMBTileFileLayerCommand { get; }
         public Command<LayerViewModel<string>> RemoveMBTileFileLayerCommand { get; }
+        public Command<LayerViewModel<string>> AddUrlLayerCommand { get; }
+        public Command<LayerViewModel<string>> RemoveUrlLayerCommand { get; }
         public Command SelectFileCommand { get; }
 
         
@@ -109,6 +116,14 @@ namespace TrackDataDroid.ViewModels
         
         public ObservableCollection<ILayer> MapLayersFiltered { get; private set; }
         public ObservableCollection<LayerViewModel<string>> MapFileLayers { get; private set; }
+        public ObservableCollection<LayerViewModel<string>> MapUrlLayers { get; private set; }
+
+        private LayerViewModel<string> _layerViewModelEntry;
+        public LayerViewModel<string> LayerViewModelEntry
+        {
+            get { return _layerViewModelEntry; }
+            set { SetProperty(ref _layerViewModelEntry, value); }
+        }
 
         private DisplayInfo _currentDisplayInfo;        
         public DisplayInfo CurrentDisplayInfo
@@ -442,6 +457,7 @@ namespace TrackDataDroid.ViewModels
                 map.Layers.Add(layer);
                 MapFileLayers.Add(new LayerViewModel<string>
                 {
+                    Name = layerName,
                     Description = layerName,
                     LayerData = path,
                     Layer = layer
@@ -457,19 +473,58 @@ namespace TrackDataDroid.ViewModels
         {
             if (!string.IsNullOrEmpty(layerVm?.LayerData))
             {
-                var layers = _map.Layers.Where(l => l.Name == layerVm?.LayerData).ToList();
+                var layers = _map.Layers.Where(l => l.Name == layerVm?.Name).ToList();
                 foreach (var layer in layers)
                 {
                     _map.Layers.Remove(layer);
                 }
 
-                var fileLayers = MapFileLayers.Where(t => t.LayerData == layerVm.LayerData).ToList();
+                var fileLayers = MapFileLayers.Where(t => t.Name == layerVm.Name).ToList();
                 foreach (var layer in fileLayers)
                 {
                     MapFileLayers.Remove(layer);
                 }
             }
         }
+
+        private void AddUrlLayer(string url, string layerName, Mapsui.Map map)
+        {
+            if (!string.IsNullOrEmpty(layerName) && map != null)
+            {
+                var layer = CreateUrlTileLayer(url, layerName);
+                map.Layers.Add(layer);
+                MapUrlLayers.Add(new LayerViewModel<string>
+                {
+                    Name = layerName,
+                    Description = layerName,
+                    LayerData = url,
+                    Layer = layer
+                });
+            }
+            else
+            {
+                throw new Exception($"invalid url: {url}");
+            }
+        }
+
+        private void RemoveUrlLayer(LayerViewModel<string> layerVm, Mapsui.Map map)
+        {
+            if (!string.IsNullOrEmpty(layerVm?.Name))
+            {
+                var layers = _map.Layers.Where(l => l.Name == layerVm?.Name).ToList();
+                foreach (var layer in layers)
+                {
+                    _map.Layers.Remove(layer);
+                }
+
+                var urlLayers = MapFileLayers.Where(t => t.Name == layerVm.Name).ToList();
+                foreach (var layer in urlLayers)
+                {
+                    MapFileLayers.Remove(layer);
+                }
+            }
+        }
+
 
         private void MoveLayerUp(ILayer layer, LayerCollection layerCollection)
         {
@@ -549,6 +604,17 @@ namespace TrackDataDroid.ViewModels
             return new Mapsui.Geometries.Point(location.Latitude, location.Longitude);
 
         }
+
+
+        private TileLayer CreateUrlTileLayer(string url, string name)
+        {
+            var tileSource = TmsTileSourceBuilder.Build(url, true);
+            return new TileLayer(tileSource)
+            {
+                Name = name
+            };
+        }
+
 
         //todo: add map choice options in configuration
         private Mapsui.Map GetOnlineOSMMap()
