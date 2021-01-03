@@ -21,6 +21,8 @@ using Mapsui.Utilities;
 using Xamarin.Forms.Markup;
 using System.Collections.ObjectModel;
 using Xamarin.Essentials;
+using BruTile.Web;
+using BruTile.Predefined;
 
 namespace TrackDataDroid.ViewModels
 {
@@ -38,6 +40,7 @@ namespace TrackDataDroid.ViewModels
             AvailableTrackLayers = new ObservableCollection<LayerViewModel<CoordinateData>>();
             MapLayersFiltered = new ObservableCollection<ILayer>();
             MapFileLayers = new ObservableCollection<LayerViewModel<string>>();
+            MapUrlLayers = new ObservableCollection<LayerViewModel<string>>();
 
             LoadAvailableTracksCommand = new Command(async () => await LoadAvailableTracks(), CanLoadAvailableTracks());
             LoadTrackCommand = new Command<TrackSummaryViewModel>(async (x) => await AddTrackLayer(x),CanLoadTrack());
@@ -46,14 +49,14 @@ namespace TrackDataDroid.ViewModels
             MoveLayerUpCommand = new Command<ILayer>(x => MoveLayerUp(x, _map.Layers), (x) => x != null && _mapView != null);
             MoveLayerDownCommand = new Command<ILayer>(x => MoveLayerDown(x, _map.Layers), (x) => x != null && _mapView != null);
 
-            AddMBTileFileLayerCommand = new Command<LayerViewModel<string>>(x => AddMBTileFileLayer(x.LayerData, x.LayerData, _map));
+            AddMBTileFileLayerCommand = new Command<LayerViewModel<string>>(x => AddMBTileFileLayer(x.LayerData, x.Name, _map));
             RemoveMBTileFileLayerCommand = new Command<LayerViewModel<string>>(x => RemoveMBTileFileLayer(x, _map));
             SelectFileCommand = new Command(async () => await SelectFileAsync());
 
-            AddUrlLayerCommand = new Command<LayerViewModel<string>>(x => AddUrlLayer(x.LayerData, x.LayerData, _map));
+            AddUrlLayerCommand = new Command<LayerViewModel<string>>(x => AddUrlLayer(x.LayerData, x.Name, _map));
             RemoveUrlLayerCommand = new Command<LayerViewModel<string>>(x => RemoveUrlLayer(x, _map));
             
-            LayerViewModelEntry = new LayerViewModel<string>();
+            LayerViewModelEntry = new LayerViewModel<string>() { Name="example", LayerData= "https://a.tile.opentopomap.org/{z}/{x}/{y}.png"};
 
 
             UpdateDisplayInfo();
@@ -608,12 +611,70 @@ namespace TrackDataDroid.ViewModels
 
         private TileLayer CreateUrlTileLayer(string url, string name)
         {
-            var tileSource = TmsTileSourceBuilder.Build(url, true);
-            return new TileLayer(tileSource)
-            {
-                Name = name
-            };
+            //var tileSource = TmsTileSourceBuilder.Build(url, false);
+            //return new TileLayer(tileSource)
+            //{
+            //    Name = name
+            //};
+            //this times out
+
+            var tileSource = CreateTileSource(url, name);
+            //var tileSource = CreateOSMTileSource(url, name);
+
+
+            return new TileLayer(tileSource) { Name = name};
         }
+
+        private HttpTileSource CreateTileSource(string url, string name)
+        {
+            return new HttpTileSource(
+                    new GlobalSphericalMercator(), 
+                    urlFormatter: url, //"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    serverNodes: null, //new[] { "a", "b", "c" }, 
+                    name: name, //"OpenStreetMap"
+                    attribution: null, //new BruTile.Attribution("© OpenStreetMap contributors", "https://www.openstreetmap.org/copyright")
+                    userAgent: null //"OpenStreetMap in Mapsui"
+                    );
+        }
+
+        //this works
+        //private HttpTileSource CreateOSMTileSource(string url, string name)
+        //{
+        //    return new HttpTileSource(
+        //            new GlobalSphericalMercator(), 
+        //            urlFormatter: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        //            serverNodes: new[] { "a", "b", "c" }, 
+        //            name: "OpenStreetMap",
+        //            attribution: new BruTile.Attribution("© OpenStreetMap contributors", "https://www.openstreetmap.org/copyright"),
+        //            userAgent: "OpenStreetMap in Mapsui"
+        //            );
+        //}
+
+        //this works
+        //private HttpTileSource CreateOSMTileSource(string url, string name)
+        //{
+        //    return new HttpTileSource(
+        //            new GlobalSphericalMercator(), 
+        //            urlFormatter: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        //            serverNodes: new[] { "a", "b", "c" }, 
+        //            name: name,
+        //            attribution: null,
+        //            userAgent: null
+        //            );
+        //}
+
+        //private HttpTileSource CreateOSMTileSource(string url, string name)
+        //{
+        //    return new HttpTileSource(
+        //            new GlobalSphericalMercator(),
+        //            //urlFormatter: "http://tiles.wmflabs.org/hillshading/${z}/${x}/${y}.png"
+        //            //https://{a|b|c}.tile.opentopomap.org/{z}/{x}/{y}.png 
+        //            //this works
+        //            urlFormatter: "https://a.tile.opentopomap.org/{z}/{x}/{y}.png"
+        //            );
+        //}
+
+
 
 
         //todo: add map choice options in configuration

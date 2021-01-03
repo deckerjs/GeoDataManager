@@ -93,6 +93,13 @@ namespace TrackDataDroid.Repositories
             (Switch.OnColorProperty, Primary_Color_Shaded),
             (Switch.BackgroundColorProperty, Primary_DarkShade));
 
+
+        public static Style<Entry> EntryStyle => new Style<Entry>(
+            (Entry.TextColorProperty, Primary_Color),
+            (Entry.FontAttributesProperty, FontAttributes.Bold),
+            (Entry.BackgroundColorProperty, Primary_Black)
+            );
+
         public static ResourceDictionary DefaultStyle()
         {
 
@@ -155,7 +162,8 @@ namespace TrackDataDroid.Repositories
                     label,
                     ComandButtonStyle,
                     DataItemCheckStyle,
-                    DataItemSwitchStyle
+                    DataItemSwitchStyle,
+                    EntryStyle
                 };
         }
 

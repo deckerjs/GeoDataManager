@@ -95,7 +95,7 @@ namespace TrackDataDroid.Views
                                 .Row(0).Column(1),
                             new Button {HeightRequest = 20, ImageSource = _addIconImageSrc}
                                 .Style(StyleRepository.ComandButtonStyle)
-                                .BindCommand(nameof(_viewModel.AddUrlLayerCommand),_viewModel,"." )
+                                .BindCommand(nameof(_viewModel.AddUrlLayerCommand),_viewModel,nameof(_viewModel.LayerViewModelEntry))
                                 .Row(0).Column(2)
                         }
             };
