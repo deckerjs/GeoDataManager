@@ -8,6 +8,8 @@ using Android.Widget;
 using Android.OS;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using TrackDataDroid.Services;
 
 namespace TrackDataDroid.Droid
 {
@@ -30,8 +32,6 @@ namespace TrackDataDroid.Droid
 
             var application = host.Services.GetRequiredService<App>();
             LoadApplication(application);
-
-            //LoadApplication(new App());
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {

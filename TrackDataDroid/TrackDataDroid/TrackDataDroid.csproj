@@ -39,6 +39,8 @@
     <PackageReference Include="Mapsui.Forms" Version="2.0.3" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.1.9" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.9" />
+    <PackageReference Include="NLog" Version="4.7.6" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.7.0" />
     <!--<PackageReference Include="sqlite" Version="3.13.0" />-->
     <!--<PackageReference Include="sqlite-net-pcl" Version="1.7.335" />-->
     <!--<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.0.4" />-->

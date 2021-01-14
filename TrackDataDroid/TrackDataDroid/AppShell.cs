@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using TrackDataDroid.Configuration;
 using TrackDataDroid.Services;
@@ -25,7 +26,8 @@ namespace TrackDataDroid
             MapDataPage mapViewPage,
             MapFileLayerPage mapFileLayerPage,
             MapUrlLayerPage mapUrlLayerPage,
-            GpsPage gpsPage)
+            GpsPage gpsPage, 
+            ILogger<AppShell> logger)
         {
             _settingsPage = settingsPage;
             _osmMapViewPage = osmMapViewPage;
@@ -36,17 +38,13 @@ namespace TrackDataDroid
             Resources = GetResources();
             Title = "Track Viewer";
                         
-            Items.Add(new TabBar 
+            try
+            {
+                Items.Add(new TabBar 
             { 
                 Title = "Shell Section MainPage",
                 Items = 
-                    {
-                        new ShellContent()
-                            {
-                                Title="Config",
-                                Icon=ImageUtility.GetFontImageSource(IconNameConstants.Cog, ImageUtility.DefaultImageSize.Large),
-                                Content = _settingsPage
-                            },
+                    {                        
                         new ShellContent() 
                             { 
                                 Title="Data", 
@@ -76,9 +74,20 @@ namespace TrackDataDroid
                                 Title="GPS",
                                 Icon=ImageUtility.GetFontImageSource(IconNameConstants.Satellite, ImageUtility.DefaultImageSize.Large),
                                 Content = _gpsPage
-                            }
+                            },
+                        new ShellContent()
+                            {
+                                Title="Config",
+                                Icon=ImageUtility.GetFontImageSource(IconNameConstants.Cog, ImageUtility.DefaultImageSize.Large),
+                                Content = _settingsPage
+                            },
                     }
             });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, ex.Message);
+            }
 
         }
 

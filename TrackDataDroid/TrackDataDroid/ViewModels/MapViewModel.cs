@@ -23,47 +23,56 @@ using System.Collections.ObjectModel;
 using Xamarin.Essentials;
 using BruTile.Web;
 using BruTile.Predefined;
+using Microsoft.Extensions.Logging;
 
 namespace TrackDataDroid.ViewModels
 {
     public class MapViewModel: BaseViewModel
     {
         private readonly CoordinateDataRepository _dataRepository;
-        
+        private readonly ILogger<MapViewModel> _logger;
         private MapView _mapView;
         
-        public MapViewModel(CoordinateDataRepository dataRepository)
+        public MapViewModel(CoordinateDataRepository dataRepository, ILogger<MapViewModel> logger)
         {
             _dataRepository = dataRepository;
+            _logger = logger;
 
-            AvailableCoordinateData = new ObservableCollection<TrackSummaryViewModel>();
-            AvailableTrackLayers = new ObservableCollection<LayerViewModel<CoordinateData>>();
-            MapLayersFiltered = new ObservableCollection<ILayer>();
-            MapFileLayers = new ObservableCollection<LayerViewModel<string>>();
-            MapUrlLayers = new ObservableCollection<LayerViewModel<string>>();
+            try
+            {
+                AvailableCoordinateData = new ObservableCollection<TrackSummaryViewModel>();
+                AvailableTrackLayers = new ObservableCollection<LayerViewModel<CoordinateData>>();
+                MapLayersFiltered = new ObservableCollection<ILayer>();
+                MapFileLayers = new ObservableCollection<LayerViewModel<string>>();
+                MapUrlLayers = new ObservableCollection<LayerViewModel<string>>();
 
-            LoadAvailableTracksCommand = new Command(async () => await LoadAvailableTracks(), CanLoadAvailableTracks());
-            LoadTrackCommand = new Command<TrackSummaryViewModel>(async (x) => await AddTrackLayer(x),CanLoadTrack());
-            RemoveLoadedTrackCommand = new Command<LayerViewModel<CoordinateData>>((x) => RemoveTrackLayer(x), CanRemoveLoadedTrack());
-            NavToLayerCenterCommand = new Command<ILayer>(x => CenterLayer(x), (x)=> x != null &&_mapView!=null);
-            MoveLayerUpCommand = new Command<ILayer>(x => MoveLayerUp(x, _map.Layers), (x) => x != null && _mapView != null);
-            MoveLayerDownCommand = new Command<ILayer>(x => MoveLayerDown(x, _map.Layers), (x) => x != null && _mapView != null);
+                LoadAvailableTracksCommand = new Command(async () => await LoadAvailableTracks(), CanLoadAvailableTracks());
+                LoadTrackCommand = new Command<TrackSummaryViewModel>(async (x) => await AddTrackLayer(x),CanLoadTrack());
+                RemoveLoadedTrackCommand = new Command<LayerViewModel<CoordinateData>>((x) => RemoveTrackLayer(x), CanRemoveLoadedTrack());
+                NavToLayerCenterCommand = new Command<ILayer>(x => CenterLayer(x), (x)=> x != null &&_mapView!=null);
+                MoveLayerUpCommand = new Command<ILayer>(x => MoveLayerUp(x, _map.Layers), (x) => x != null && _mapView != null);
+                MoveLayerDownCommand = new Command<ILayer>(x => MoveLayerDown(x, _map.Layers), (x) => x != null && _mapView != null);
 
-            AddMBTileFileLayerCommand = new Command<LayerViewModel<string>>(x => AddMBTileFileLayer(x.LayerData, x.Name, _map));
-            RemoveMBTileFileLayerCommand = new Command<LayerViewModel<string>>(x => RemoveMBTileFileLayer(x, _map));
-            SelectFileCommand = new Command(async () => await SelectFileAsync());
+                AddMBTileFileLayerCommand = new Command<LayerViewModel<string>>(x => AddMBTileFileLayer(x.LayerData, x.Name, _map));
+                RemoveMBTileFileLayerCommand = new Command<LayerViewModel<string>>(x => RemoveMBTileFileLayer(x, _map));
+                SelectFileCommand = new Command(async () => await SelectFileAsync());
 
-            AddUrlLayerCommand = new Command<LayerViewModel<string>>(x => AddUrlLayer(x.LayerData, x.Name, _map));
-            RemoveUrlLayerCommand = new Command<LayerViewModel<string>>(x => RemoveUrlLayer(x, _map));
+                AddUrlLayerCommand = new Command<LayerViewModel<string>>(x => AddUrlLayer(x.LayerData, x.Name, _map));
+                RemoveUrlLayerCommand = new Command<LayerViewModel<string>>(x => RemoveUrlLayer(x, _map));
             
-            LayerViewModelEntry = new LayerViewModel<string>() { Name="example", LayerData= "https://a.tile.opentopomap.org/{z}/{x}/{y}.png"};
+                LayerViewModelEntry = new LayerViewModel<string>() { Name="example", LayerData= "https://a.tile.opentopomap.org/{z}/{x}/{y}.png"};
 
+                UpdateDisplayInfo();
+                DeviceDisplay.MainDisplayInfoChanged += OnMainDisplayInfoChanged;
 
-            UpdateDisplayInfo();
-            DeviceDisplay.MainDisplayInfoChanged += OnMainDisplayInfoChanged;
+                _map = GetCustomMap();
+                _mapView = GetNewMapView();
 
-            _map = GetCustomMap();
-            _mapView = GetNewMapView();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, ex.Message);
+            }
         }
 
         private Func<bool> CanLoadAvailableTracks()

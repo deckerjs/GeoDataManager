@@ -13,6 +13,8 @@ using GeoStoreApi.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using TrackDataDroid.Repositories;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 
 namespace TrackDataDroid
 {
@@ -37,7 +39,7 @@ namespace TrackDataDroid
         public static IHostBuilder BuildHost()
         {
             return XamarinHost.CreateDefaultBuilder<App>()
-             .ConfigureServices((context, services) =>
+            .ConfigureServices((context, services) =>
              {
                  // todo: 
                  // may actually want to pull views from di host when shown
@@ -69,6 +71,13 @@ namespace TrackDataDroid
                  services.AddScoped<CoordinateDataOfflineSource>();
 
                  services.AddScoped<CoordinateDataApiClient>();
+
+                 services.AddLogging(loggingBuilder =>
+                 {
+                     loggingBuilder.ClearProviders();
+                     loggingBuilder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+                     loggingBuilder.AddNLog(context.Configuration);
+                 });
              });
         }
 

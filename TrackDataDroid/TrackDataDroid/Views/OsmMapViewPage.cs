@@ -97,11 +97,11 @@ namespace TrackDataDroid.Views
                                         .Style(StyleRepository.ImageButtonStyle)
                                         .Row(1).Column(0).ColumnSpan(2).CenterVertical()
                                         .BindCommand(nameof(_viewModel.NavToLayerCenterCommand),_viewModel,"."),
-                                    new ImageButton {Source = ImageUtility.GetFontImageSource(IconNameConstants.ArrowUp)}
+                                    new ImageButton {Source = ImageUtility.GetFontImageSource(IconNameConstants.ArrowDown)}
                                         .Style(StyleRepository.ImageButtonStyle)
                                         .Row(1).Column(2).ColumnSpan(2).CenterVertical()
                                         .BindCommand(nameof(_viewModel.MoveLayerUpCommand),_viewModel,"."),
-                                    new ImageButton {Source = ImageUtility.GetFontImageSource(IconNameConstants.ArrowDown)}
+                                    new ImageButton {Source = ImageUtility.GetFontImageSource(IconNameConstants.ArrowUp)}
                                         .Style(StyleRepository.ImageButtonStyle)
                                         .Row(1).Column(4).ColumnSpan(2).CenterVertical()
                                         .BindCommand(nameof(_viewModel.MoveLayerDownCommand),_viewModel,".")

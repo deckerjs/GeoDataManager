@@ -38,6 +38,12 @@
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <BundleAssemblies>false</BundleAssemblies>
     <MandroidI18n />
+    <AndroidLinkTool>r8</AndroidLinkTool>
+    <AndroidSupportedAbis />
+    <AndroidKeyStore>false</AndroidKeyStore>
+    <AndroidSigningKeyStore>C:\Users\naughtius\AppData\Local\Xamarin\Mono for Android\Keystore\squidrancher\squidrancher.keystore</AndroidSigningKeyStore>
+    <AndroidSigningStorePass>
+    </AndroidSigningStorePass>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -122,7 +128,7 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties XamarinHotReloadDebuggerTimeoutExceptionGeoDataDroidUIAndroidHideInfoBar="True" XamarinHotReloadDebuggerTimeoutExceptionTrackDataDroidAndroidHideInfoBar="True" />
+      <UserProperties XamarinHotReloadDebuggerTimeoutExceptionTrackDataDroidAndroidHideInfoBar="True" XamarinHotReloadDebuggerTimeoutExceptionGeoDataDroidUIAndroidHideInfoBar="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
