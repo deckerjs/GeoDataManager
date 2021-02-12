@@ -9,20 +9,23 @@ using System;
 using TrackDataDroid.Configuration;
 using TrackDataDroid.Repositories;
 using TrackDataDroid.Services;
+using Microsoft.Extensions.Logging;
 
 namespace TrackDataDroid.Views
 {
     public class MapDataPage : ContentPage
     {
         private readonly MapViewModel _viewModel;
+        private readonly ILogger<MapDataPage> _logger;
         private bool _initialized;
         private FontImageSource _refreshIconImageSrc;
         private FontImageSource _addIconImageSrc;
         private FontImageSource _removeIconImageSrc;
 
-        public MapDataPage(MapViewModel viewModel)
+        public MapDataPage(MapViewModel viewModel, ILogger<MapDataPage> logger)
         {
             _viewModel = viewModel;
+            _logger = logger;
             BindingContext = _viewModel;
 
             InitializeIconImages();
@@ -36,15 +39,22 @@ namespace TrackDataDroid.Views
         }
 
         protected override async void OnAppearing()
-        {            
-            if (!_initialized)
+        {
+            try
             {
-                Content = GetPageContent();
-                _viewModel.ReadyToLoadTracks = true;
-                await _viewModel.LoadAvailableTracks();
-                _initialized = true;
+                if (!_initialized)
+                {
+                    Content = GetPageContent();
+                    _viewModel.ReadyToLoadTracks = true;
+                    await _viewModel.LoadAvailableTracks();
+                    _initialized = true;
+                }
+                base.OnAppearing();
             }
-            base.OnAppearing();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+            }
         }
 
         private View GetPageContent()

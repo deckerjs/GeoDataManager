@@ -10,28 +10,38 @@ using Mapsui.Layers;
 using TrackDataDroid.Repositories;
 using TrackDataDroid.Services;
 using TrackDataDroid.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace TrackDataDroid.Views
 {
     public class OsmMapViewPage : ContentPage
     {
         private readonly MapViewModel _viewModel;
+        private readonly ILogger<OsmMapViewPage> _logger;
         private bool _initialized;
 
-        public OsmMapViewPage(MapViewModel viewModel)
+        public OsmMapViewPage(MapViewModel viewModel, ILogger<OsmMapViewPage> logger)
         {
             _viewModel = viewModel;
+            _logger = logger;
             BindingContext = _viewModel;
         }
 
         protected override async void OnAppearing()
         {
-            if (!_initialized)
+            try
             {
-                Content = await GetPageContent();
-                _initialized = true;
+                if (!_initialized)
+                {
+                    Content = await GetPageContent();
+                    _initialized = true;
+                }
+                base.OnAppearing();
             }
-            base.OnAppearing();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+            }
         }
 
         private async Task<View> GetPageContent()

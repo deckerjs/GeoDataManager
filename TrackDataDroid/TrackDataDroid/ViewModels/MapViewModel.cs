@@ -184,6 +184,7 @@ namespace TrackDataDroid.ViewModels
             UpdateDisplayInfo();
         }
 
+        //todo: new utility could be made to accomplish this, might be used elswhere
         private void UpdateDisplayInfo()
         {
             CurrentDisplayInfo = DeviceDisplay.MainDisplayInfo;
@@ -216,15 +217,21 @@ namespace TrackDataDroid.ViewModels
 
         public async Task LoadAvailableTracks()
         {
-            //todo: add track date to summary instead of track import date
-            if (ReadyToLoadTracks)
+            try
             {
-                var items = await GetAvailableTracks();
-                AvailableCoordinateData.Clear();
-                foreach (var item in items)
+                if (ReadyToLoadTracks)
                 {
-                    AvailableCoordinateData.Add(item);
+                    var items = await GetAvailableTracks();
+                    AvailableCoordinateData.Clear();
+                    foreach (var item in items)
+                    {
+                        AvailableCoordinateData.Add(item);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
             }
         }
 
@@ -258,6 +265,7 @@ namespace TrackDataDroid.ViewModels
             return _mapView;
         }
 
+        //todo: break binding from mapview, move somewhere
         private MapView GetNewMapView()
         {
             return new MapView()
@@ -275,6 +283,7 @@ namespace TrackDataDroid.ViewModels
             .Bind(StackLayout.WidthRequestProperty, nameof(Section1Width));
         }
 
+        //todo: move to mapsui utility as extension on repo inteface or something
         private async Task<List<TrackSummaryViewModel>> GetAvailableTracks()
         {
             if (!ReadyToLoadTracks) return null;
@@ -318,6 +327,7 @@ namespace TrackDataDroid.ViewModels
             }
         }
 
+        //todo: move to mapsui utility as extension on repo interface or something
         private async Task<LayerViewModel<CoordinateData>> GetTrackLayerVm(string trackId)
         {
             var coordData = await _dataRepository.GetTrackAsync(trackId);
@@ -350,6 +360,7 @@ namespace TrackDataDroid.ViewModels
             return null;
         }
 
+        //todo: move to mapsui utility as extension on mapview
         private void CenterLayer(ILayer layer)
         {
             if (layer.Envelope != null)
@@ -358,38 +369,7 @@ namespace TrackDataDroid.ViewModels
             }
         }
 
-        private async Task<ILayer> CreateLineStringLayer(IStyle style = null)
-        {
-
-            var getResult = await _dataRepository.GetTracksSummaryAsync();
-            List<CoordinateDataSummary> trackSummary = getResult?.ToList();
-
-            if(trackSummary!=null && trackSummary.Count > 0)
-            {
-                var firstTrack = trackSummary.FirstOrDefault();
-                var coordData = await _dataRepository.GetTrackAsync(firstTrack.ID);
-
-                var trackPoints = coordData.Data.First().Coordinates.Select(x => SphericalMercator.FromLonLat(x.Longitude, x.Latitude));
-
-                //todo: style starting and ending points differently
-                var startingPoint = new Feature { Geometry = trackPoints.First() } ;
-                var endingPoint = new Feature { Geometry = trackPoints.Last() };
-                var trackLine = new Feature { Geometry = new LineString(trackPoints) };
-
-                var features = new[] { startingPoint, endingPoint, trackLine };
-                return new MemoryLayer
-                {
-                    //DataSource = new MemoryProvider(new Feature { Geometry = trackLine }),
-                    DataSource = new MemoryProvider(features),
-                    Name = "LineStringLayer",
-                    Style = style
-                };
-
-            }
-
-            return new Layer();
-        }
-
+        //todo: move to mapsui utility
         private static IStyle GetLineStringStyle()
         {
             return new VectorStyle
@@ -435,6 +415,7 @@ namespace TrackDataDroid.ViewModels
             MapLayersFiltered.Add(layer);
         }
 
+        //todo: move to file utility
         private string CreateFileFromResource(string layerFileName)
         {
             WriteStreamToFile(layerFileName);
@@ -560,6 +541,7 @@ namespace TrackDataDroid.ViewModels
             }
         }
 
+        //todo: move to mapsui utility
         private int GetLayerIndex(ILayer layer, LayerCollection layerCollection)
         {
             int index = 0;
@@ -573,6 +555,7 @@ namespace TrackDataDroid.ViewModels
         }
 
 
+        //todo: move to file utility
         private static string GetSpecialFolderPath(string baseLayerfile)
         {
             //todo: look into sd card location for base maps
@@ -580,6 +563,8 @@ namespace TrackDataDroid.ViewModels
             return Path.Combine(basepath, baseLayerfile);
         }
 
+        //this is generic, any file included with project that needs to be read would use it
+        //todo: move to file utility
         private static void WriteStreamToFile(string fileName)
         {
             var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"TrackDataDroid.{fileName}");
@@ -599,6 +584,7 @@ namespace TrackDataDroid.ViewModels
             }
         }
 
+        //todo: this is pretty generic, it could be added to some map utility 
         private static TileLayer CreateMbTilesLayer(string path, string name)
         {
             var sqliteconn = new SQLiteConnectionString(path, false);
@@ -607,7 +593,7 @@ namespace TrackDataDroid.ViewModels
             return mbTilesLayer;
         }
 
-
+        //todo: move to mapsui utility
         private async Task<Mapsui.Geometries.Point> GetCurrentLocation()
         {
             var request = new GeolocationRequest(GeolocationAccuracy.Best);
@@ -618,22 +604,17 @@ namespace TrackDataDroid.ViewModels
         }
 
 
+        //todo: move to mapsui utility
         private TileLayer CreateUrlTileLayer(string url, string name)
         {
-            //var tileSource = TmsTileSourceBuilder.Build(url, false);
-            //return new TileLayer(tileSource)
-            //{
-            //    Name = name
-            //};
-            //this times out
-
             var tileSource = CreateTileSource(url, name);
+            //todo: add option for osm tilesource
             //var tileSource = CreateOSMTileSource(url, name);
-
 
             return new TileLayer(tileSource) { Name = name};
         }
 
+        //move to mapsui utility
         private HttpTileSource CreateTileSource(string url, string name)
         {
             return new HttpTileSource(
@@ -646,46 +627,6 @@ namespace TrackDataDroid.ViewModels
                     );
         }
 
-        //this works
-        //private HttpTileSource CreateOSMTileSource(string url, string name)
-        //{
-        //    return new HttpTileSource(
-        //            new GlobalSphericalMercator(), 
-        //            urlFormatter: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        //            serverNodes: new[] { "a", "b", "c" }, 
-        //            name: "OpenStreetMap",
-        //            attribution: new BruTile.Attribution("© OpenStreetMap contributors", "https://www.openstreetmap.org/copyright"),
-        //            userAgent: "OpenStreetMap in Mapsui"
-        //            );
-        //}
-
-        //this works
-        //private HttpTileSource CreateOSMTileSource(string url, string name)
-        //{
-        //    return new HttpTileSource(
-        //            new GlobalSphericalMercator(), 
-        //            urlFormatter: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        //            serverNodes: new[] { "a", "b", "c" }, 
-        //            name: name,
-        //            attribution: null,
-        //            userAgent: null
-        //            );
-        //}
-
-        //private HttpTileSource CreateOSMTileSource(string url, string name)
-        //{
-        //    return new HttpTileSource(
-        //            new GlobalSphericalMercator(),
-        //            //urlFormatter: "http://tiles.wmflabs.org/hillshading/${z}/${x}/${y}.png"
-        //            //https://{a|b|c}.tile.opentopomap.org/{z}/{x}/{y}.png 
-        //            //this works
-        //            urlFormatter: "https://a.tile.opentopomap.org/{z}/{x}/{y}.png"
-        //            );
-        //}
-
-
-
-
         //todo: add map choice options in configuration
         private Mapsui.Map GetOnlineOSMMap()
         {            
@@ -696,21 +637,6 @@ namespace TrackDataDroid.ViewModels
             };
             map.Layers.Add(OpenStreetMap.CreateTileLayer());
             return map;
-        }
-
-        //demo testing only, remove when done
-        public ILayer GetDemoLineStringLayer(IStyle style = null)
-        {
-            string WKTGr5 = "LINESTRING(40.939812306314707 -104.4140350073576, 40.770964482799172 -105.78512543812394, 40.884347157552838 -105.83570159040391, 40.804107449948788 -105.66309272311628)";
-        var lineString = (LineString)Geometry.GeomFromText(WKTGr5);
-            lineString = new LineString(lineString.Vertices.Select(v => SphericalMercator.FromLonLat(v.Y, v.X)));
-
-            return new MemoryLayer
-            {
-                DataSource = new MemoryProvider(new Feature { Geometry = lineString }),
-                Name = "LineStringLayer",
-                Style = style
-            };
         }
 
     }
