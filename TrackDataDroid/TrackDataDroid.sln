@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackDataDroid.Android", "TrackDataDroid.Android\TrackDataDroid.Android.csproj", "{8CABC814-8EAF-4873-A1DA-C2F47E19CDF0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackDataDroid", "TrackDataDroid\TrackDataDroid.csproj", "{F3E785B1-97ED-493F-ABBD-237634AA3B6A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoStoreApi.Client", "..\GeoStoreApi.Client\GeoStoreApi.Client.csproj", "{CA7BEBF7-859F-439C-BD78-9EE7680421FD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoStoreApi.Abstractions.CoordinateDataModels", "..\CoordinateDataModels\GeoStoreApi.Abstractions.CoordinateDataModels.csproj", "{701A95F3-44EE-4732-8EC4-0BB8C89D2C25}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8CABC814-8EAF-4873-A1DA-C2F47E19CDF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CABC814-8EAF-4873-A1DA-C2F47E19CDF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CABC814-8EAF-4873-A1DA-C2F47E19CDF0}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{8CABC814-8EAF-4873-A1DA-C2F47E19CDF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CABC814-8EAF-4873-A1DA-C2F47E19CDF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CABC814-8EAF-4873-A1DA-C2F47E19CDF0}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F3E785B1-97ED-493F-ABBD-237634AA3B6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3E785B1-97ED-493F-ABBD-237634AA3B6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3E785B1-97ED-493F-ABBD-237634AA3B6A}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F3E785B1-97ED-493F-ABBD-237634AA3B6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3E785B1-97ED-493F-ABBD-237634AA3B6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3E785B1-97ED-493F-ABBD-237634AA3B6A}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{CA7BEBF7-859F-439C-BD78-9EE7680421FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA7BEBF7-859F-439C-BD78-9EE7680421FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA7BEBF7-859F-439C-BD78-9EE7680421FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA7BEBF7-859F-439C-BD78-9EE7680421FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{701A95F3-44EE-4732-8EC4-0BB8C89D2C25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{701A95F3-44EE-4732-8EC4-0BB8C89D2C25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{701A95F3-44EE-4732-8EC4-0BB8C89D2C25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{701A95F3-44EE-4732-8EC4-0BB8C89D2C25}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {27338634-BEBC-4BC2-8570-561D396AA1E1}
+	EndGlobalSection
+EndGlobal

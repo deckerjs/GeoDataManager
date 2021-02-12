@@ -15,9 +15,26 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoDataWebPortal", "GeoData
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoStoreApi.Tests", "GeoStoreApi.Tests\GeoStoreApi.Tests.csproj", "{76C2FA4D-6ED0-4CD4-A578-596E5674E4F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoStoreApi.Abstractions.CoordinateDataModels", "CoordinateDataModels\GeoStoreApi.Abstractions.CoordinateDataModels.csproj", "{6A4C10CC-87D8-4912-A03E-2547179AD0BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoStoreApi.Abstractions.CoordinateDataModels", "CoordinateDataModels\GeoStoreApi.Abstractions.CoordinateDataModels.csproj", "{6A4C10CC-87D8-4912-A03E-2547179AD0BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoStoreApi.Client", "GeoStoreApi.Client\GeoStoreApi.Client.csproj", "{BFDC4378-5F57-41E5-A62D-2C3B5FCB75A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoStoreApi.Client", "GeoStoreApi.Client\GeoStoreApi.Client.csproj", "{BFDC4378-5F57-41E5-A62D-2C3B5FCB75A3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFiles", "{62AF9B7C-2AFD-40E2-8B9C-41F2B667B43F}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.env = .env
+		.gitignore = .gitignore
+		_config.yml = _config.yml
+		BuildAPIImage.bat = BuildAPIImage.bat
+		BuildWebPortalImage.bat = BuildWebPortalImage.bat
+		docker-compose.yml = docker-compose.yml
+		GeoStoreAPI_Node_Dockerfile = GeoStoreAPI_Node_Dockerfile
+		localmongo.yml = localmongo.yml
+		postgis-compose.yml = postgis-compose.yml
+		publish-apiclient-nuget.yml = publish-apiclient-nuget.yml
+		README.md = README.md
+		startlocalmongo.bat = startlocalmongo.bat
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

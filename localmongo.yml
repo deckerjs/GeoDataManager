@@ -12,8 +12,8 @@ services:
     volumes:
     - mongodatavolume:/data/db
     # environment:
-    # - MONGO_INITDB_ROOT_USERNAME=usermradminpants
-    # - MONGO_INITDB_ROOT_PASSWORD=y5Trogldytes123!
+    # - MONGO_INITDB_ROOT_USERNAME=user
+    # - MONGO_INITDB_ROOT_PASSWORD=pwrd
 
 volumes:
   mongodatavolume:

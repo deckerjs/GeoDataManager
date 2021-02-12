@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <UserSecretsId>60a4b3d1-4802-4cf2-9462-c021bdd963d6</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="appsettings.json" />
+    <None Remove="co-full-base-dark-1.mbtiles" />
+    <None Remove="co-full-roads-only-dark-1.mbtiles" />
+    <None Remove="co-full-tracks-only-dark-1.mbtiles" />
+    <None Remove="world.mbtiles" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="appsettings.json" />
+    <EmbeddedResource Include="co-full-base-dark-1.mbtiles" />
+    <EmbeddedResource Include="co-full-roads-only-dark-1.mbtiles" />
+    <EmbeddedResource Include="co-full-tracks-only-dark-1.mbtiles" />
+    <EmbeddedResource Include="world.mbtiles">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>    
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BruTile" Version="2.2.0" />
+    <PackageReference Include="BruTile.MbTiles" Version="2.2.0" />
+    <PackageReference Include="Mapsui" Version="2.0.3" />
+    <PackageReference Include="Mapsui.Forms" Version="2.0.3" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.1.9" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.9" />
+    <PackageReference Include="NLog" Version="4.7.6" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.7.0" />
+    <!--<PackageReference Include="sqlite" Version="3.13.0" />-->
+    <!--<PackageReference Include="sqlite-net-pcl" Version="1.7.335" />-->
+    <!--<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.0.4" />-->
+    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1560" />  
+    <PackageReference Include="Xamarin.Essentials" Version="1.6.0" />  
+    <PackageReference Include="Xamarin.Forms.Maps" Version="4.8.0.1560" />
+  </ItemGroup>
+
+    <ItemGroup>
+    <Folder Include="MbTiles\" />
+    <Folder Include="MapCreation\" />
+  </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\CoordinateDataModels\GeoStoreApi.Abstractions.CoordinateDataModels.csproj" />
+      <ProjectReference Include="..\..\GeoStoreApi.Client\GeoStoreApi.Client.csproj" />
+    </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="AppShell.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+
+</Project>
